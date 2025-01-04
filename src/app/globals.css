@@ -19,3 +19,12 @@ body {
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* styles/globals.css */
+.label-gray {
+  @apply block text-gray-700 mb-1 font-bold text-sm;
+}
+
+.input-orange {
+  @apply w-full border border-orange-400 focus:ring-orange-500 rounded-md p-1 text-gray-600;
+}

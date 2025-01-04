@@ -17,20 +17,20 @@ const Header = () => {
 
   return (
     <>
-      <nav className="bg-blue-600">
+      <nav className="bg-orange-600">
         <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
           <div className="text-white text-lg font-bold">MyApp</div>
           <div className="hidden md:flex space-x-4">
             <Link
               href="/"
-              className="text-white hover:bg-blue-700 px-3 py-2 rounded"
+              className="text-white hover:bg-orange-700 px-3 py-2 rounded"
             >
               Dashboard
             </Link>
             <div className="relative">
               <button
                 onClick={toggleDropdown}
-                className="text-white hover:bg-blue-700 px-3 py-2 rounded"
+                className="text-white hover:bg-orange-700 px-3 py-2 rounded"
               >
                 Account
               </button>
@@ -53,19 +53,19 @@ const Header = () => {
             </div>
             <Link
               href="/crm/campaign"
-              className="text-white hover:bg-blue-700 px-3 py-2 rounded"
+              className="text-white hover:bg-orange-700 px-3 py-2 rounded"
             >
               Campaign
             </Link>
             <a
               href="/contact"
-              className="text-white hover:bg-blue-700 px-3 py-2 rounded"
+              className="text-white hover:bg-orange-700 px-3 py-2 rounded"
             >
               Contact
             </a>
             <a
               href="/contact"
-              className="text-white hover:bg-blue-700 px-3 py-2 rounded"
+              className="text-white hover:bg-orange-700 px-3 py-2 rounded"
             >
               Report
             </a>
@@ -82,17 +82,17 @@ const Header = () => {
         </div>
         {/* Menu Mobile */}
         {isMobileMenuOpen && (
-          <div className="md:hidden bg-blue-600">
+          <div className="md:hidden bg-orange-600">
             <Link
               href="/"
-              className="block text-white hover:bg-blue-700 px-4 py-2"
+              className="block text-white hover:bg-orange-700 px-4 py-2"
             >
               Home
             </Link>
             <div className="relative">
               <button
                 onClick={toggleDropdown}
-                className="block w-full text-left text-white hover:bg-blue-700 px-4 py-2"
+                className="block w-full text-left text-white hover:bg-orange-700 px-4 py-2"
               >
                 Services
               </button>
@@ -121,13 +121,13 @@ const Header = () => {
             </div>
             <a
               href="/about"
-              className="block text-white hover:bg-blue-700 px-4 py-2"
+              className="block text-white hover:bg-orange-700 px-4 py-2"
             >
               About
             </a>
             <a
               href="/contact"
-              className="block text-white hover:bg-blue-700 px-4 py-2"
+              className="block text-white hover:bg-orange-700 px-4 py-2"
             >
               Contact
             </a>

@@ -4,7 +4,7 @@ interface AccordionItem {
   id: number;
   title: string;
   content: string;
-}
+} 
 
 const Accordion: React.FC = () => {
   const [openId, setOpenId] = useState<number | null>(null);
