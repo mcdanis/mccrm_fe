@@ -22,7 +22,7 @@ const Header = () => {
           <div className="text-white text-lg font-bold">MyApp</div>
           <div className="hidden md:flex space-x-4">
             <Link
-              href="/"
+              href="/crm"
               className="text-white hover:bg-orange-700 px-3 py-2 rounded"
             >
               Dashboard
@@ -58,7 +58,7 @@ const Header = () => {
               Campaign
             </Link>
             <a
-              href="/contact"
+              href="/crm/contact"
               className="text-white hover:bg-orange-700 px-3 py-2 rounded"
             >
               Contact

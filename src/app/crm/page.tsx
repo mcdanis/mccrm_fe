@@ -1,10 +1,13 @@
-import React from 'react'
-import Header from '@/app/crm/header'
+import React from "react";
+import Header from "@/app/crm/header";
 
 const Crm = () => {
   return (
-    <Header />
-  )
-}
+    <>
+      <Header />
+      dashboard
+    </>
+  );
+};
 
 export default Crm;

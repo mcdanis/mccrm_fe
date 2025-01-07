@@ -2,42 +2,46 @@
 
 import React from "react";
 import { useState } from "react";
+import Modal from "@/components/modals/modal-add-existing-contact";
+import Link from "next/link";
 
 export const Contact = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
+
   return (
     <>
+      <Modal isOpen={isModalOpen} onClose={closeModal} />
       <div className="relative">
-        <button
-          onClick={toggleDropdown}
-          className="text-white hover:bg-blue-700 px-3 py-2 rounded bg-blue-500"
-        >
+        <button onClick={toggleDropdown} className="btn-orange-sm">
           Add contact
         </button>
         {isDropdownOpen && (
           <div className="absolute w-48 bg-white rounded-md shadow-lg z-10">
-            <a
-              href="/service1"
+            <Link
+              href="/crm/campaign/sub-campaign/contact/add"
               className="block px-4 py-2 text-gray-800 hover:bg-gray-100"
             >
               Single
-            </a>
+            </Link>
             <a
               href="/service2"
               className="block px-4 py-2 text-gray-800 hover:bg-gray-100"
             >
               CSV
             </a>
-            <a
-              href="/service3"
-              className="block px-4 py-2 text-gray-800 hover:bg-gray-100"
+            <button
+              onClick={openModal}
+              className="block px-4 py-2 text-gray-800 hover:bg-gray-100 w-full text-start"
             >
               Existing data
-            </a>
+            </button>
           </div>
         )}
       </div>

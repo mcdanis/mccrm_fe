@@ -226,9 +226,7 @@ const Contact = () => {
                       </div>
                     </div>
                     <div className="pt-3">
-                      <button className="bg-orange-500 hover:bg-orange-700 text-white font-bold text-sm py-2 px-3 border border-orange-700 rounded">
-                        Simpan Notes
-                      </button>
+                      <button className="btn-orange">Simpan Notes</button>
                     </div>
                   </div>
                 )}
@@ -273,13 +271,13 @@ const Contact = () => {
                     <div className="grid grid-cols-2 grid-rows-3 gap-3">
                       <div>
                         <label className="label-gray">Status Type</label>
-                        <select className="w-1/3 bg-white p-2 text-black rounded border border-orange-400 focus:outline-none focus:ring-2 focus:ring-orange-500">
+                        <select className="w-full bg-white p-2 text-black rounded border border-orange-400 focus:outline-none focus:ring-2 focus:ring-orange-500">
                           <option value="">Lead Type</option>
                         </select>
                       </div>
                       <div>
                         <label className="label-gray">Lead Owner</label>
-                        <select className="w-1/3 bg-white p-2 text-black rounded border border-orange-400 focus:outline-none focus:ring-2 focus:ring-orange-500">
+                        <select className="w-full bg-white p-2 text-black rounded border border-orange-400 focus:outline-none focus:ring-2 focus:ring-orange-500">
                           <option value="">Lead Owner</option>
                         </select>
                       </div>

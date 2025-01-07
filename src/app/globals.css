@@ -22,9 +22,30 @@ body {
 
 /* styles/globals.css */
 .label-gray {
-  @apply block text-gray-700 mb-1 font-bold text-sm;
+  @apply block text-gray-700 mb-1 text-sm;
 }
 
 .input-orange {
-  @apply w-full border border-orange-400 focus:ring-orange-500 rounded-md p-1 text-gray-600;
+  @apply w-full border border-orange-400 focus:ring-orange-500 rounded-md p-1 text-gray-600 text-sm;
+}
+
+.select-orange {
+  @apply w-full border border-orange-400 focus:ring-orange-500 rounded-md text-gray-600 text-sm bg-white;
+  padding: 6px 5px 6px 5px;
+}
+
+.btn-orange {
+  @apply bg-orange-500 hover:bg-orange-700 text-white font-bold text-sm py-2 px-3 border border-orange-700 rounded;
+}
+
+.btn-orange-sm {
+  @apply bg-orange-500 hover:bg-orange-700 text-white font-bold text-xs px-3 border border-orange-700 rounded;
+  padding-top: 7px;
+  padding-bottom: 7px;
+}
+
+.btn-orange-outline-sm {
+  @apply font-bold text-xs px-3 border border-orange-700 rounded;
+  padding-top: 7px;
+  padding-bottom: 7px;
 }

@@ -22,16 +22,16 @@ const Crm = () => {
           <nav className="flex flex-col gap-4 w-full">
             <button
               onClick={() => handleNavClick("Contact")}
-              className={`text-gray-300 hover:text-white hover:bg-gray-700 px-4 py-2 rounded ${
-                activeContent === "Contact" ? "bg-orange-700" : ""
+              className={`text-white hover:bg-orange-500 px-4 py-2 rounded ${
+                activeContent === "Contact" ? "bg-orange-500" : ""
               }`}
             >
               Contact
             </button>
             <button
               onClick={() => handleNavClick("Info")}
-              className={`text-gray-300 hover:text-white hover:bg-gray-700 px-4 py-2 rounded ${
-                activeContent === "Info" ? "bg-orange-700" : ""
+              className={`text-white hover:bg-orange-500 px-4 py-2 rounded ${
+                activeContent === "Info" ? "bg-orange-500" : ""
               }`}
             >
               Info
