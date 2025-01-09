@@ -1,12 +1,42 @@
-// pages/login.js
-import React from 'react';
+"use client"
+import React, { useState } from 'react';
+import Cookies from "js-cookie";
 
 const LoginPage = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+
+  const handleLogin = async (e) => {
+    e.preventDefault(); // Mencegah reload halaman
+
+    try {
+      const response = await fetch('http://localhost:3030/api/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Login failed');
+      }
+
+      const data = await response.json();
+      localStorage.setItem('token', data.token);
+      window.location.href = '/crm';
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="w-full max-w-md p-8 space-y-8 bg-white rounded-lg shadow-md">
         <h2 className="text-2xl font-bold text-center">Login</h2>
-        <form className="space-y-6">
+        {error && <p className="text-red-500 text-center">{error}</p>}
+        <form className="space-y-6" onSubmit={handleLogin}>
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-gray-700">
               Email
@@ -15,6 +45,8 @@ const LoginPage = () => {
               type="email"
               id="email"
               required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               className="block w-full px-3 py-2 mt-1 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-500"
               placeholder="you@example.com"
             />
@@ -27,6 +59,8 @@ const LoginPage = () => {
               type="password"
               id="password"
               required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               className="block w-full px-3 py-2 mt-1 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-500"
               placeholder="********"
             />
@@ -49,4 +83,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage; 
+export default LoginPage;

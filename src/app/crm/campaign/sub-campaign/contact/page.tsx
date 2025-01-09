@@ -64,7 +64,7 @@ const Contact = () => {
           <label className="text-xs italic text-gray-500">
             Created at : 12-02-2023
           </label>
-          <div className="grid grid-cols-1 grid-rows-6 mt-3">
+          <div className="grid grid-cols-1 gap-4 mt-3">
             <div className="min-h-1">
               <label className="label-gray">Full Name</label>
               <input className="input-orange" />
