@@ -4,8 +4,13 @@ import React from "react";
 import Header from "@/app/crm/header";
 import { useState } from "react";
 import Link from "next/link";
+import { Inter } from '@next/font/google'
+
+const inter = Inter({ subsets: ['latin'], weight: ['400', '700']});
 
 export default function Campaign() {
+
+
   const [filterValue, setFilterValue] = useState("");
   const [statusValue, setStatusValue] = useState("");
 
@@ -89,7 +94,7 @@ export default function Campaign() {
           </div>
           <div className="inline-block">
             <div className="max-w-xs overflow-hidden rounded-lg shadow-lg border-2 border-gray-100 hover:shadow-xl transition-shadow duration-300 ease-in-out p-5">
-              <p className="font-bold text-lg text-center">
+              <p className={`font-bold text-lg text-center ${inter.className}`}>
                 APLIKASI BOOKING KLINIK
               </p>
               <div className="mt-4 overflow-y-auto h-[200px]">

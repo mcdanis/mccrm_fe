@@ -1,17 +1,18 @@
 "use client"
 import React, { useState } from 'react';
 import Cookies from "js-cookie";
+import {useIsLogin, api} from "../utils/utils"
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
-  const handleLogin = async (e) => {
-    e.preventDefault(); // Mencegah reload halaman
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault(); 
 
     try {
-      const response = await fetch('http://localhost:3030/api/login', {
+      const response = await api('login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -24,12 +25,17 @@ const LoginPage = () => {
       }
 
       const data = await response.json();
-      localStorage.setItem('token', data.token);
+      localStorage.setItem('mccrm_token', data.token);
+      sessionStorage.setItem('mccrm_token', data.token);
+      Cookies.set('mccrm_token', data.token, { expires: 7 });
+      Cookies.set('mccrm_user_id', data.userId, { expires: 7 });
       window.location.href = '/crm';
     } catch (err) {
-      setError(err.message);
-    }
+      setError((err as Error).message);
+    }    
   };
+
+  useIsLogin()
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
@@ -73,7 +79,7 @@ const LoginPage = () => {
           </button>
         </form>
         <p className="text-sm text-center">
-          Don't have an account?{' '}
+          Dont have an account?{' '}
           <a href="/register" className="text-blue-600 hover:underline">
             Register here
           </a>

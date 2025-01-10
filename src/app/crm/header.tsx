@@ -2,8 +2,10 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import {useIsLogin} from "../../utils/utils"
 
 const Header = () => {
+  useIsLogin()
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -25,14 +27,14 @@ const Header = () => {
               href="/crm"
               className="text-white hover:bg-orange-700 px-3 py-2 rounded"
             >
-              Dashboard
+              DASHBOARD
             </Link>
             <div className="relative">
               <button
                 onClick={toggleDropdown}
                 className="text-white hover:bg-orange-700 px-3 py-2 rounded"
               >
-                Account
+                ACCOUNT
               </button>
               {isDropdownOpen && (
                 <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10">
@@ -55,19 +57,19 @@ const Header = () => {
               href="/crm/campaign"
               className="text-white hover:bg-orange-700 px-3 py-2 rounded"
             >
-              Campaign
+              CAMPAIGN
             </Link>
             <a
               href="/crm/contact"
               className="text-white hover:bg-orange-700 px-3 py-2 rounded"
             >
-              Contact
+              CONTACT
             </a>
             <a
               href="/contact"
               className="text-white hover:bg-orange-700 px-3 py-2 rounded"
             >
-              Report
+              REPORT
             </a>
           </div>
           {/* Menu Hamburger untuk tampilan mobile */}
