@@ -1,14 +1,42 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Header from "@/app/crm/header";
 import { Contact, Info } from "@/components/sub-campaign-detail";
+import ApiService from "@/utils/services/ApiService";
+import { useParams } from "next/navigation";
+
+interface SubCampaign {
+  id: number;
+  campaign_id: string;
+  name: string;
+  owner: number;
+  manager: number;
+  status: string;
+  client_id: number;
+  created_by: number;
+  createdAt: number;
+}
 
 const Crm = () => {
-  // State to store the active content
-  const [activeContent, setActiveContent] = useState("Contact");
+  const apiService = new ApiService();
 
-  // Function to handle button clicks
+  const params = useParams();
+  const { sub_campaign_id } = params;
+
+  const [activeContent, setActiveContent] = useState("Contact");
+  const [subCampaign, setSubCampaign] = useState<SubCampaign>();
+
+  useEffect(() => {
+    const subCampaign = async () => {
+      const subCampaignData = await apiService.getSubCampaign(
+        Number(sub_campaign_id)
+      );
+      setSubCampaign(subCampaignData);
+    };
+    subCampaign();
+  }, []);
+
   const handleNavClick = (content: string) => {
     setActiveContent(content);
   };
@@ -22,16 +50,16 @@ const Crm = () => {
           <nav className="flex flex-col gap-4 w-full">
             <button
               onClick={() => handleNavClick("Contact")}
-              className={`text-white hover:bg-orange-500 px-4 py-2 rounded ${
-                activeContent === "Contact" ? "bg-orange-500" : ""
+              className={`text-white hover:bg-[#5C708E] px-4 py-2 rounded ${
+                activeContent === "Contact" ? "bg-[#3c5d8f]" : ""
               }`}
             >
               Contact
             </button>
             <button
               onClick={() => handleNavClick("Info")}
-              className={`text-white hover:bg-orange-500 px-4 py-2 rounded ${
-                activeContent === "Info" ? "bg-orange-500" : ""
+              className={`text-white hover:bg-[#5C708E] px-4 py-2 rounded ${
+                activeContent === "Info" ? "bg-[#3c5d8f]" : ""
               }`}
             >
               Info
@@ -41,11 +69,15 @@ const Crm = () => {
 
         {/* Content Area */}
         <div className="flex-1 p-6 bg-gray-100">
-          <h2 className="text-2xl font-semibold mb-3">Kampanye 1s</h2>
-          <h2 className="text-1xl font-semibold">{activeContent}</h2>
+          <h2 className="text-2xl font-semibold mb-3 text-gray-700">
+            {subCampaign?.name}
+          </h2>
+          <h2 className="text-1xl font-semibold text-gray-500">
+            {activeContent}
+          </h2>
           <div className="mt-4">
             {activeContent === "Contact" && <Contact />}
-            {activeContent === "Info" && <Info />}
+            {activeContent === "Info" && <Info subCampaign={subCampaign} />}
           </div>
         </div>
       </div>

@@ -1,13 +1,40 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
-import {useIsLogin} from "../../utils/utils"
+import { useIsNotLogin } from "../../utils/utils";
+import { Inter } from "@next/font/google";
+import ApiService from "@/utils/services/ApiService";
+import Cookies from "js-cookie";
+
+const inter = Inter({ subsets: ["latin"], weight: ["400", "700"] });
+
+interface User {
+  id: number;
+  name: string;
+  role: string;
+  title: string;
+  client_id: string;
+}
 
 const Header = () => {
-  useIsLogin()
+  useIsNotLogin();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [user, setUser] = useState<User>();
+  const apiService = new ApiService();
+
+  useEffect(() => {
+    const getCurrentUser = async () => {
+      const userData = await apiService.getUser(
+        Number(Cookies.get("mccrm_user_id"))
+      );
+      setUser(userData);
+      console.log("----");
+      console.log(userData.name);
+    };
+    getCurrentUser();
+  }, []);
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
@@ -17,57 +44,62 @@ const Header = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
+  if (!user) {
+    return <>Loading...</>;
+  }
   return (
     <>
-      <nav className="bg-orange-600">
+      <nav className="bg-[#5C708E]">
         <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
           <div className="text-white text-lg font-bold">MyApp</div>
           <div className="hidden md:flex space-x-4">
             <Link
               href="/crm"
-              className="text-white hover:bg-orange-700 px-3 py-2 rounded"
+              className={`text-white hover:bg-[#3c5d8f] px-3 py-2 rounded ${inter.className}`}
             >
               DASHBOARD
             </Link>
-            <div className="relative">
-              <button
-                onClick={toggleDropdown}
-                className="text-white hover:bg-orange-700 px-3 py-2 rounded"
-              >
-                ACCOUNT
-              </button>
-              {isDropdownOpen && (
-                <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10">
-                  <Link
-                    href="/crm/client"
-                    className="block px-4 py-2 text-gray-800 hover:bg-gray-100"
-                  >
-                    Client
-                  </Link>
-                  <Link
-                    href="/crm/user"
-                    className="block px-4 py-2 text-gray-800 hover:bg-gray-100"
-                  >
-                    User
-                  </Link>
-                </div>
-              )}
-            </div>
+            {user.role == "ADM" && (
+              <div className="relative">
+                <button
+                  onClick={toggleDropdown}
+                  className={`text-white hover:bg-[#3c5d8f] px-3 py-2 rounded ${inter.className}`}
+                >
+                  ACCOUNT
+                </button>
+                {isDropdownOpen && (
+                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10">
+                    <Link
+                      href="/crm/client"
+                      className="block px-4 py-2 text-gray-800 hover:bg-gray-100"
+                    >
+                      Client
+                    </Link>
+                    <Link
+                      href="/crm/user"
+                      className="block px-4 py-2 text-gray-800 hover:bg-gray-100"
+                    >
+                      User
+                    </Link>
+                  </div>
+                )}
+              </div>
+            )}
             <Link
               href="/crm/campaign"
-              className="text-white hover:bg-orange-700 px-3 py-2 rounded"
+              className={`text-white hover:bg-[#3c5d8f] px-3 py-2 rounded ${inter.className}`}
             >
               CAMPAIGN
             </Link>
             <a
               href="/crm/contact"
-              className="text-white hover:bg-orange-700 px-3 py-2 rounded"
+              className={`text-white hover:bg-[#3c5d8f] px-3 py-2 rounded ${inter.className}`}
             >
               CONTACT
             </a>
             <a
               href="/contact"
-              className="text-white hover:bg-orange-700 px-3 py-2 rounded"
+              className={`text-white hover:bg-[#3c5d8f] px-3 py-2 rounded ${inter.className}`}
             >
               REPORT
             </a>
@@ -87,14 +119,14 @@ const Header = () => {
           <div className="md:hidden bg-orange-600">
             <Link
               href="/"
-              className="block text-white hover:bg-orange-700 px-4 py-2"
+              className="block text-white hover:bg-[#3c5d8f] px-4 py-2"
             >
               Home
             </Link>
             <div className="relative">
               <button
                 onClick={toggleDropdown}
-                className="block w-full text-left text-white hover:bg-orange-700 px-4 py-2"
+                className="block w-full text-left text-white hover:bg-[#3c5d8f] px-4 py-2"
               >
                 Services
               </button>
@@ -123,13 +155,13 @@ const Header = () => {
             </div>
             <a
               href="/about"
-              className="block text-white hover:bg-orange-700 px-4 py-2"
+              className="block text-white hover:bg-[#3c5d8f] px-4 py-2"
             >
               About
             </a>
             <a
               href="/contact"
-              className="block text-white hover:bg-orange-700 px-4 py-2"
+              className="block text-white hover:bg-[#3c5d8f] px-4 py-2"
             >
               Contact
             </a>

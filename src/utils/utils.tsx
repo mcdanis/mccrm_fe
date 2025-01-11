@@ -4,23 +4,40 @@ import Cookies from "js-cookie";
 import { useEffect } from "react";
 import Swal from "sweetalert2";
 
-export const useIsLogin = (
-  defaultRedirect: string = "/crm",
-  successRedirect: string = "/"
-) => {
-  // const router = useRouter();
-  // const currentPath = window.location.pathname;
-  // useEffect(() => {
-  //   if (Cookies.get('mccrm_token')) {
-  //     if (currentPath !== defaultRedirect) {
-  //       router.push(defaultRedirect);
-  //     }
-  //   } else {
-  //     if (currentPath !== successRedirect) {
-  //       router.push(successRedirect);
-  //     }
-  //   }
-  // }, [router, currentPath, defaultRedirect, successRedirect]);
+// export const useIsLogin = (
+//   defaultRedirect: string = "/crm",
+//   successRedirect: string = "/"
+// ) => {
+//   const router = useRouter();
+//   const currentPath = window.location.pathname;
+//   useEffect(() => {
+//     if (Cookies.get('mccrm_token')) {
+//       if (currentPath !== defaultRedirect) {
+//         router.push(defaultRedirect);
+//       }
+//     } else {
+//       if (currentPath !== successRedirect) {
+//         router.push(successRedirect);
+//       }
+//     }
+//   }, [router, currentPath, defaultRedirect, successRedirect]);
+// };
+
+export const useIsNotLogin = () => {
+  const router = useRouter();
+  useEffect(() => {
+    if (!Cookies.get("mccrm_token")) {
+      router.push("/");
+    }
+  });
+};
+export const useIsLogin = () => {
+  const router = useRouter();
+  useEffect(() => {
+    if (Cookies.get("mccrm_token")) {
+      router.push("/crm");
+    }
+  });
 };
 
 export const api = async (path: string, payload: object) => {
@@ -39,7 +56,7 @@ export const messageBox = async (
     Swal.fire({
       title: title,
       text: msg,
-      icon: icon,
+      icon: icon as "success" | "error" | "warning" | "info" | "question",
       confirmButtonText: "Ok",
       cancelButtonText: "Cancel",
       showCancelButton: isCancelButtonVisible,

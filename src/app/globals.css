@@ -3,13 +3,13 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
+  --background: white;
   --foreground: #171717;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
+    --background: white;
     --foreground: #ededed;
   }
 }
@@ -17,7 +17,7 @@
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: Arial;
 }
 
 /* styles/globals.css */
@@ -26,26 +26,26 @@ body {
 }
 
 .input-orange {
-  @apply w-full border border-orange-400 focus:ring-orange-500 rounded-md p-1 text-gray-600 text-sm;
+  @apply w-full border border-[#5C708E] focus:ring-[#3c5d8f] rounded-md p-1 text-gray-600 text-sm;
 }
 
 .select-orange {
-  @apply w-full border border-orange-400 focus:ring-orange-500 rounded-md text-gray-600 text-sm bg-white;
+  @apply w-full border border-[#5C708E] focus:ring-[#3c5d8f] rounded-md text-gray-600 text-sm bg-white;
   padding: 6px 5px 6px 5px;
 }
 
 .btn-orange {
-  @apply bg-orange-500 hover:bg-orange-700 text-white font-bold text-sm py-2 px-3 border border-orange-700 rounded;
+  @apply bg-[#5C708E] hover:bg-[#3c5d8f] text-white text-sm py-2 px-3 border border-[#3c5d8f] rounded;
 }
 
 .btn-orange-sm {
-  @apply bg-orange-500 hover:bg-orange-700 text-white font-bold text-xs px-3 border border-orange-700 rounded;
+  @apply bg-[#5C708E] hover:bg-[#3c5d8f] text-white font-bold text-xs px-3 border border-[#3c5d8f] rounded;
   padding-top: 7px;
   padding-bottom: 7px;
 }
 
 .btn-orange-outline-sm {
-  @apply font-bold text-xs px-3 border border-orange-700 rounded;
+  @apply font-bold text-xs px-3 border border-[#3c5d8f] rounded;
   padding-top: 7px;
   padding-bottom: 7px;
 }
@@ -58,4 +58,8 @@ body {
 .btn-primary {
   @apply text-white font-bold text-sm py-2 px-3 border rounded;
   background-color: #5c708e;
+}
+
+.bg-secondary {
+  background-color: #f7e9e8;
 }

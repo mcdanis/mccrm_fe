@@ -30,13 +30,17 @@ const Clients = () => {
 
   const handleDelete = async (id: number, name: string) => {
     const confirmDelete = await messageBox(
-      "Hapus client",
-      "Yakin hapus client " + name + "?",
+      "Delete a Client",
+      "sure delete this client " + name + "?",
       "question"
     );
     if (confirmDelete) {
-      const response = await apiService.deleteClient(id);
+      const response = await apiService.delete("client", id);
       if (!response.error) {
+        setClients((prevClients) =>
+          prevClients.filter((client) => Number(client.id) !== id)
+        );
+
         messageBox("Berhasil", "Client berhasil di hapus", "success", "no");
       }
     }
@@ -48,7 +52,7 @@ const Clients = () => {
       <div className="container mx-auto p-4 my-5">
         <div className="grid grid-cols-2">
           <div className="grid grid-cols-2 mb-4 gap-4">
-            <h1 className="text-2xl text-bold">Client</h1>
+            <h1 className="text-2xl text-bold text-gray-700">Client</h1>
           </div>
           <div className="text-end">
             <Link href="/crm/client/add" className="btn-orange-sm">
@@ -106,7 +110,7 @@ const Clients = () => {
                           "question"
                         )
                       }
-                      className="flex items-center px-2 py-1 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-e-lg hover:bg-gray-100 hover:text-green-700 focus:z-10 focus:ring-2 focus:ring-green-700 focus:text-green-700 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:ring-green-500 dark:focus:text-white"
+                      className="flex items-center px-2 py-1 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-e-lg hover:bg-gray-100 hover:text-green-700 focus:z-10 focus:ring-2 focus:ring-green-700 focus:text-green-700 dark:focus:ring-green-500 "
                     >
                       <PencilIcon className="h-4 w-6 text-green-500" />
                       <span>Edit</span>

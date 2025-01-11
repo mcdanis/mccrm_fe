@@ -78,14 +78,17 @@ export const Contact = () => {
     </>
   );
 };
-export const Info = () => {
+
+interface InfoProps {
+  subCampaign: Record<string>;
+}
+
+export const Info: React.FC<InfoProps> = ({ subCampaign }) => {
   const [formData, setFormData] = useState({
-    projectTargetClosingProd: "",
-    subCampaignOwner: "",
-    createdAt: "",
-    status: "",
-    subCampaignManager: "",
-    summary: "",
+    projectTargetClosingProd: subCampaign.name,
+    subCampaignOwner: subCampaign.owner,
+    status: subCampaign.status,
+    subCampaignManager: subCampaign.manager,
   });
 
   const handleChange = (
@@ -113,16 +116,16 @@ export const Info = () => {
           onSubmit={handleSubmit}
           className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
         >
-          <div className="grid grid-cols-2 grid-rows-5 gap-3">
+          <div className="grid grid-cols-2 gap-3">
             <div>
               <label
                 className="block text-gray-700 text-sm font-bold mb-2"
                 htmlFor="projectTargetClosingProd"
               >
-                Project/Target Closing/Production:
+                Sub-Campaign Name
               </label>
               <input
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                className="input-orange"
                 id="projectTargetClosingProd"
                 type="text"
                 name="projectTargetClosingProd"
@@ -138,7 +141,7 @@ export const Info = () => {
                 Sub Campaign Owner:
               </label>
               <input
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                className="input-orange"
                 id="subCampaignOwner"
                 type="text"
                 name="subCampaignOwner"
@@ -153,14 +156,18 @@ export const Info = () => {
               >
                 Created At:
               </label>
-              <input
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                id="createdAt"
-                type="date"
-                name="createdAt"
-                value={formData.createdAt}
-                onChange={handleChange}
-              />
+              <label className="text-gray-700">
+                {new Date(subCampaign.createdAt).toLocaleString()}
+              </label>
+            </div>
+            <div>
+              <label
+                className="block text-gray-700 text-sm font-bold mb-2"
+                htmlFor="createdAt"
+              >
+                Created By:
+              </label>
+              <label className="text-gray-700">{subCampaign.created_by}</label>
             </div>
             <div>
               <label
@@ -169,18 +176,14 @@ export const Info = () => {
               >
                 Status:
               </label>
-              <select
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              <input
+                className="input-orange"
                 id="status"
+                type="text"
                 name="status"
                 value={formData.status}
                 onChange={handleChange}
-              >
-                <option value="">Select Status</option>
-                <option value="active">Active</option>
-                <option value="inactive">Inactive</option>
-                <option value="completed">Completed</option>
-              </select>
+              />
             </div>
             <div>
               <label
@@ -190,7 +193,7 @@ export const Info = () => {
                 Sub Campaign Manager:
               </label>
               <input
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                className="input-orange"
                 id="subCampaignManager"
                 type="text"
                 name="subCampaignManager"
@@ -198,22 +201,8 @@ export const Info = () => {
                 onChange={handleChange}
               />
             </div>
-            <div>
-              <label
-                className="block text-gray-700 text-sm font-bold mb-2"
-                htmlFor="summary"
-              >
-                Summary:
-              </label>
-              <textarea
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                id="summary"
-                name="summary"
-                value={formData.summary}
-                onChange={handleChange}
-              />
-            </div>
           </div>
+          <button className="btn-orange-sm w-full mt-5">Update</button>
         </form>
       </div>
     </>

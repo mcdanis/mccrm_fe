@@ -2,17 +2,42 @@
 
 import React from "react";
 import Header from "@/app/crm/header";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Inter } from '@next/font/google'
+import { Inter, Montserrat } from "@next/font/google";
+import ApiService from "@/utils/services/ApiService";
 
-const inter = Inter({ subsets: ['latin'], weight: ['400', '700']});
+const inter = Inter({ subsets: ["latin"], weight: ["400", "700"] });
+const montserrat = Montserrat({
+  subsets: ["latin"],
+  weight: ["400", "700"],
+});
+
+interface SubCampaign {
+  id: number;
+  name: string;
+}
+
+interface Campaign {
+  id: number;
+  name: string;
+  subCampaigns: SubCampaign[];
+}
 
 export default function Campaign() {
-
-
   const [filterValue, setFilterValue] = useState("");
   const [statusValue, setStatusValue] = useState("");
+
+  const [campaigns, setCampaigns] = useState<Campaign[]>([]);
+  const apiService = new ApiService();
+
+  useEffect(() => {
+    const fetchCampaigns = async () => {
+      const campaignsData = await apiService.getCampaignsWithSubs();
+      setCampaigns(campaignsData);
+    };
+    fetchCampaigns();
+  }, []);
 
   const handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFilterValue(event.target.value);
@@ -21,11 +46,6 @@ export default function Campaign() {
   const handleStatusChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setStatusValue(event.target.value);
   };
-
-  const data = Array.from({ length: 50 }, (_, i) => ({
-    id: i + 1,
-    name: `Kampanye Klinik ${i + 1}`,
-  }));
 
   return (
     <>
@@ -51,8 +71,8 @@ export default function Campaign() {
                 className="select-orange"
               >
                 <option value="">Select</option>
-                <option value="option1">Option 1</option>
-                <option value="option2">Option 2</option>
+                <option value="option1">Active</option>
+                <option value="option2">Non-Active</option>
               </select>
             </div>
           </div>
@@ -64,62 +84,40 @@ export default function Campaign() {
         </div>
 
         <div className="grid grid-cols-4 gap-4">
-          <div className="inline-block">
-            <div className="max-w-xs overflow-hidden rounded-lg shadow-lg border-2 border-gray-100 hover:shadow-xl transition-shadow duration-300 ease-in-out p-5">
-              <p className="font-bold text-lg text-center">
-                APLIKASI BOOKING KLINIK
-              </p>
-              <div className="mt-4 overflow-y-auto h-[200px]">
-                <table className="min-w-full">
-                  <tbody>
-                    {data.map((item) => (
-                      <tr
-                        key={item.id}
-                        className="hover:bg-yellow-100 hover:text-black"
-                      >
-                        <td className="px-4 py-2 border-b border-gray-300">
-                          <Link
-                            href="/crm/campaign/sub-campaign/12"
-                            className="label-gray"
+          {campaigns.map((campaign) => (
+            <div className="inline-block" key={campaign.id}>
+              <div className="max-w-xs overflow-hidden rounded-lg shadow-lg border-2 border-gray-100 hover:shadow-xl transition-shadow duration-300 ease-in-out p-5">
+                <p
+                  className={`font-bold text-lg text-center text-gray-700 ${montserrat.className}`}
+                >
+                  {campaign.name}
+                </p>
+                <div className="mt-4 overflow-y-auto h-[200px]">
+                  <table className="min-w-full">
+                    <tbody>
+                      {campaign.subCampaigns.map((subCampaign) => (
+                        <tr
+                          key={`${campaign.id}-${subCampaign.id}`}
+                          className="hover:bg-gray-200 hover:text-black"
+                        >
+                          <td
+                            className={`px-4 py-2 border-b border-gray-300 ${inter.className}`}
                           >
-                            {item.name}
-                          </Link>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+                            <Link
+                              href={`/crm/campaign/sub-campaign/${subCampaign.id}`}
+                              className="label-gray underline"
+                            >
+                              {subCampaign.name}
+                            </Link>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </div>
-          </div>
-          <div className="inline-block">
-            <div className="max-w-xs overflow-hidden rounded-lg shadow-lg border-2 border-gray-100 hover:shadow-xl transition-shadow duration-300 ease-in-out p-5">
-              <p className={`font-bold text-lg text-center ${inter.className}`}>
-                APLIKASI BOOKING KLINIK
-              </p>
-              <div className="mt-4 overflow-y-auto h-[200px]">
-                <table className="min-w-full">
-                  <tbody>
-                    {data.map((item) => (
-                      <tr
-                        key={item.id}
-                        className="hover:bg-yellow-100 hover:text-black"
-                      >
-                        <td className="px-4 py-2 border-b border-gray-300">
-                          <Link
-                            href="/crm/campaign/sub-campaign/12"
-                            className="label-gray"
-                          >
-                            {item.name}
-                          </Link>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
+          ))}
         </div>
       </div>
     </>
