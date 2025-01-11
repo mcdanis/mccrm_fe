@@ -1,12 +1,15 @@
-"use client"
-import { useRouter } from 'next/navigation';
-import Cookies from 'js-cookie';
-import { useEffect } from 'react';
+"use client";
+import { useRouter } from "next/navigation";
+import Cookies from "js-cookie";
+import { useEffect } from "react";
+import Swal from "sweetalert2";
 
-export const useIsLogin = (defaultRedirect: string = '/crm', successRedirect: string = '/') => {
+export const useIsLogin = (
+  defaultRedirect: string = "/crm",
+  successRedirect: string = "/"
+) => {
   // const router = useRouter();
   // const currentPath = window.location.pathname;
-
   // useEffect(() => {
   //   if (Cookies.get('mccrm_token')) {
   //     if (currentPath !== defaultRedirect) {
@@ -20,6 +23,32 @@ export const useIsLogin = (defaultRedirect: string = '/crm', successRedirect: st
   // }, [router, currentPath, defaultRedirect, successRedirect]);
 };
 
-export const api = async (path:string, payload:object) => {
+export const api = async (path: string, payload: object) => {
   return fetch(process.env.URL + path, payload);
-}
+};
+
+export const messageBox = async (
+  title: string,
+  msg: string,
+  icon: string,
+  noCB: string = "yes"
+) => {
+  const isCancelButtonVisible = noCB == "yes";
+
+  return new Promise((resolve) => {
+    Swal.fire({
+      title: title,
+      text: msg,
+      icon: icon,
+      confirmButtonText: "Ok",
+      cancelButtonText: "Cancel",
+      showCancelButton: isCancelButtonVisible,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        resolve(true);
+      } else if (result.isDismissed) {
+        resolve(false);
+      }
+    });
+  });
+};

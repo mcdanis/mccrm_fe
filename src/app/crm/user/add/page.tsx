@@ -3,63 +3,69 @@
 import React from "react";
 import Header from "@/app/crm/header";
 import { useState, useEffect } from "react";
-import {api} from "@/utils/utils"
+import { api } from "@/utils/utils";
 import Cookies from "js-cookie";
 import ApiService from "@/utils/services/ApiService";
 // import Link from "next/link";
 
-interface Client{
+interface Client {
   id: number;
   name: string;
-  status: string;
-  phone_number: string;
+  role: string;
+  title: string;
   email: string;
-  address: string;
   client_id: number;
+  password: string;
 }
 export default function Client() {
-  const [error, setError] = useState('');
-  const [clients, setClients] =useState<Client[]>([]);
+  const [error, setError] = useState("");
+  const [clients, setClients] = useState<Client[]>([]);
 
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [address, setAddress] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [industry, setIndustry] = useState('');
-  const [status, setStatus] = useState('');
-  const [clientId, setClientId] = useState('');
-  
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [role, setRole] = useState("");
+  const [title, setTitle] = useState("");
+  const [clientId, setClientId] = useState("");
+  const [password, setPassword] = useState("");
+
   const handleSubmit = async (e: React.FormEvent<HTMLButtonElement>) => {
-    e.preventDefault()
+    e.preventDefault();
     try {
-      const response = await api('user/add', {
-        method: 'POST',
+      const response = await api("user/add", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${Cookies.get('mccrm_token')}`
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${Cookies.get("mccrm_token")}`,
         },
-        body: JSON.stringify({ email, name, address, phone_number:phoneNumber, industry, status, client_id:clientId }),
+        body: JSON.stringify({
+          email,
+          name,
+          title,
+          role: role,
+          client_id: clientId,
+          password,
+        }),
       });
 
-      const data = await response.json(); 
-      if (!response.ok) throw new Error(data.error || 'Something went wrong'); 
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "Something went wrong");
 
-      window.location.href = '/crm/client';
+      window.location.href = "/crm/user";
     } catch (err) {
       setError((err as Error).message);
-    }  
-  }
+    }
+  };
 
-  const apiService = new ApiService()
+  const apiService = new ApiService();
 
-  useEffect(() =>{    
+  useEffect(() => {
     const fetchClients = async () => {
       const clientsData = await apiService.getClients();
       setClients(clientsData);
     };
-    fetchClients();    
-  }, [])
-  
+    fetchClients();
+  }, []);
+
   return (
     <>
       <Header />
@@ -70,50 +76,64 @@ export default function Client() {
           <div className="grid grid-cols-2 gap-3 mt-2">
             <div>
               <label htmlFor="campaign-name" className="label-gray">
-                Client Name
+                Name
               </label>
-              <input type="text" className="input-orange" id="client-name" value={name} onChange={(e) => setName(e.target.value)}/>
+              <input
+                type="text"
+                className="input-orange"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
             </div>
             <div>
               <label htmlFor="campaign-status" className="label-gray">
                 Email
               </label>
-              <input type="text" className="input-orange" id="email" value={email} onChange={(e) => setEmail(e.target.value)}/>
+              <input
+                type="text"
+                className="input-orange"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
             </div>
-
             <div>
               <label htmlFor="sub-campaign-name" className="label-gray">
-                Phone Number
+                Title
               </label>
-              <input type="text" className="input-orange" id="phone-number" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)}/>
+              <input
+                type="text"
+                className="input-orange"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+              />
             </div>
             <div>
               <label htmlFor="sub-campaign-owner" className="label-gray">
-                Address
+                Role
               </label>
-              <textarea name="" id="address" className="input-orange" value={address} onChange={(e) => setAddress(e.target.value)}></textarea>
-            </div>
-            <div>
-              <label htmlFor="sub-campaign-manager" className="label-gray">
-                Industry
-              </label>
-              <input type="text" className="input-orange" id="industry" value={industry} onChange={(e) => setIndustry(e.target.value)}/>
-            </div>
-            <div>
-              <label htmlFor="sub-campaign-status" className="label-gray">
-                Status
-              </label>
-              <select className="select-orange" value={status} onChange={(e) => setStatus(e.target.value)}>
-                <option value="">Pilih Status</option>
-                <option value="1">Active</option>
-                <option value="0">Non-Antive</option>
+              <select
+                className="select-orange"
+                value={role}
+                onChange={(e) => setRole(e.target.value)}
+              >
+                <option>Pilih Role</option>
+                <option value="MR">Marketing Representative (MR)</option>
+                <option value="SDR">
+                  Sales Development Representative (SDR)
+                </option>
+                <option value="AE">Account Executive (AE)</option>
+                <option value="ADM">Admin</option>
               </select>
             </div>
             <div>
               <label htmlFor="sub-campaign-status" className="label-gray">
                 Client
               </label>
-              <select className="select-orange" value={clientId} onChange={(e) => setClientId(e.target.value)}>
+              <select
+                className="select-orange"
+                value={clientId}
+                onChange={(e) => setClientId(e.target.value)}
+              >
                 <option>Pilih Client</option>
                 {clients.map((client, index) => (
                   <option key={index} value={client.id}>
@@ -122,8 +142,21 @@ export default function Client() {
                 ))}
               </select>
             </div>
+            <div>
+              <label htmlFor="sub-campaign-name" className="label-gray">
+                Password
+              </label>
+              <input
+                type="text"
+                className="input-orange"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </div>
           </div>
-          <button onClick={handleSubmit} className="btn-orange-sm w-full mt-3">Save</button>
+          <button onClick={handleSubmit} className="btn-orange-sm w-full mt-3">
+            Save
+          </button>
         </div>
       </div>
     </>

@@ -226,7 +226,7 @@ const Contact = () => {
                       </div>
                     </div>
                     <div className="pt-3">
-                      <button className="btn-orange">Simpan Notes</button>
+                      <button className="btn-primary">Simpan Notes</button>
                     </div>
                   </div>
                 )}

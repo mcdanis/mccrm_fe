@@ -1,12 +1,12 @@
-"use client"
+"use client";
 
 import React, { useEffect, useState } from "react";
 import Header from "@/app/crm/header";
 import Link from "next/link";
-import {api} from "@/utils/utils"
-import Cookies from 'js-cookie';
+import { api } from "@/utils/utils";
+import Cookies from "js-cookie";
 
-interface User{
+interface User {
   title: string;
   role: string;
   name: string;
@@ -17,24 +17,24 @@ interface User{
 const User = () => {
   const [users, setUsers] = useState<User[]>([]);
 
-  useEffect(() =>{
-    const fetchUsers = async () => { 
+  useEffect(() => {
+    const fetchUsers = async () => {
       try {
-        const response = await api('users', {
-          method: 'GET',
+        const response = await api("users", {
+          method: "GET",
           headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${Cookies.get('mccrm_token')}`
-          }
-        })
-        const data = await response.json()
-        setUsers(data)
-      }catch(error){
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${Cookies.get("mccrm_token")}`,
+          },
+        });
+        const data = await response.json();
+        setUsers(data);
+      } catch (error) {
         console.log(error);
       }
-    }
-    fetchUsers()
-  }, [])
+    };
+    fetchUsers();
+  }, []);
 
   return (
     <>
@@ -78,7 +78,7 @@ const User = () => {
             ))}
           </tbody>
         </table>
-      </div>      
+      </div>
     </>
   );
 };

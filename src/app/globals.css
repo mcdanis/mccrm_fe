@@ -49,3 +49,13 @@ body {
   padding-top: 7px;
   padding-bottom: 7px;
 }
+
+.bg-primary {
+  background-color: #5c708e;
+  color: white;
+}
+
+.btn-primary {
+  @apply text-white font-bold text-sm py-2 px-3 border rounded;
+  background-color: #5c708e;
+}
