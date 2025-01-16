@@ -9,6 +9,7 @@ class ApiService {
       Authorization: `Bearer ${Cookies.get("mccrm_token")}`,
     };
   }
+
   async getClients() {
     try {
       const response = await api("clients", {
@@ -47,7 +48,7 @@ class ApiService {
 
   async getCampaignsWithSubs() {
     try {
-      const response = await api("campaigns-with-subs", {
+      const response = await api("campaigns-with-subs?status=1", {
         method: "GET",
         headers: this.headerAuth,
       });

@@ -18,7 +18,7 @@ import { useRouter } from "next/navigation";
 //   sub_campaign_manager: string;
 //   sub_campaign_status: string;
 // }
-interface Client {
+interface Client_User {
   id: number;
   name: string;
 }
@@ -35,14 +35,22 @@ export default function Home() {
   const [subCampaignManager, setSubCampaignManager] = useState("");
   const [subCampaignStatus, setSubCampaignStatus] = useState("");
 
-  const [clients, setClients] = useState<Client[]>([]);
+  const [clients, setClients] = useState<Client_User[]>([]);
+  const [users, setUsers] = useState<Client_User[]>([]);
 
   useEffect(() => {
     const fetchClients = async () => {
       const clientsData = await apiService.getClients();
       setClients(clientsData);
     };
+    const fetchUsers = async () => {
+      const usersData = await apiService.getUsers();
+      setUsers(usersData);
+    };
+
+    fetchUsers();
     fetchClients();
+
   }, []);
 
   const handleSubmit = async (e: React.FormEvent<HTMLButtonElement>) => {
@@ -100,8 +108,8 @@ export default function Home() {
                 onChange={(e) => setCampaignStatus(e.target.value)}
               >
                 <option>Pilih</option>
-                <option value={1}>aktif</option>
-                <option value={0}>non aktif</option>
+                <option value={1}>Active</option>
+                <option value={0}>Non-Active</option>
               </select>
             </div>
           </div>
@@ -130,8 +138,11 @@ export default function Home() {
                 onChange={(e) => setSubCampaignOwner(e.target.value)}
               >
                 <option>Pilih</option>
-                <option value={1}>dani</option>
-                <option value={0}>ijem</option>
+                {users.map((user, index) => (
+                  <option key={index} value={user.id}>
+                    {user.name}
+                  </option>
+                ))}
               </select>
             </div>
             <div>
@@ -144,8 +155,11 @@ export default function Home() {
                 onChange={(e) => setSubCampaignManager(e.target.value)}
               >
                 <option>Pilih</option>
-                <option value={1}>dani</option>
-                <option value={0}>ijem</option>
+                {users.map((user, index) => (
+                  <option key={index} value={user.id}>
+                    {user.name}
+                  </option>
+                ))}
               </select>
             </div>
             <div>
@@ -158,8 +172,8 @@ export default function Home() {
                 onChange={(e) => setSubCampaignStatus(e.target.value)}
               >
                 <option>Pilih</option>
-                <option value={1}>aktif</option>
-                <option value={0}>non aktif</option>
+                <option value={1}>Active</option>
+                <option value={0}>Non-Active</option>
               </select>
             </div>
             <div>
