@@ -1,17 +1,117 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import Header from "@/app/crm/header";
+import ErrorElement from "@/components/error-element";
 import { Inter } from "@next/font/google";
+import { useRouter, useSearchParams } from "next/navigation";
+import { messageBox } from "@/utils/utils";
+import ApiService from "@/utils/services/ApiService";
 
 const inter = Inter({ subsets: ["latin"], weight: ["400", "700"] });
 
-const Contact = () => {
-  const [activeTab, setActiveTab] = useState("notes");
+interface SubCampaign {
+  campaign: {
+    name: string;
+  };
+  name: string;
+}
 
-  const switchTab = (tab: string) => {
-    setActiveTab(tab);
+const Contact = () => {
+  const router = useRouter();
+  const apiService = new ApiService();
+
+  const searchParams = useSearchParams();
+  const [subCampaign, setSubCampaign] = useState<SubCampaign>();
+  const [error, setError] = useState();
+
+  const [formData, setFormData] = useState({
+    fullName: "",
+    phoneNumber: "",
+    email: "",
+    country: "",
+    address: "",
+    source: "",
+    note: "",
+    company: "",
+    tag: 1,
+    contactStatus: 1,
+    levelPriority: 1,
+    subCampaignId: searchParams.get("sub_campaign_id"),
+  });
+
+  useEffect(() => {
+    const checkingCampaignId = async () => {
+      if (!searchParams.get("sub_campaign_id")) {
+        const msg = await messageBox(
+          "",
+          "URL Tidak valid, mohon pilih campaign/sub campaign dengan benar !",
+          "warning",
+          "no"
+        );
+        if (msg) {
+          router.push("/crm/campaign");
+        }
+      }
+    };
+
+    const subCampaign = async () => {
+      const subCampaignData = await apiService.getSubCampaign(
+        Number(searchParams.get("sub_campaign_id"))
+      );
+      setSubCampaign(subCampaignData);
+    };
+    checkingCampaignId();
+    subCampaign();
+  }, []);
+
+  if (!subCampaign) {
+    return (
+      <>
+        <div>please wait Loading...</div>
+      </>
+    );
+  }
+
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
+  ) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const msg = await messageBox(
+      "",
+      "Data will be saved, make sure all data is correct!",
+      "question"
+    );
+    if (msg) {
+      const response = await apiService.addContact(formData);
+      if (response.error == false) {
+        const msg = await messageBox(
+          "",
+          "Contacts successfully added",
+          "success",
+          "no"
+        );
+        if (msg) {
+          // router.push("/crm/campaign");
+          router.push(
+            "/crm/campaign/sub-campaign/" + searchParams.get("sub_campaign_id")
+          );
+        }
+      } else {
+        setError(response.error);
+      }
+    }
   };
 
   return (
@@ -24,41 +124,68 @@ const Contact = () => {
           >
             PERSONAL INFORMATION
           </h2>
-          <label className="text-xs italic text-gray-500">
-            Created at : 12-02-2023
-          </label>
+
           <div className="grid grid-cols-1 gap-4 mt-3">
             <div className="min-h-1">
               <label className="label-gray">Full Name</label>
-              <input className="input-orange" />
+              <input
+                className="input-orange"
+                name="fullName"
+                onChange={handleChange}
+              />
             </div>
             <div>
               <label className="label-gray">Phone Number</label>
-              <input className="input-orange" />
+              <input
+                className="input-orange"
+                name="phoneNumber"
+                onChange={handleChange}
+              />
             </div>
             <div>
               <label className="label-gray">Email</label>
-              <input className="input-orange" />
+              <input
+                className="input-orange"
+                name="email"
+                onChange={handleChange}
+              />
+            </div>
+            <div>
+              <label className="label-gray">Company</label>
+              <input
+                className="input-orange"
+                name="company"
+                onChange={handleChange}
+              />
             </div>
             <div>
               <label className="label-gray">Country</label>
-              <input className="input-orange" />
+              <input
+                className="input-orange"
+                name="country"
+                onChange={handleChange}
+              />
             </div>
             <div>
               <label className="label-gray">Address</label>
-              <textarea className="input-orange"></textarea>
+              <textarea
+                className="input-orange"
+                name="address"
+                onChange={handleChange}
+              ></textarea>
             </div>
             <div>
               <label className="label-gray">Source</label>
-              <input className="input-orange" />
-            </div>
-            <div>
-              <label className="label-gray">Original Status</label>
-              <input className="input-orange" />
+              <input
+                className="input-orange"
+                name="source"
+                onChange={handleChange}
+              />
             </div>
           </div>
         </div>
         <div className="w-3/4 p-4 bg-white">
+          <ErrorElement error={error} />
           <div className="flex items-center p-4 bg-[#F3F4F6] shadow-md">
             <button className="flex items-center text-gray-600 hover:text-orange-500 focus:outline-none text-sm">
               <svg
@@ -75,85 +202,83 @@ const Contact = () => {
                   d="M15 12H3m0 0l6-6m-6 6l6 6"
                 />
               </svg>
-              Kembali
+              Back
             </button>
 
-            <h1
-              className={`ml-4 text-lg font-bold text-gray-800 ${inter.className}`}
-            >
-              Kampanye \ sub kampanye
-            </h1>
+            <div className="flex items-center w-full">
+              <h1 className={`ml-4 font-bold text-gray-800 ${inter.className}`}>
+                {subCampaign.campaign.name} \ {subCampaign.name}
+              </h1>
+              <button className="ml-auto btn-orange-sm" onClick={handleSubmit}>
+                Save
+              </button>
+            </div>
           </div>
           <div className="grid grid-cols-1 gap-4 mt-3">
             <div className="">
-              <div className="flex-1 mt-5">
-
-                {/* Notes Section */}
-                {activeTab == "notes" && (
-                  <div className="bg-secondary p-4 rounded shadow-md">
-                    <div className="mb-4">
-                      <label className="label-gray" htmlFor="note">
-                        Input Note
+              <div className="flex-1 mt-2">
+                <div className="bg-secondary p-4 rounded shadow-md">
+                  <div className="mb-4">
+                    <label className="label-gray" htmlFor="note">
+                      Input Note
+                    </label>
+                    <textarea
+                      id="note"
+                      className="w-full p-2 text-black rounded focus:outline-none focus:ring-2 input-orange"
+                      name="note"
+                      onChange={handleChange}
+                    ></textarea>
+                  </div>
+                  <div className="grid grid-cols-4 gap-2">
+                    <div>
+                      <label className="label-gray" htmlFor="tag">
+                        Tag
                       </label>
-                      <textarea
-                        id="note"
-                        className="w-full p-2 text-black rounded focus:outline-none focus:ring-2 input-orange"
-                      ></textarea>
+                      <select
+                        id="tag"
+                        className="select-orange"
+                        name="tag"
+                        onChange={handleChange}
+                      >
+                        <option value="1">Tag 1</option>
+                        <option value="2">Tag 2</option>
+                      </select>
                     </div>
-                    <div className="grid grid-cols-4 gap-2">
-                      <div>
-                        <label className="label-gray" htmlFor="tag">
-                          Tag
-                        </label>
-                        <select
-                          id="tag"
-                          className="w-full bg-white p-2 text-black rounded border border-[#5C708E] focus:outline-none focus:ring-2 focus:ring-[#5C708E]"
-                        >
-                          <option value="">Pilih Tag</option>
-                          <option value="tag1">Tag 1</option>
-                          <option value="tag2">Tag 2</option>
-                        </select>
-                      </div>
-                      <div>
-                        <label className="label-gray" htmlFor="tag">
-                          Status Kontak
-                        </label>
-                        <select
-                          id="tag"
-                          className="w-full bg-white p-2 text-black rounded border border-[#5C708E] focus:outline-none focus:ring-2 focus:ring-[#5C708E]"
-                        >
-                          <option value="">Pilih Tag</option>
-                          <option value="tag1">Draf</option>
-                          <option value="tag1">Open</option>
-                          <option value="tag2">On Progress</option>
-                          <option value="tag2">Qualification Lead</option>
-                          <option value="tag2">Negotiation</option>
-                          <option value="tag2">Deal</option>
-                          <option value="tag2">Active Project</option>
-                          <option value="tag2">Done</option>
-                          <option value="tag2">Lost</option>
-                        </select>
-                      </div>
-                      <div>
-                        <label className="label-gray">Level Priority</label>
-                        <select
-                          id="tag"
-                          className="w-full bg-white p-2 text-black rounded border border-[#5C708E] focus:outline-none focus:ring-2 focus:ring-[#5C708E]"
-                        >
-                          <option value="">Level</option>
-                          <option value="">Low</option>
-                          <option value="">Medium</option>
-                          <option value="">Priority</option>
-                        </select>
-                      </div>
+                    <div>
+                      <label className="label-gray" htmlFor="contact-status">
+                        Contact Status
+                      </label>
+                      <select
+                        id="contact-status"
+                        className="select-orange"
+                        name="contactStatus"
+                      >
+                        <option value="1">Draf</option>
+                        <option value="2">Open</option>
+                        <option value="3">On Progress</option>
+                        <option value="4">Qualification Lead</option>
+                        <option value="5">Negotiation</option>
+                        <option value="6">Deal</option>
+                        <option value="7">Active Project</option>
+                        <option value="8">Done</option>
+                        <option value="9">Lost</option>
+                      </select>
                     </div>
-                    <div className="pt-3">
-                      <button className="btn-orange-sm">Simpan Notes</button>
+                    <div>
+                      <label className="label-gray">Level Priority</label>
+                      <select
+                        id="level-priority"
+                        className="select-orange"
+                        name="levelPriority"
+                        onChange={handleChange}
+                      >
+                        <option value="1">Low</option>
+                        <option value="2">Medium</option>
+                        <option value="3">Priority</option>
+                      </select>
                     </div>
                   </div>
-                )}
-
-
+                </div>
               </div>
             </div>
           </div>

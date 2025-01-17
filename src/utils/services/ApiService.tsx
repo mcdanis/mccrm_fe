@@ -48,10 +48,13 @@ class ApiService {
 
   async getCampaignsWithSubs(status: number, name: string) {
     try {
-      const response = await api("campaigns-with-subs?status=" + status + "&campaign=" + name, {
-        method: "GET",
-        headers: this.headerAuth,
-      });
+      const response = await api(
+        "campaigns-with-subs?status=" + status + "&campaign=" + name,
+        {
+          method: "GET",
+          headers: this.headerAuth,
+        }
+      );
       return await response.json();
     } catch (error) {
       console.log(error);
@@ -102,7 +105,7 @@ class ApiService {
     subCampaignOwner: string,
     subCampaignManager: string,
     subCampaignStatus: string,
-    isCampaign = ''
+    isCampaign = ""
   ) {
     try {
       const response = await api("campaign/add", {
@@ -117,9 +120,37 @@ class ApiService {
           subCampaignManager,
           subCampaignStatus,
           userId: Cookies.get("mccrm_user_id"),
-          isCampaign
+          isCampaign,
         }),
       });
+      return await response.json();
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async addContact(formData: object) {
+    try {
+      const response = await api("campaign/sub-campaign/contact", {
+        method: "POST",
+        headers: this.headerAuth,
+        body: JSON.stringify(formData),
+      });
+      return await response.json();
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async getContacts(subCampaignId: number) {
+    try {
+      const response = await api(
+        "campaign/sub-campaign/contacts/" + subCampaignId,
+        {
+          method: "GET",
+          headers: this.headerAuth,
+        }
+      );
       return await response.json();
     } catch (error) {
       console.log(error);

@@ -1,23 +1,52 @@
 "use client";
 
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Modal from "@/components/modals/modal-add-existing-contact";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import ApiService from "@/utils/services/ApiService";
+import { useRouter } from "next/navigation";
+import { convert } from "@/utils/utils";
 
+interface InfoProps {
+  subCampaign: Record<string>;
+}
 
 export const Contact: React.FC<InfoProps> = ({ subCampaign }) => {
+  const router = useRouter();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [contacts, setContacts] = useState(false);
+
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
+
+  const apiService = new ApiService();
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
 
-  const searchParams = useSearchParams()
+  // const searchParams = useSearchParams();
+  useEffect(() => {
+    if (!subCampaign || !subCampaign.id) {
+      return;
+    }
+    const fetchContacts = async () => {
+      const contacts = await apiService.getContacts(subCampaign.id);
+      setContacts(contacts);
+    };
+
+    fetchContacts();
+  }, [subCampaign]);
+
+  if (!contacts) {
+    return;
+  }
+
+  const contactDetail = (contactId: number) => {
+    router.push(`/crm/campaign/sub-campaign/contact/${contactId}`);
+  };
 
   return (
     <>
@@ -53,7 +82,7 @@ export const Contact: React.FC<InfoProps> = ({ subCampaign }) => {
       <div className="overflow-x-auto mt-5">
         <table className="min-w-full bg-white border border-gray-200">
           <thead>
-            <tr className="bg-gray-100 text-gray-600 uppercase text-sm leading-normal">
+            <tr className="bg-primary text-gray-600 uppercase text-sm leading-normal">
               <th className="py-3 px-6 text-left">No</th>
 
               <th className="py-3 px-6 text-left">Nama</th>
@@ -67,25 +96,27 @@ export const Contact: React.FC<InfoProps> = ({ subCampaign }) => {
           </thead>
 
           <tbody className="text-gray-600 text-sm font-light">
-            <tr key="2" className="border-b border-gray-200 hover:bg-gray-100">
-              <td className="py-3 px-6">sdf</td>
-
-              <td className="py-3 px-6">item.name</td>
-
-              <td className="py-3 px-6">item.email</td>
-
-              <td className="py-3 px-6">item.role</td>
-            </tr>
+            {contacts.map((contact, index) => (
+              <tr
+                key={contact.id}
+                className="border-b border-gray-200 hover:bg-gray-100 cursor-pointer"
+                onClick={() => contactDetail(contact.id)}
+              >
+                <td className="py-3 px-6">{index + 1}</td>
+                <td className="py-3 px-6">{contact.full_name}</td>
+                <td className="py-3 px-6">{contact.company}</td>
+                <td className="py-3 px-6">
+                  {convert(contact.status, "status")}
+                </td>
+                <td className="py-3 px-6">{convert(contact.tag, "tag")}</td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>
     </>
   );
 };
-
-interface InfoProps {
-  subCampaign: Record<string>;
-}
 
 export const Info: React.FC<InfoProps> = ({ subCampaign }) => {
   const [formData, setFormData] = useState({

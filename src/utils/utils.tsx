@@ -40,8 +40,60 @@ export const useIsLogin = () => {
   });
 };
 
+export const errorElement = () => {
+  return (
+    <>
+      <div>s</div>
+    </>
+  );
+};
+
 export const api = async (path: string, payload: object) => {
   return fetch(process.env.URL + path, payload);
+};
+
+export const contact_status: { [key: number]: string } = {
+  1: "Draf",
+  2: "Open",
+  3: "On Progress",
+  4: "Qualification Lead",
+  5: "Negotiation",
+  6: "Deal",
+  7: "Active Project",
+  8: "Done",
+  9: "Lost ",
+};
+
+export const level_priority: { [key: number]: string } = {
+  1: "Low",
+  2: "Medium",
+  3: "Priority",
+};
+
+export const tag: { [key: number]: string } = {
+  1: "Tag1",
+  2: "Tag2",
+  3: "Tag3",
+};
+
+export const convert = (value: number, type: string) => {
+  let result: string | undefined;
+
+  switch (type) {
+    case "status":
+      result = contact_status[value];
+      break;
+    case "level_priority":
+      result = level_priority[value];
+      break;
+    case "tag":
+      result = tag[value];
+      break;
+    default:
+      result = undefined;
+  }
+
+  return result ? result : "Unknown";
 };
 
 export const messageBox = async (
@@ -62,8 +114,8 @@ export const messageBox = async (
       showCancelButton: isCancelButtonVisible,
       customClass: {
         confirmButton: "btn-orange-sm",
-        cancelButton: "btn-orange-outline-sm-i"
-      }
+        cancelButton: "btn-orange-outline-sm-i",
+      },
     }).then((result) => {
       if (result.isConfirmed) {
         resolve(true);
