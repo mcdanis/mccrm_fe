@@ -50,6 +50,15 @@ body {
   padding-bottom: 7px;
 }
 
+.btn-orange-outline-sm-i {
+  background-color: #e32424 !important;
+  color: white;
+  font-size: .75rem;
+  border: 1px solid #e32424;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
 .bg-primary {
   background-color: #5c708e;
   color: white;

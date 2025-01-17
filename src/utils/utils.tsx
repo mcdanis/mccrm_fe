@@ -60,6 +60,10 @@ export const messageBox = async (
       confirmButtonText: "Ok",
       cancelButtonText: "Cancel",
       showCancelButton: isCancelButtonVisible,
+      customClass: {
+        confirmButton: "btn-orange-sm",
+        cancelButton: "btn-orange-outline-sm-i"
+      }
     }).then((result) => {
       if (result.isConfirmed) {
         resolve(true);

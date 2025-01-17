@@ -50,17 +50,15 @@ const Crm = () => {
           <nav className="flex flex-col gap-4 w-full">
             <button
               onClick={() => handleNavClick("Contact")}
-              className={`text-white hover:bg-[#5C708E] px-4 py-2 rounded ${
-                activeContent === "Contact" ? "bg-[#3c5d8f]" : ""
-              }`}
+              className={`text-white hover:bg-[#5C708E] px-4 py-2 rounded ${activeContent === "Contact" ? "bg-[#3c5d8f]" : ""
+                }`}
             >
               Contact
             </button>
             <button
               onClick={() => handleNavClick("Info")}
-              className={`text-white hover:bg-[#5C708E] px-4 py-2 rounded ${
-                activeContent === "Info" ? "bg-[#3c5d8f]" : ""
-              }`}
+              className={`text-white hover:bg-[#5C708E] px-4 py-2 rounded ${activeContent === "Info" ? "bg-[#3c5d8f]" : ""
+                }`}
             >
               Info
             </button>
@@ -76,7 +74,7 @@ const Crm = () => {
             {activeContent}
           </h2>
           <div className="mt-4">
-            {activeContent === "Contact" && <Contact />}
+            {activeContent === "Contact" && <Contact subCampaign={subCampaign} />}
             {activeContent === "Info" && <Info subCampaign={subCampaign} />}
           </div>
         </div>

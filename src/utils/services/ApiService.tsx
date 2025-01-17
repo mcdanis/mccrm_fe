@@ -46,9 +46,9 @@ class ApiService {
     }
   }
 
-  async getCampaignsWithSubs() {
+  async getCampaignsWithSubs(status: number, name: string) {
     try {
-      const response = await api("campaigns-with-subs?status=1", {
+      const response = await api("campaigns-with-subs?status=" + status + "&campaign=" + name, {
         method: "GET",
         headers: this.headerAuth,
       });
@@ -101,7 +101,8 @@ class ApiService {
     clientId: string,
     subCampaignOwner: string,
     subCampaignManager: string,
-    subCampaignStatus: string
+    subCampaignStatus: string,
+    isCampaign = ''
   ) {
     try {
       const response = await api("campaign/add", {
@@ -116,6 +117,7 @@ class ApiService {
           subCampaignManager,
           subCampaignStatus,
           userId: Cookies.get("mccrm_user_id"),
+          isCampaign
         }),
       });
       return await response.json();

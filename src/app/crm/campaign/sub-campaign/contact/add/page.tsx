@@ -3,6 +3,9 @@
 import React from "react";
 import { useState } from "react";
 import Header from "@/app/crm/header";
+import { Inter } from "@next/font/google";
+
+const inter = Inter({ subsets: ["latin"], weight: ["400", "700"] });
 
 const Contact = () => {
   const [activeTab, setActiveTab] = useState("notes");
@@ -15,11 +18,16 @@ const Contact = () => {
     <>
       <Header />
       <div className="flex h-auto items-stretch">
-        <div className="bg-gray-100 w-1/4 p-4">
-          <h2 className="font-bold text-xl mb-4">NEW CONTACT</h2>
-          <h2 className="font-bold text-md mb-4">PERSONAL INFORMATION</h2>
-
-          <div className="grid grid-cols-1 grid-rows-6 mt-3">
+        <div className="bg-[#F3F4F6] w-1/4 p-4">
+          <h2
+            className={`font-bold text-lg mb-4 text-gray-700 ${inter.className}`}
+          >
+            PERSONAL INFORMATION
+          </h2>
+          <label className="text-xs italic text-gray-500">
+            Created at : 12-02-2023
+          </label>
+          <div className="grid grid-cols-1 gap-4 mt-3">
             <div className="min-h-1">
               <label className="label-gray">Full Name</label>
               <input className="input-orange" />
@@ -50,71 +58,46 @@ const Contact = () => {
             </div>
           </div>
         </div>
-        <div className="w-3/4 p-4">
-          <div className="flex items-center justify-between p-4 bg-white shadow-md">
-            <div className="flex items-center">
-              <button className="flex items-center text-gray-600 hover:text-orange-500 focus:outline-none text-sm">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-5 mr-1"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M15 12H3m0 0l6-6m-6 6l6 6"
-                  />
-                </svg>
-                Kembali
-              </button>
+        <div className="w-3/4 p-4 bg-white">
+          <div className="flex items-center p-4 bg-[#F3F4F6] shadow-md">
+            <button className="flex items-center text-gray-600 hover:text-orange-500 focus:outline-none text-sm">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-5 mr-1"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M15 12H3m0 0l6-6m-6 6l6 6"
+                />
+              </svg>
+              Kembali
+            </button>
 
-              <h1 className="ml-4 text-lg font-bold text-gray-800">
-                Kampanye \ sub kampanye
-              </h1>
-            </div>
-
-            <button className="btn-orange-sm">Save</button>
+            <h1
+              className={`ml-4 text-lg font-bold text-gray-800 ${inter.className}`}
+            >
+              Kampanye \ sub kampanye
+            </h1>
           </div>
           <div className="grid grid-cols-1 gap-4 mt-3">
             <div className="">
-              <div className="flex-1 p-4">
-                {/* Tabs */}
-                <div className="flex space-x-4 mb-4">
-                  <button
-                    onClick={() => switchTab("notes")}
-                    className={`hover:bg-orange-400 py-2 px-4 border-b-4 border-orange-700 hover:orange-blue-500 rounded ${
-                      activeTab == "notes"
-                        ? "bg-orange-500 text-white font-bold"
-                        : "bg-white text-black"
-                    }`}
-                  >
-                    Notes
-                  </button>
-                  <button
-                    onClick={() => switchTab("progress")}
-                    className={`hover:bg-orange-400 py-2 px-4 border-b-4 border-orange-700 hover:orange-blue-500 rounded ${
-                      activeTab == "progress"
-                        ? "bg-orange-500 text-white font-bold"
-                        : "bg-white text-black"
-                    }`}
-                  >
-                    Activity
-                  </button>
-                </div>
+              <div className="flex-1 mt-5">
 
                 {/* Notes Section */}
                 {activeTab == "notes" && (
-                  <div className="bg-orange-200 p-4 rounded shadow-md">
+                  <div className="bg-secondary p-4 rounded shadow-md">
                     <div className="mb-4">
                       <label className="label-gray" htmlFor="note">
                         Input Note
                       </label>
                       <textarea
                         id="note"
-                        className="w-full p-2 text-black rounded focus:outline-none focus:ring-2 focus:ring-orange-500"
+                        className="w-full p-2 text-black rounded focus:outline-none focus:ring-2 input-orange"
                       ></textarea>
                     </div>
                     <div className="grid grid-cols-4 gap-2">
@@ -124,7 +107,7 @@ const Contact = () => {
                         </label>
                         <select
                           id="tag"
-                          className="w-full bg-white p-2 text-black rounded border border-orange-400 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                          className="w-full bg-white p-2 text-black rounded border border-[#5C708E] focus:outline-none focus:ring-2 focus:ring-[#5C708E]"
                         >
                           <option value="">Pilih Tag</option>
                           <option value="tag1">Tag 1</option>
@@ -137,7 +120,7 @@ const Contact = () => {
                         </label>
                         <select
                           id="tag"
-                          className="w-full bg-white p-2 text-black rounded border border-orange-400 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                          className="w-full bg-white p-2 text-black rounded border border-[#5C708E] focus:outline-none focus:ring-2 focus:ring-[#5C708E]"
                         >
                           <option value="">Pilih Tag</option>
                           <option value="tag1">Draf</option>
@@ -155,7 +138,7 @@ const Contact = () => {
                         <label className="label-gray">Level Priority</label>
                         <select
                           id="tag"
-                          className="w-full bg-white p-2 text-black rounded border border-orange-400 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                          className="w-full bg-white p-2 text-black rounded border border-[#5C708E] focus:outline-none focus:ring-2 focus:ring-[#5C708E]"
                         >
                           <option value="">Level</option>
                           <option value="">Low</option>
@@ -164,28 +147,13 @@ const Contact = () => {
                         </select>
                       </div>
                     </div>
-                  </div>
-                )}
-
-                {/* progress section */}
-                {activeTab == "progress" && (
-                  <div className="bg-orange-200 p-4 rounded shadow-md">
-                    <div className="grid grid-cols-2 grid-rows-3 gap-2">
-                      {/* <div>
-                        <label className="label-gray">Salesperson</label>
-                        <input className="input-orange" />
-                      </div> */}
-                      <div>
-                        <label className="label-gray">Input Progress</label>
-                        <input className="input-orange" />
-                      </div>
-                      <div>
-                        <label className="label-gray">Keterangan</label>
-                        <textarea className="input-orange"></textarea>
-                      </div>
+                    <div className="pt-3">
+                      <button className="btn-orange-sm">Simpan Notes</button>
                     </div>
                   </div>
                 )}
+
+
               </div>
             </div>
           </div>

@@ -130,7 +130,7 @@ const Contact = () => {
           </div>
           <div className="grid grid-cols-1 gap-4 mt-3">
             <div className="">
-              <div className="flex-1 p-4">
+              <div className="flex-1">
                 {/* Tabs */}
                 {/* <button
                   onClick={() => switchTab("notes")}
@@ -148,41 +148,37 @@ const Contact = () => {
                 <div className="mt-3 flex space-x-1 mb-4">
                   <button
                     onClick={() => switchTab("notes")}
-                    className={`hover:bg-[#3c5d8f] py-2 px-4 border border-[#3c5d8f] hover:text-white rounded ${
-                      activeTab == "notes"
+                    className={`hover:bg-[#3c5d8f] py-2 px-4 border border-[#3c5d8f] hover:text-white rounded ${activeTab == "notes"
                         ? "bg-[#5C708E] text-white"
                         : "bg-[#F3F4F6] text-black"
-                    }`}
+                      }`}
                   >
                     Notes
                   </button>
                   <button
                     onClick={() => switchTab("progress")}
-                    className={`hover:bg-[#3c5d8f] py-2 px-4 border border-[#3c5d8f] hover:text-white rounded ${
-                      activeTab == "progress"
+                    className={`hover:bg-[#3c5d8f] py-2 px-4 border border-[#3c5d8f] hover:text-white rounded ${activeTab == "progress"
                         ? "bg-[#5C708E] text-white"
                         : "bg-[#F3F4F6] text-black"
-                    }`}
+                      }`}
                   >
                     Activity
                   </button>
                   <button
                     onClick={() => switchTab("status")}
-                    className={`hover:bg-[#3c5d8f] py-2 px-4 border border-[#3c5d8f] hover:text-white rounded ${
-                      activeTab == "status"
+                    className={`hover:bg-[#3c5d8f] py-2 px-4 border border-[#3c5d8f] hover:text-white rounded ${activeTab == "status"
                         ? "bg-[#5C708E] text-white"
                         : "bg-[#F3F4F6] text-black"
-                    }`}
+                      }`}
                   >
                     Qualification
                   </button>
                   <button
                     onClick={() => switchTab("negotiation")}
-                    className={`hover:bg-[#3c5d8f] py-2 px-4 border border-[#3c5d8f] hover:text-white rounded ${
-                      activeTab == "negotiation"
+                    className={`hover:bg-[#3c5d8f] py-2 px-4 border border-[#3c5d8f] hover:text-white rounded ${activeTab == "negotiation"
                         ? "bg-[#5C708E] text-white"
                         : "bg-[#F3F4F6] text-black"
-                    }`}
+                      }`}
                   >
                     Negotiation
                   </button>
@@ -340,11 +336,10 @@ const Contact = () => {
                   {tabs.map((tab) => (
                     <button
                       key={tab.id}
-                      className={`flex-1 py-1 text-center ${
-                        activeTimelineTab === tab.id
+                      className={`flex-1 py-1 text-center ${activeTimelineTab === tab.id
                           ? "bg-[#5C708E] text-white"
                           : "bg-gray-200 text-gray-700"
-                      }`}
+                        }`}
                       onClick={() => handleTabClick(tab.id)}
                     >
                       {tab.label}

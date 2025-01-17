@@ -27,6 +27,8 @@ export default function Home() {
 
   const apiService = new ApiService();
 
+  const [error, setError] = useState("");
+
   const [campaignName, setCampaignName] = useState("");
   const [campaignStatus, setCampaignStatus] = useState("");
   const [subCampaignName, setSubCampaignName] = useState("");
@@ -75,7 +77,8 @@ export default function Home() {
         router.push("/crm/campaign");
       }
     } else {
-      throw new Error(response.error || "Something went wrong");
+      setError(response.error)
+
     }
   };
 
@@ -85,6 +88,11 @@ export default function Home() {
       <div className="flex items-center justify-center mt-10 rounded-sm">
         <div className="p-6 shadow-lg w-3/4">
           <h3 className="text-lg text-gray-700 font-bold">Campaign</h3>
+          {error &&
+            <div className="p-4 mb-4 text-sm rounded-lg bg-red-100 dark:bg-gray-200 dark:text-red-400" role="alert">
+              {error}
+            </div>
+          }
           <div className="grid grid-cols-2 gap-3 mt-2">
             <div>
               <label htmlFor="campaign-name" className="label-gray">

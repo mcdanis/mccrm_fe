@@ -26,25 +26,25 @@ interface Campaign {
 
 export default function Campaign() {
   const [filterValue, setFilterValue] = useState("");
-  const [statusValue, setStatusValue] = useState("");
+  const [statusValue, setStatusValue] = useState(1);
 
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
   const apiService = new ApiService();
 
   useEffect(() => {
     const fetchCampaigns = async () => {
-      const campaignsData = await apiService.getCampaignsWithSubs();
+      const campaignsData = await apiService.getCampaignsWithSubs(statusValue, filterValue);
       setCampaigns(campaignsData);
     };
     fetchCampaigns();
-  }, []);
+  }, [statusValue, filterValue]);
 
   const handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFilterValue(event.target.value);
   };
 
   const handleStatusChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setStatusValue(event.target.value);
+    setStatusValue(Number(event.target.value));
   };
 
   return (
@@ -70,9 +70,8 @@ export default function Campaign() {
                 onChange={handleStatusChange}
                 className="select-orange"
               >
-                <option value="">Select</option>
-                <option value="option1">Active</option>
-                <option value="option2">Non-Active</option>
+                <option value="1">Active</option>
+                <option value="0">Non-Active</option>
               </select>
             </div>
           </div>
@@ -87,10 +86,9 @@ export default function Campaign() {
           {campaigns.map((campaign) => (
             <div className="inline-block" key={campaign.id}>
               <div className="max-w-xs overflow-hidden rounded-lg shadow-lg border-2 border-gray-100 hover:shadow-xl transition-shadow duration-300 ease-in-out p-5">
-                <p
-                  className={`font-bold text-lg text-center text-gray-700 ${montserrat.className}`}
-                >
+                <p className={`font-bold text-md text-gray-700 ${montserrat.className} flex items-center`}>
                   {campaign.name}
+                  <Link href={`/crm/campaign/sub-campaign/add?campaign_id=${campaign.id}`} className="ml-auto text-center btn-orange-sm">+</Link>
                 </p>
                 <div className="mt-4 overflow-y-auto h-[200px]">
                   <table className="min-w-full">

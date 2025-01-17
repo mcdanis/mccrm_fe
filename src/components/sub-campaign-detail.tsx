@@ -4,8 +4,10 @@ import React from "react";
 import { useState } from "react";
 import Modal from "@/components/modals/modal-add-existing-contact";
 import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
 
-export const Contact = () => {
+
+export const Contact: React.FC<InfoProps> = ({ subCampaign }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const openModal = () => setIsModalOpen(true);
@@ -14,6 +16,8 @@ export const Contact = () => {
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
+
+  const searchParams = useSearchParams()
 
   return (
     <>
@@ -25,7 +29,7 @@ export const Contact = () => {
         {isDropdownOpen && (
           <div className="absolute w-48 bg-white rounded-md shadow-lg z-10">
             <Link
-              href="/crm/campaign/sub-campaign/contact/add"
+              href={`/crm/campaign/sub-campaign/contact/add?sub_campaign_id=${subCampaign.id}`}
               className="block px-4 py-2 text-gray-800 hover:bg-gray-100"
             >
               Single
