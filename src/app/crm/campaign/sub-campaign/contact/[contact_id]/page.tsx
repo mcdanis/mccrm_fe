@@ -1,14 +1,26 @@
 "use client";
 
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Header from "@/app/crm/header";
 import { Inter } from "@next/font/google";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useParams } from "next/navigation";
+import ApiService from "@/utils/services/ApiService";
+import {
+  convertTime,
+  contact_status,
+  tag,
+  level_priority,
+  lead_type,
+} from "@/utils/utils";
 
 const inter = Inter({ subsets: ["latin"], weight: ["400", "700"] });
 
 const Contact = () => {
+  const apiService = new ApiService();
+  const params = useParams();
+  const { contact_id } = params;
+
   const [activeTab, setActiveTab] = useState("notes");
 
   const switchTab = (tab: string) => {
@@ -16,6 +28,7 @@ const Contact = () => {
   };
 
   const [activeTimelineTab, setActiveTimelineTab] = useState("All");
+  const [contact, setContact] = useState();
 
   const tabs = [
     { id: "All", label: "All (4)" },
@@ -41,23 +54,73 @@ const Contact = () => {
       description:
         "Status changed from Approaching to Lost with the reason: Do not call",
     },
-    {
-      id: "joshuacoates2",
-      date: "03/09/2024 13:05:15",
-      title: "Joshua Coates",
-      description: "Status changed from Open to Approaching",
-    },
-    {
-      id: "contactimported",
-      date: "30/08/2024 11:46:21",
-      title: "Contact imported",
-      description: "Contact uploaded",
-    },
   ];
 
   const handleTabClick = (tabId: string) => {
     setActiveTimelineTab(tabId);
   };
+
+  useEffect(() => {
+    const fetchContact = async () => {
+      const contact = await apiService.getContact(contact_id);
+      setContact(contact);
+    };
+    fetchContact();
+  }, []);
+
+  const [formData, setFormData] = useState({
+    fullName: "",
+    phoneNumber: "",
+    email: "",
+    company: "",
+    country: "",
+    address: "",
+    source: "",
+    // note
+    note: "",
+    tag: "",
+    contactStatus: "",
+    levelPriority: "",
+    // activity
+    inputProgress: "",
+    description: "",
+    // qualified
+  });
+
+  const handleChange = (
+    event:
+      | React.ChangeEvent<HTMLInputElement>
+      | React.ChangeEvent<HTMLSelectElement>
+      | React.ChangeEvent<HTMLTextAreaElement>
+  ) => {
+    const { name, value } = event.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  useEffect(() => {
+    if (contact) {
+      setFormData({
+        ...formData,
+        fullName: contact.contact.full_name,
+        phoneNumber: contact.contact.phone_number,
+        email: contact.contact.email,
+        company: contact.contact.company,
+        country: contact.contact.country,
+        source: contact.contact.source,
+        address: contact.contact.address,
+        tag: contact.contact.tag,
+        levelPriority: contact.contact.level_priority,
+        status: contact.contact.status,
+      });
+    }
+  }, [contact]);
+
+  if (!contact) {
+    return <>please wait..</>;
+  }
 
   return (
     <>
@@ -70,40 +133,71 @@ const Contact = () => {
             PERSONAL INFORMATION
           </h2>
           <label className="text-xs italic text-gray-500">
-            Created at : 12-02-2023
+            Created at : {convertTime(contact.contact.createdAt)}
           </label>
           <div className="grid grid-cols-1 gap-4 mt-3">
             <div className="min-h-1">
               <label className="label-gray">Full Name</label>
-              <input className="input-orange" />
+              <input
+                className="input-orange"
+                name="fullName"
+                value={formData.fullName}
+                onChange={handleChange}
+              />
             </div>
             <div>
               <label className="label-gray">Phone Number</label>
-              <input className="input-orange" />
+              <input
+                className="input-orange"
+                name="phoneNumber"
+                value={formData.phoneNumber}
+                onChange={handleChange}
+              />
             </div>
             <div>
               <label className="label-gray">Email</label>
-              <input className="input-orange" />
+              <input
+                className="input-orange"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+              />
             </div>
             <div>
               <label className="label-gray">Company</label>
-              <input className="input-orange" />
+              <input
+                className="input-orange"
+                name="company"
+                value={formData.company}
+                onChange={handleChange}
+              />
             </div>
             <div>
               <label className="label-gray">Country</label>
-              <input className="input-orange" />
+              <input
+                className="input-orange"
+                name="country"
+                value={formData.country}
+                onChange={handleChange}
+              />
             </div>
             <div>
               <label className="label-gray">Address</label>
-              <textarea className="input-orange"></textarea>
+              <textarea
+                className="input-orange"
+                name="address"
+                value={formData.address}
+                onChange={handleChange}
+              ></textarea>
             </div>
             <div>
               <label className="label-gray">Source</label>
-              <input className="input-orange" />
-            </div>
-            <div>
-              <label className="label-gray">Original Status</label>
-              <input className="input-orange" />
+              <input
+                className="input-orange"
+                name="source"
+                value={formData.source}
+                onChange={handleChange}
+              />
             </div>
           </div>
         </div>
@@ -130,7 +224,9 @@ const Contact = () => {
             <h1
               className={`ml-4 text-lg font-bold text-gray-800 ${inter.className}`}
             >
-              Kampanye \ sub kampanye
+              {contact.subCampaign.campaign.name}{" "}
+              <span className="text-orange-600">\</span>{" "}
+              {contact.subCampaign.name}
             </h1>
           </div>
           <div className="grid grid-cols-1 gap-4 mt-3">
@@ -153,7 +249,7 @@ const Contact = () => {
                 <div className="mt-3 flex space-x-1 mb-4">
                   <button
                     onClick={() => switchTab("notes")}
-                    className={`hover:bg-[#3c5d8f] py-2 px-4 border border-[#3c5d8f] hover:text-white rounded ${
+                    className={`hover:bg-[#1c3458] px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${
                       activeTab == "notes"
                         ? "bg-[#5C708E] text-white"
                         : "bg-[#F3F4F6] text-black"
@@ -163,7 +259,7 @@ const Contact = () => {
                   </button>
                   <button
                     onClick={() => switchTab("progress")}
-                    className={`hover:bg-[#3c5d8f] py-2 px-4 border border-[#3c5d8f] hover:text-white rounded ${
+                    className={`hover:bg-[#1c3458] px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${
                       activeTab == "progress"
                         ? "bg-[#5C708E] text-white"
                         : "bg-[#F3F4F6] text-black"
@@ -173,7 +269,7 @@ const Contact = () => {
                   </button>
                   <button
                     onClick={() => switchTab("status")}
-                    className={`hover:bg-[#3c5d8f] py-2 px-4 border border-[#3c5d8f] hover:text-white rounded ${
+                    className={`hover:bg-[#1c3458] px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${
                       activeTab == "status"
                         ? "bg-[#5C708E] text-white"
                         : "bg-[#F3F4F6] text-black"
@@ -183,7 +279,7 @@ const Contact = () => {
                   </button>
                   <button
                     onClick={() => switchTab("negotiation")}
-                    className={`hover:bg-[#3c5d8f] py-2 px-4 border border-[#3c5d8f] hover:text-white rounded ${
+                    className={`hover:bg-[#1c3458] px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${
                       activeTab == "negotiation"
                         ? "bg-[#5C708E] text-white"
                         : "bg-[#F3F4F6] text-black"
@@ -196,7 +292,7 @@ const Contact = () => {
                 {/* Notes Section */}
                 {activeTab == "notes" && (
                   <div className="bg-secondary p-4 rounded shadow-md">
-                    <div className="mb-4">
+                    <div className="mb-1">
                       <label className="label-gray" htmlFor="note">
                         Input Note
                       </label>
@@ -205,6 +301,9 @@ const Contact = () => {
                         className="w-full p-2 text-black rounded focus:outline-none focus:ring-2 input-orange"
                       ></textarea>
                     </div>
+                    <div className="mb-3">
+                      <button className="btn-orange-sm">Simpan Notes</button>
+                    </div>
                     <div className="grid grid-cols-4 gap-2">
                       <div>
                         <label className="label-gray" htmlFor="tag">
@@ -212,48 +311,59 @@ const Contact = () => {
                         </label>
                         <select
                           id="tag"
-                          className="w-full bg-white p-2 text-black rounded border border-[#5C708E] focus:outline-none focus:ring-2 focus:ring-[#5C708E]"
+                          className="select-orange"
+                          name="tag"
+                          onChange={handleChange}
+                          value={formData.tag}
                         >
-                          <option value="">Pilih Tag</option>
-                          <option value="tag1">Tag 1</option>
-                          <option value="tag2">Tag 2</option>
+                          {Object.entries(tag).map(([key, value]) => (
+                            <option key={key} value={key}>
+                              {" "}
+                              {value}{" "}
+                            </option>
+                          ))}
                         </select>
                       </div>
                       <div>
-                        <label className="label-gray" htmlFor="tag">
-                          Status Kontak
+                        <label className="label-gray" htmlFor="contact-status">
+                          Contact Status
                         </label>
                         <select
-                          id="tag"
-                          className="w-full bg-white p-2 text-black rounded border border-[#5C708E] focus:outline-none focus:ring-2 focus:ring-[#5C708E]"
+                          id="contact-status"
+                          className="select-orange"
+                          name="status"
+                          onChange={handleChange}
+                          value={formData.status}
                         >
-                          <option value="">Pilih Tag</option>
-                          <option value="tag1">Draf</option>
-                          <option value="tag1">Open</option>
-                          <option value="tag2">On Progress</option>
-                          <option value="tag2">Qualification Lead</option>
-                          <option value="tag2">Negotiation</option>
-                          <option value="tag2">Deal</option>
-                          <option value="tag2">Active Project</option>
-                          <option value="tag2">Done</option>
-                          <option value="tag2">Lost</option>
+                          {Object.entries(contact_status).map(
+                            ([key, value]) => (
+                              <option key={key} value={key}>
+                                {" "}
+                                {value}{" "}
+                              </option>
+                            )
+                          )}
                         </select>
                       </div>
                       <div>
                         <label className="label-gray">Level Priority</label>
                         <select
                           id="tag"
-                          className="w-full bg-white p-2 text-black rounded border border-[#5C708E] focus:outline-none focus:ring-2 focus:ring-[#5C708E]"
+                          className="select-orange"
+                          name="levelPriority"
+                          onChange={handleChange}
+                          value={formData.levelPriority}
                         >
-                          <option value="">Level</option>
-                          <option value="">Low</option>
-                          <option value="">Medium</option>
-                          <option value="">Priority</option>
+                          {Object.entries(level_priority).map(
+                            ([key, value]) => (
+                              <option key={key} value={key}>
+                                {" "}
+                                {value}{" "}
+                              </option>
+                            )
+                          )}
                         </select>
                       </div>
-                    </div>
-                    <div className="pt-3">
-                      <button className="btn-orange-sm">Simpan Notes</button>
                     </div>
                   </div>
                 )}
@@ -297,14 +407,19 @@ const Contact = () => {
                   <div className="bg-secondary p-4 rounded shadow-md">
                     <div className="grid grid-cols-2 grid-rows-3 gap-3">
                       <div>
-                        <label className="label-gray">Status Type</label>
-                        <select className="w-full bg-white p-2 text-black rounded border border-[#5C708E] focus:outline-none focus:ring-2 focus:ring-[#5C708E]">
-                          <option value="">Lead Type</option>
+                        <label className="label-gray">Lead Type</label>
+                        <select className="select-orange">
+                          {Object.entries(lead_type).map(([key, value]) => (
+                            <option key={key} value={key}>
+                              {" "}
+                              {value}{" "}
+                            </option>
+                          ))}
                         </select>
                       </div>
                       <div>
                         <label className="label-gray">Lead Owner</label>
-                        <select className="w-full bg-white p-2 text-black rounded border border-[#5C708E] focus:outline-none focus:ring-2 focus:ring-[#5C708E]">
+                        <select className="select-orange">
                           <option value="">Lead Owner</option>
                         </select>
                       </div>

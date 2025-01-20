@@ -156,6 +156,21 @@ class ApiService {
       console.log(error);
     }
   }
+
+  async getContact(contactsId: number) {
+    try {
+      const response = await api(
+        "campaign/sub-campaign/contact/" + contactsId,
+        {
+          method: "GET",
+          headers: this.headerAuth,
+        }
+      );
+      return await response.json();
+    } catch (error) {
+      console.log(error);
+    }
+  }
 }
 
 export default ApiService;

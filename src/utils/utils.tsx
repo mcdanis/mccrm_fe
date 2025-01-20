@@ -31,6 +31,7 @@ export const useIsNotLogin = () => {
     }
   });
 };
+
 export const useIsLogin = () => {
   const router = useRouter();
   useEffect(() => {
@@ -40,12 +41,21 @@ export const useIsLogin = () => {
   });
 };
 
-export const errorElement = () => {
-  return (
-    <>
-      <div>s</div>
-    </>
-  );
+export const convertTime = (dateTime) => {
+  const date = new Date(dateTime);
+  const options = {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+    hour: "numeric",
+    minute: "numeric",
+    second: "numeric",
+    timeZoneName: "short",
+  };
+  const formattedDate = date.toLocaleString("id-ID", options);
+
+  return formattedDate;
 };
 
 export const api = async (path: string, payload: object) => {
@@ -62,6 +72,12 @@ export const contact_status: { [key: number]: string } = {
   7: "Active Project",
   8: "Done",
   9: "Lost ",
+};
+
+export const lead_type: { [key: number]: string } = {
+  1: "Cold",
+  2: "Warm (MQL)",
+  3: "Hot (SQL)",
 };
 
 export const level_priority: { [key: number]: string } = {
