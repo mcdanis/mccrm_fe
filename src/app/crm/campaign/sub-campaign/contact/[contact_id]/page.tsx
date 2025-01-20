@@ -13,6 +13,7 @@ import {
   level_priority,
   lead_type,
 } from "@/utils/utils";
+import Editor from "react-simple-wysiwyg";
 
 const inter = Inter({ subsets: ["latin"], weight: ["400", "700"] });
 
@@ -29,6 +30,7 @@ const Contact = () => {
 
   const [activeTimelineTab, setActiveTimelineTab] = useState("All");
   const [contact, setContact] = useState();
+  const [html, setHtml] = useState("my <b>HTML</b>");
 
   const tabs = [
     { id: "All", label: "All (4)" },
@@ -85,6 +87,26 @@ const Contact = () => {
     inputProgress: "",
     description: "",
     // qualified
+    leadType: "",
+    leadOwner: "",
+    budget: "",
+    authority: "",
+    need: "",
+    time: "",
+    spesification: "",
+    nextStep: "",
+    // nego
+    projectName: "",
+    projectStartdate: "",
+    projectDeadline: "",
+    deal: "",
+    resultOfNegotiation: "",
+    // done
+    paymentStatus: "",
+    deal: "",
+    evaluation: "",
+    feedback: "",
+    documentation: "",
   });
 
   const handleChange = (
@@ -100,22 +122,40 @@ const Contact = () => {
     }));
   };
 
+  const handleChangeNote = (
+    event:
+      | React.ChangeEvent<HTMLInputElement>
+      | React.ChangeEvent<HTMLSelectElement>
+      | React.ChangeEvent<HTMLTextAreaElement>
+  ) => {};
+
   useEffect(() => {
     if (contact) {
       setFormData({
         ...formData,
-        fullName: contact.contact.full_name,
-        phoneNumber: contact.contact.phone_number,
-        email: contact.contact.email,
-        company: contact.contact.company,
-        country: contact.contact.country,
-        source: contact.contact.source,
-        address: contact.contact.address,
-        tag: contact.contact.tag,
-        levelPriority: contact.contact.level_priority,
-        status: contact.contact.status,
+        fullName: contact.contact.full_name || "",
+        phoneNumber: contact.contact.phone_number || "",
+        email: contact.contact.email || "",
+        company: contact.contact.company || "",
+        country: contact.contact.country || "",
+        source: contact.contact.source || "",
+        address: contact.contact.address || "",
+        tag: contact.contact.tag || "",
+        levelPriority: contact.contact.level_priority || "",
+        status: contact.contact.status || "",
+        leadType: contact.contactBant ? contact.contactBant.lead_type : "",
+        budget: contact.contactBant ? contact.contactBant.budget : "",
+        authority: contact.contactBant ? contact.contactBant.authority : "",
+        time: contact.contactBant ? contact.contactBant.time : "",
+        need: contact.contactBant ? contact.contactBant.need : "",
+        nextStep: contact.contactBant ? contact.contactBant.next_step : "",
+        spesification: contact.contactBant
+          ? contact.contactBant.spesification
+          : "",
+        leadOwner: contact.contactBant ? contact.contactBant.lead_owner : "",
       });
     }
+    console.log(contact);
   }, [contact]);
 
   if (!contact) {
@@ -267,26 +307,42 @@ const Contact = () => {
                   >
                     Activity
                   </button>
-                  <button
-                    onClick={() => switchTab("status")}
-                    className={`hover:bg-[#1c3458] px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${
-                      activeTab == "status"
-                        ? "bg-[#5C708E] text-white"
-                        : "bg-[#F3F4F6] text-black"
-                    }`}
-                  >
-                    Qualification
-                  </button>
-                  <button
-                    onClick={() => switchTab("negotiation")}
-                    className={`hover:bg-[#1c3458] px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${
-                      activeTab == "negotiation"
-                        ? "bg-[#5C708E] text-white"
-                        : "bg-[#F3F4F6] text-black"
-                    }`}
-                  >
-                    Negotiation
-                  </button>
+                  {formData.status >= 4 && formData.status != 9 && (
+                    <button
+                      onClick={() => switchTab("status")}
+                      className={`hover:bg-[#1c3458] px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${
+                        activeTab == "status"
+                          ? "bg-[#5C708E] text-white"
+                          : "bg-[#F3F4F6] text-black"
+                      }`}
+                    >
+                      Qualification
+                    </button>
+                  )}
+                  {formData.status >= 5 && formData.status != 9 && (
+                    <button
+                      onClick={() => switchTab("negotiation")}
+                      className={`hover:bg-[#1c3458] px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${
+                        activeTab == "negotiation"
+                          ? "bg-[#5C708E] text-white"
+                          : "bg-[#F3F4F6] text-black"
+                      }`}
+                    >
+                      Negotiation
+                    </button>
+                  )}
+                  {formData.status == 8 && formData.status != 9 && (
+                    <button
+                      onClick={() => switchTab("done")}
+                      className={`hover:bg-[#1c3458] px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${
+                        activeTab == "done"
+                          ? "bg-[#5C708E] text-white"
+                          : "bg-[#F3F4F6] text-black"
+                      }`}
+                    >
+                      Done
+                    </button>
+                  )}
                 </div>
 
                 {/* Notes Section */}
@@ -296,13 +352,16 @@ const Contact = () => {
                       <label className="label-gray" htmlFor="note">
                         Input Note
                       </label>
-                      <textarea
-                        id="note"
-                        className="w-full p-2 text-black rounded focus:outline-none focus:ring-2 input-orange"
-                      ></textarea>
+                      <Editor
+                        className="text-black bg-white"
+                        containerProps={{ style: { resize: "vertical" } }}
+                        value={formData.note}
+                        name="note"
+                        onChange={handleChange}
+                      />
                     </div>
                     <div className="mb-3">
-                      <button className="btn-orange-sm">Simpan Notes</button>
+                      <button className="btn-orange-sm">Save Notes</button>
                     </div>
                     <div className="grid grid-cols-4 gap-2">
                       <div>
@@ -384,6 +443,11 @@ const Contact = () => {
                         <label className="label-gray">Keterangan</label>
                         <textarea className="input-orange"></textarea>
                       </div>
+                      <div className="mb-3">
+                        <button className="btn-orange-sm">
+                          Update Activity
+                        </button>
+                      </div>
                     </div>
                   </div>
                 )}
@@ -393,10 +457,94 @@ const Contact = () => {
                   <div className="bg-secondary p-4 rounded shadow-md">
                     <div className="grid grid-cols-1 gap-2">
                       <div>
+                        <label className="label-gray">Project Name</label>
+                        <input type="text" className="input-orange" />
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-3 gap-2 mt-3">
+                      <div>
+                        <label className="label-gray">Project Startdate</label>
+                        <input type="date" className="input-orange" />
+                      </div>
+                      <div>
+                        <label className="label-gray">Deadline Project</label>
+                        <input type="date" className="input-orange" />
+                      </div>
+                      <div>
+                        <label className="label-gray">Deal</label>
+                        <input type="number" className="input-orange" />
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-1 gap-2 mt-3">
+                      <div>
                         <label className="label-gray">
                           Result of Negotiation
                         </label>
-                        <textarea className="input-orange"></textarea>
+                        <Editor
+                          className="text-black bg-white"
+                          containerProps={{ style: { resize: "vertical" } }}
+                          value={formData.resultOfNegotiation}
+                          name="resultOfNegotiation"
+                          onChange={handleChange}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* done section */}
+                {activeTab == "done" && (
+                  <div className="bg-secondary p-4 rounded shadow-md">
+                    <div className="grid grid-cols-4 gap-2 mt-3">
+                      <div>
+                        <label className="label-gray">Payment Status</label>
+                        <select name="" className="select-orange">
+                          <option value="">Pilih</option>
+                          <option value="">Lunas</option>
+                          <option value="">Belum</option>
+                        </select>
+                      </div>
+
+                      <div>
+                        <label className="label-gray">Deal</label>
+                        <input type="number" className="input-orange" />
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-1 gap-2 mt-3">
+                      <div>
+                        <label className="label-gray">Evaluation</label>
+                        <Editor
+                          className="text-black bg-white"
+                          containerProps={{ style: { resize: "vertical" } }}
+                          value={formData.evaluation}
+                          name="evaluation"
+                          onChange={handleChange}
+                        />
+                      </div>
+                      <div>
+                        <label className="label-gray">Feedback</label>
+                        <Editor
+                          className="text-black bg-white"
+                          containerProps={{ style: { resize: "vertical" } }}
+                          value={formData.feedback}
+                          name="feedback"
+                          onChange={handleChange}
+                        />
+                      </div>
+                      <div>
+                        <label className="label-gray">Documentation</label>
+                        <small>
+                          di isi seperti tools module librari dll yg di gunakan,
+                          link web nya apa dll pokoknya supaya hasil kerja bisa
+                          di lihat oleh ceo{" "}
+                        </small>
+                        <Editor
+                          className="text-black bg-white"
+                          containerProps={{ style: { resize: "vertical" } }}
+                          value={formData.documentation}
+                          name="documentation"
+                          onChange={handleChange}
+                        />
                       </div>
                     </div>
                   </div>
@@ -408,7 +556,12 @@ const Contact = () => {
                     <div className="grid grid-cols-2 grid-rows-3 gap-3">
                       <div>
                         <label className="label-gray">Lead Type</label>
-                        <select className="select-orange">
+                        <select
+                          className="select-orange"
+                          name="leadType"
+                          onChange={handleChange}
+                          value={formData.leadType}
+                        >
                           {Object.entries(lead_type).map(([key, value]) => (
                             <option key={key} value={key}>
                               {" "}
@@ -455,7 +608,7 @@ const Contact = () => {
               </div>
             </div>
             <div className="">
-              <div className="container mx-auto p-4">
+              <div className="container mx-auto">
                 <div className="flex mb-4">
                   {tabs.map((tab) => (
                     <button

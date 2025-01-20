@@ -98,7 +98,7 @@ const Header = () => {
               CONTACT
             </a>
             <a
-              href="/contact"
+              href="/crm/report"
               className={`text-white hover:bg-[#3c5d8f] px-3 py-2 rounded ${inter.className}`}
             >
               REPORT
