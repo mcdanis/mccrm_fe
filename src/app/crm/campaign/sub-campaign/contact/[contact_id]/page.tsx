@@ -34,12 +34,13 @@ const Contact = () => {
   const [html, setHtml] = useState("my <b>HTML</b>");
 
   const tabs = [
-    { id: "All", label: "All (4)" },
-    { id: "Notes", label: "Notes" },
-    { id: "Progress", label: "Activity" },
-    { id: "Statuses", label: "Qualification (4)" },
-    { id: "Calls", label: "Status" },
-    { id: "Messages", label: "Negotiation" },
+    { id: "all", label: "All (4)" },
+    { id: "notes", label: "Notes" },
+    { id: "activity", label: "Activity" },
+    { id: "qualification", label: "Qualification (4)" },
+    { id: "negotiation", label: "Negotiation" },
+    { id: "status", label: "Status" },
+    { id: "done", label: "Done" },
   ];
 
   const timelineData = [
@@ -169,7 +170,7 @@ const Contact = () => {
         dealDone: contact.contact.contactFinal ? contact.contact.contactFinal.deal_done : "",
         evaluation: contact.contact.contactFinal ? contact.contact.contactFinal.evaluation : "",
         feedback: contact.contact.contactFinal ? contact.contact.contactFinal.feedback : "",
-        documentation: contact.contact.contactFinal ? contact.contact.contactFinal.documentation : "",
+        documentation: contact.contact.contactFinal ? contact.contact.contactFinal.dorumentation : "",
         paymentStatus: contact.contact.contactFinal ? contact.contact.contactFinal.payment_status : "",
       });
     }
