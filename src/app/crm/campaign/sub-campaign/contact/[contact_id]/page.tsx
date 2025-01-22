@@ -519,9 +519,10 @@ const Contact = () => {
                     <div className="grid grid-cols-4 gap-2 mt-3">
                       <div>
                         <label className="label-gray">Payment Status</label>
-                        <select name="" className="select-orange" value={formData.paymentStatus}
+                        <select name="" className="select-orange"
+                          value={formData.paymentStatus}
                           name="paymentStatus"
-                          onChange={paymentStatus}>
+                          onChange={handleChange}>
                           <option value="1">Paid</option>
                           <option value="0">Not</option>
                         </select>
