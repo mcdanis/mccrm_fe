@@ -14,7 +14,7 @@ import {
   tag,
   level_priority,
   lead_type,
-  messageBox
+  messageBox,
 } from "@/utils/utils";
 import Editor from "react-simple-wysiwyg";
 
@@ -36,7 +36,7 @@ interface ContactBant {
 
 interface ContactActivity {
   // Misalkan ada beberapa properti di dalam array ini
-  // Contoh: 
+  // Contoh:
   id: number;
   contact_id: number;
   sub_campaign_id: number;
@@ -114,7 +114,6 @@ interface Data {
   subCampaign: SubCampaign;
 }
 
-
 const Contact = () => {
   const apiService = new ApiService();
   const params = useParams();
@@ -130,7 +129,7 @@ const Contact = () => {
   };
 
   const [users, setUsers] = useState();
-  const [activeTimelineTab, setActiveTimelineTab] = useState("All");
+  const [activeTimelineTab, setActiveTimelineTab] = useState("all");
   const [contact, setContact] = useState<Data>();
   const [html, setHtml] = useState("my <b>HTML</b>");
 
@@ -140,7 +139,6 @@ const Contact = () => {
     { id: "activity", label: "Activity" },
     { id: "qualification", label: "Qualification (4)" },
     { id: "negotiation", label: "Negotiation" },
-    { id: "status", label: "Status" },
     { id: "done", label: "Done" },
   ];
 
@@ -189,7 +187,6 @@ const Contact = () => {
     // note
     note: "",
     tag: "",
-    contactStatus: "",
     levelPriority: "",
     // activity
     inputProgress: "",
@@ -201,12 +198,12 @@ const Contact = () => {
     authority: "",
     need: "",
     time: "",
-    spesification: "",
+    spesificationProject: "",
     nextStep: "",
     // nego
     projectName: "",
     projectStartdate: "",
-    projectDeadline: "",
+    projectEnddate: "",
     deal: "",
     resultOfNegotiation: "",
     // done
@@ -216,6 +213,8 @@ const Contact = () => {
     evaluation: "",
     feedback: "",
     documentation: "",
+    contactId: contact_id,
+    userId: Cookies.get("mccrm_user_id"),
   });
 
   const handleChange = (
@@ -236,7 +235,7 @@ const Contact = () => {
       | React.ChangeEvent<HTMLInputElement>
       | React.ChangeEvent<HTMLSelectElement>
       | React.ChangeEvent<HTMLTextAreaElement>
-  ) => { };
+  ) => {};
 
   useEffect(() => {
     if (contact) {
@@ -252,27 +251,61 @@ const Contact = () => {
         tag: contact.contact.tag || "",
         levelPriority: contact.contact.level_priority || "",
         status: contact.contact.status || "",
-        leadType: contact.contact.contactBant ? contact.contact.contactBant.lead_type : "",
-        budget: contact.contact.contactBant ? contact.contact.contactBant.budget : "",
-        authority: contact.contact.contactBant ? contact.contact.contactBant.authority : "",
-        time: contact.contact.contactBant ? contact.contact.contactBant.time : "",
-        need: contact.contact.contactBant ? contact.contact.contactBant.need : "",
-        nextStep: contact.contact.contactBant ? contact.contact.contactBant.next_step : "",
+        leadType: contact.contact.contactBant
+          ? contact.contact.contactBant.lead_type
+          : "",
+        budget: contact.contact.contactBant
+          ? contact.contact.contactBant.budget
+          : "",
+        authority: contact.contact.contactBant
+          ? contact.contact.contactBant.authority
+          : "",
+        time: contact.contact.contactBant
+          ? contact.contact.contactBant.time
+          : "",
+        need: contact.contact.contactBant
+          ? contact.contact.contactBant.need
+          : "",
+        nextStep: contact.contact.contactBant
+          ? contact.contact.contactBant.next_step
+          : "",
         spesificationProject: contact.contact.contactBant
           ? contact.contact.contactBant.spesification_project
           : "",
-        leadOwner: contact.contact.contactBant ? contact.contact.contactBant.lead_owner : "",
-        projectName: contact.contact.contactFinal ? contact.contact.contactFinal.project_name : "",
-        projectStartdate: contact.contact.contactFinal ? contact.contact.contactFinal.start_date : "",
-        projectEnddate: contact.contact.contactFinal ? contact.contact.contactFinal.end_date : "",
-        deal: contact.contact.contactFinal ? contact.contact.contactFinal.deal : "",
-        resultOfNegotiation: contact.contact.contactFinal ? contact.contact.contactFinal.result_negotiation : "",
+        leadOwner: contact.contact.contactBant
+          ? contact.contact.contactBant.lead_owner
+          : "",
+        projectName: contact.contact.contactFinal
+          ? contact.contact.contactFinal.project_name
+          : "",
+        projectStartdate: contact.contact.contactFinal
+          ? contact.contact.contactFinal.start_date
+          : "",
+        projectEnddate: contact.contact.contactFinal
+          ? contact.contact.contactFinal.end_date
+          : "",
+        deal: contact.contact.contactFinal
+          ? contact.contact.contactFinal.deal
+          : "",
+        resultOfNegotiation: contact.contact.contactFinal
+          ? contact.contact.contactFinal.result_negotiation
+          : "",
 
-        dealDone: contact.contact.contactFinal ? contact.contact.contactFinal.deal_done : "",
-        evaluation: contact.contact.contactFinal ? contact.contact.contactFinal.evaluation : "",
-        feedback: contact.contact.contactFinal ? contact.contact.contactFinal.feedback : "",
-        documentation: contact.contact.contactFinal ? contact.contact.contactFinal.dorumentation : "",
-        paymentStatus: contact.contact.contactFinal ? contact.contact.contactFinal.payment_status : "",
+        dealDone: contact.contact.contactFinal
+          ? contact.contact.contactFinal.deal_done
+          : "",
+        evaluation: contact.contact.contactFinal
+          ? contact.contact.contactFinal.evaluation
+          : "",
+        feedback: contact.contact.contactFinal
+          ? contact.contact.contactFinal.feedback
+          : "",
+        documentation: contact.contact.contactFinal
+          ? contact.contact.contactFinal.dorumentation
+          : "",
+        paymentStatus: contact.contact.contactFinal
+          ? contact.contact.contactFinal.payment_status
+          : "",
       });
     }
     console.log(contact);
@@ -283,10 +316,10 @@ const Contact = () => {
       contactId: contact.contact.id,
       subCampaignId: contact.contact.sub_campaign_id,
       note: formData.note,
-      userId: Cookies.get('mccrm_user_id')
-    }
+      userId: Cookies.get("mccrm_user_id"),
+    };
 
-    const addNote = await apiService.addNote(data)
+    const addNote = await apiService.addNote(data);
     if (addNote.error == false) {
       const msg = await messageBox(
         "",
@@ -294,22 +327,22 @@ const Contact = () => {
         "success",
         "no"
       );
-      setError("")
-      formData.note = ""
+      setError("");
+      formData.note = "";
     } else {
-      setError(addNote.message)
+      setError(addNote.message);
     }
-  }
+  };
 
   const saveActivity = async () => {
     const data = {
       contactId: contact.contact.id,
       description: formData.description,
       title: formData.inputProgress,
-      userId: Cookies.get('mccrm_user_id')
-    }
+      userId: Cookies.get("mccrm_user_id"),
+    };
 
-    const addNote = await apiService.addActivity(data)
+    const addNote = await apiService.addActivity(data);
     if (addNote.error == false) {
       const msg = await messageBox(
         "",
@@ -317,15 +350,28 @@ const Contact = () => {
         "success",
         "no"
       );
-      setError("")
-      formData.description = ""
-      formData.inputProgress = ""
+      setError("");
+      formData.description = "";
+      formData.inputProgress = "";
     } else {
-      setError(addNote.message)
+      setError(addNote.message);
     }
-  }
+  };
 
-
+  const handleSubmit = async () => {
+    const updateContact = await apiService.updateContact(formData);
+    if (updateContact.error == false) {
+      const msg = await messageBox(
+        "",
+        "Contact successfully updated !!",
+        "success",
+        "no"
+      );
+      setError("");
+    } else {
+      setError(updateContact.message);
+    }
+  };
 
   if (!contact) {
     return <>please wait..</>;
@@ -430,13 +476,16 @@ const Contact = () => {
               Kembali
             </button>
 
-            <h1
-              className={`ml-4 text-lg font-bold text-gray-800 ${inter.className}`}
-            >
-              {contact.subCampaign.campaign.name}{" "}
-              <span className="text-orange-600">\</span>{" "}
-              {contact.subCampaign.name}
-            </h1>
+            <div className="flex items-center w-full">
+              <h1 className={`ml-4 font-bold text-gray-800 ${inter.className}`}>
+                {contact.subCampaign.campaign.name}
+                <span className="text-orange-600"> \ </span>
+                {contact.subCampaign.name}
+              </h1>
+              <button className="ml-auto btn-orange-sm" onClick={handleSubmit}>
+                Save
+              </button>
+            </div>
           </div>
           <div className="grid grid-cols-1 gap-4 mt-3">
             <div className="">
@@ -458,29 +507,32 @@ const Contact = () => {
                 <div className="mt-3 flex space-x-1 mb-4">
                   <button
                     onClick={() => switchTab("notes")}
-                    className={`hover:bg-[#1c3458] px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${activeTab == "notes"
-                      ? "bg-[#5C708E] text-white"
-                      : "bg-[#F3F4F6] text-black"
-                      }`}
+                    className={`hover:bg-[#1c3458] px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${
+                      activeTab == "notes"
+                        ? "bg-[#5C708E] text-white"
+                        : "bg-[#F3F4F6] text-black"
+                    }`}
                   >
                     Notes
                   </button>
                   <button
                     onClick={() => switchTab("progress")}
-                    className={`hover:bg-[#1c3458] px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${activeTab == "progress"
-                      ? "bg-[#5C708E] text-white"
-                      : "bg-[#F3F4F6] text-black"
-                      }`}
+                    className={`hover:bg-[#1c3458] px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${
+                      activeTab == "progress"
+                        ? "bg-[#5C708E] text-white"
+                        : "bg-[#F3F4F6] text-black"
+                    }`}
                   >
                     Activity
                   </button>
                   {formData.status >= 4 && formData.status != 9 && (
                     <button
                       onClick={() => switchTab("status")}
-                      className={`hover:bg-[#1c3458] px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${activeTab == "status"
-                        ? "bg-[#5C708E] text-white"
-                        : "bg-[#F3F4F6] text-black"
-                        }`}
+                      className={`hover:bg-[#1c3458] px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${
+                        activeTab == "status"
+                          ? "bg-[#5C708E] text-white"
+                          : "bg-[#F3F4F6] text-black"
+                      }`}
                     >
                       Qualification
                     </button>
@@ -488,10 +540,11 @@ const Contact = () => {
                   {formData.status >= 5 && formData.status != 9 && (
                     <button
                       onClick={() => switchTab("negotiation")}
-                      className={`hover:bg-[#1c3458] px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${activeTab == "negotiation"
-                        ? "bg-[#5C708E] text-white"
-                        : "bg-[#F3F4F6] text-black"
-                        }`}
+                      className={`hover:bg-[#1c3458] px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${
+                        activeTab == "negotiation"
+                          ? "bg-[#5C708E] text-white"
+                          : "bg-[#F3F4F6] text-black"
+                      }`}
                     >
                       Negotiation
                     </button>
@@ -499,10 +552,11 @@ const Contact = () => {
                   {formData.status == 8 && formData.status != 9 && (
                     <button
                       onClick={() => switchTab("done")}
-                      className={`hover:bg-[#1c3458] px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${activeTab == "done"
-                        ? "bg-[#5C708E] text-white"
-                        : "bg-[#F3F4F6] text-black"
-                        }`}
+                      className={`hover:bg-[#1c3458] px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${
+                        activeTab == "done"
+                          ? "bg-[#5C708E] text-white"
+                          : "bg-[#F3F4F6] text-black"
+                      }`}
                     >
                       Done
                     </button>
@@ -525,7 +579,9 @@ const Contact = () => {
                       />
                     </div>
                     <div className="mb-3">
-                      <button className="btn-orange-sm" onClick={saveNote}>Save Notes</button>
+                      <button className="btn-orange-sm" onClick={saveNote}>
+                        Save Notes
+                      </button>
                     </div>
                     <div className="grid grid-cols-4 gap-2">
                       <div>
@@ -601,7 +657,8 @@ const Contact = () => {
                       </div> */}
                       <div>
                         <label className="label-gray">Input Progress</label>
-                        <input className="input-orange"
+                        <input
+                          className="input-orange"
                           name="inputProgress"
                           value={formData.inputProgress}
                           onChange={handleChange}
@@ -609,13 +666,18 @@ const Contact = () => {
                       </div>
                       <div>
                         <label className="label-gray">Description</label>
-                        <textarea className="input-orange"
+                        <textarea
+                          className="input-orange"
                           name="description"
                           value={formData.description}
-                          onChange={handleChange}></textarea>
+                          onChange={handleChange}
+                        ></textarea>
                       </div>
                       <div className="mb-3">
-                        <button className="btn-orange-sm" onClick={saveActivity}>
+                        <button
+                          className="btn-orange-sm"
+                          onClick={saveActivity}
+                        >
                           Update Activity
                         </button>
                       </div>
@@ -629,29 +691,45 @@ const Contact = () => {
                     <div className="grid grid-cols-1 gap-2">
                       <div>
                         <label className="label-gray">Project Name</label>
-                        <input type="text" className="input-orange" name="projectName"
+                        <input
+                          type="text"
+                          className="input-orange"
+                          name="projectName"
                           onChange={handleChange}
-                          value={formData.projectName} />
+                          value={formData.projectName}
+                        />
                       </div>
                     </div>
                     <div className="grid grid-cols-3 gap-2 mt-3">
                       <div>
                         <label className="label-gray">Project Startdate</label>
-                        <input type="text" className="input-orange" name="projectStartdate"
+                        <input
+                          type="text"
+                          className="input-orange"
+                          name="projectStartdate"
                           onChange={handleChange}
-                          value={formData.projectStartdate} />
+                          value={formData.projectStartdate}
+                        />
                       </div>
                       <div>
                         <label className="label-gray">Deadline Project</label>
-                        <input type="text" className="input-orange" name="projectEnddate"
+                        <input
+                          type="text"
+                          className="input-orange"
+                          name="projectEnddate"
                           onChange={handleChange}
-                          value={formData.projectEnddate} />
+                          value={formData.projectEnddate}
+                        />
                       </div>
                       <div>
                         <label className="label-gray">Deal</label>
-                        <input type="number" className="input-orange" name="deal"
+                        <input
+                          type="number"
+                          className="input-orange"
+                          name="deal"
                           onChange={handleChange}
-                          value={formData.deal} />
+                          value={formData.deal}
+                        />
                       </div>
                     </div>
                     <div className="grid grid-cols-1 gap-2 mt-3">
@@ -677,10 +755,14 @@ const Contact = () => {
                     <div className="grid grid-cols-4 gap-2 mt-3">
                       <div>
                         <label className="label-gray">Payment Status</label>
-                        <select name="" className="select-orange"
+                        <select
+                          name=""
+                          className="select-orange"
                           value={formData.paymentStatus}
                           name="paymentStatus"
-                          onChange={handleChange}>
+                          onChange={handleChange}
+                        >
+                          <option value="">Select</option>
                           <option value="1">Paid</option>
                           <option value="0">Not</option>
                         </select>
@@ -688,10 +770,13 @@ const Contact = () => {
 
                       <div>
                         <label className="label-gray">Deal</label>
-                        <input type="number" className="input-orange"
+                        <input
+                          type="number"
+                          className="input-orange"
                           value={formData.dealDone}
                           name="dealDone"
-                          onChange={handleChange} />
+                          onChange={handleChange}
+                        />
                       </div>
                     </div>
                     <div className="grid grid-cols-1 gap-2 mt-3">
@@ -760,7 +845,8 @@ const Contact = () => {
                           className="select-orange"
                           name="leadOwner"
                           onChange={handleChange}
-                          value={formData.leadOwner}>
+                          value={formData.leadOwner}
+                        >
                           {users.map((user, index) => (
                             <option key={index} value={user.id}>
                               {user.name}
@@ -801,23 +887,28 @@ const Contact = () => {
                           className="input-orange"
                           name="time"
                           onChange={handleChange}
-                          value={formData.time}></textarea>
+                          value={formData.time}
+                        ></textarea>
                       </div>
                       <div>
                         <label className="label-gray">
                           Spesification of Project
                         </label>
-                        <textarea className="input-orange"
+                        <textarea
+                          className="input-orange"
                           name="spesificationProject"
                           onChange={handleChange}
-                          value={formData.spesificationProject}></textarea>
+                          value={formData.spesificationProject}
+                        ></textarea>
                       </div>
                       <div>
                         <label className="label-gray">Next Step</label>
-                        <textarea className="input-orange"
+                        <textarea
+                          className="input-orange"
                           name="nextStep"
                           onChange={handleChange}
-                          value={formData.nextStep}></textarea>
+                          value={formData.nextStep}
+                        ></textarea>
                       </div>
                     </div>
                   </div>
@@ -830,10 +921,11 @@ const Contact = () => {
                   {tabs.map((tab) => (
                     <button
                       key={tab.id}
-                      className={`flex-1 py-1 text-center ${activeTimelineTab === tab.id
-                        ? "bg-[#5C708E] text-white"
-                        : "bg-gray-200 text-gray-700"
-                        }`}
+                      className={`flex-1 py-1 text-center ${
+                        activeTimelineTab === tab.id
+                          ? "bg-[#5C708E] text-white"
+                          : "bg-gray-200 text-gray-700"
+                      }`}
                       onClick={() => handleTabClick(tab.id)}
                     >
                       {tab.label}
