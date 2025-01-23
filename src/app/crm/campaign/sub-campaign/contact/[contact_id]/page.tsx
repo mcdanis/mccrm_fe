@@ -4,41 +4,144 @@ import React from "react";
 import { useState, useEffect } from "react";
 import Header from "@/app/crm/header";
 import { Inter } from "@next/font/google";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import ApiService from "@/utils/services/ApiService";
+import Cookies from "js-cookie";
+import ErrorElement from "@/components/error-element";
 import {
   convertTime,
   contact_status,
   tag,
   level_priority,
   lead_type,
+  messageBox
 } from "@/utils/utils";
 import Editor from "react-simple-wysiwyg";
 
 const inter = Inter({ subsets: ["latin"], weight: ["400", "700"] });
 
+interface ContactBant {
+  id: number;
+  contact_id: number;
+  lead_type: number;
+  lead_owner: number;
+  budget: string;
+  authority: string;
+  need: string;
+  time: string;
+  spesification_project: string;
+  next_step: string;
+  createdAt: string;
+}
+
+interface ContactActivity {
+  // Misalkan ada beberapa properti di dalam array ini
+  // Contoh: 
+  id: number;
+  contact_id: number;
+  sub_campaign_id: number;
+  title: string;
+  description: string;
+  createdAt: string;
+}
+
+interface ContactTimeline {
+  id: number;
+  contact_id: number;
+  sub_campaign_id: number;
+  title: string;
+  description: string;
+  createdAt: string;
+}
+
+interface ContactFinal {
+  id: number;
+  sub_campaign_id: number;
+  contact_id: number;
+  result_negotiation: string | null;
+  project_name: string;
+  start_date: string;
+  end_date: string;
+  deal: number;
+  payment_status: number;
+  deal_done: number;
+  evaluation: string;
+  feedback: string;
+  dorumentation: string;
+  createdAt: string;
+}
+
+interface Contact {
+  id: number;
+  sub_campaign_id: number;
+  full_name: string;
+  email: string;
+  phone_number: string;
+  country: string;
+  company: string;
+  address: string;
+  tag: string;
+  level_priority: string;
+  source: string;
+  status: string;
+  result_negotiation: string | null;
+  createdAt: string;
+  contactBant: ContactBant;
+  contactActivity: ContactActivity[];
+  contactTimeline: ContactTimeline[];
+  contactFinal: ContactFinal;
+}
+
+interface Campaign {
+  name: string;
+}
+
+interface SubCampaign {
+  id: number;
+  campaign_id: number;
+  name: string;
+  owner: number;
+  manager: number;
+  status: string;
+  client_id: number;
+  created_by: number;
+  createdAt: string;
+  campaign: Campaign;
+}
+
+interface Data {
+  contact: Contact;
+  subCampaign: SubCampaign;
+}
+
+
 const Contact = () => {
   const apiService = new ApiService();
   const params = useParams();
+  const router = useRouter();
+
   const { contact_id } = params;
 
   const [activeTab, setActiveTab] = useState("notes");
+  const [error, setError] = useState("");
 
   const switchTab = (tab: string) => {
     setActiveTab(tab);
   };
 
+  const [users, setUsers] = useState();
   const [activeTimelineTab, setActiveTimelineTab] = useState("All");
-  const [contact, setContact] = useState();
+  const [contact, setContact] = useState<Data>();
   const [html, setHtml] = useState("my <b>HTML</b>");
 
   const tabs = [
-    { id: "All", label: "All (4)" },
-    { id: "Notes", label: "Notes" },
-    { id: "Progress", label: "Activity" },
-    { id: "Statuses", label: "Qualification (4)" },
-    { id: "Calls", label: "Status" },
-    { id: "Messages", label: "Negotiation" },
+    { id: "all", label: "All (4)" },
+    { id: "notes", label: "Notes" },
+    { id: "activity", label: "Activity" },
+    { id: "qualification", label: "Qualification (4)" },
+    { id: "negotiation", label: "Negotiation" },
+    { id: "status", label: "Status" },
+    { id: "done", label: "Done" },
   ];
 
   const timelineData = [
@@ -68,6 +171,11 @@ const Contact = () => {
       setContact(contact);
     };
     fetchContact();
+    const fetchUsers = async () => {
+      const contact = await apiService.getUsers();
+      setUsers(contact);
+    };
+    fetchUsers();
   }, []);
 
   const [formData, setFormData] = useState({
@@ -104,6 +212,7 @@ const Contact = () => {
     // done
     paymentStatus: "",
     deal: "",
+    dealDone: "",
     evaluation: "",
     feedback: "",
     documentation: "",
@@ -127,7 +236,7 @@ const Contact = () => {
       | React.ChangeEvent<HTMLInputElement>
       | React.ChangeEvent<HTMLSelectElement>
       | React.ChangeEvent<HTMLTextAreaElement>
-  ) => {};
+  ) => { };
 
   useEffect(() => {
     if (contact) {
@@ -143,20 +252,80 @@ const Contact = () => {
         tag: contact.contact.tag || "",
         levelPriority: contact.contact.level_priority || "",
         status: contact.contact.status || "",
-        leadType: contact.contactBant ? contact.contactBant.lead_type : "",
-        budget: contact.contactBant ? contact.contactBant.budget : "",
-        authority: contact.contactBant ? contact.contactBant.authority : "",
-        time: contact.contactBant ? contact.contactBant.time : "",
-        need: contact.contactBant ? contact.contactBant.need : "",
-        nextStep: contact.contactBant ? contact.contactBant.next_step : "",
-        spesification: contact.contactBant
-          ? contact.contactBant.spesification
+        leadType: contact.contact.contactBant ? contact.contact.contactBant.lead_type : "",
+        budget: contact.contact.contactBant ? contact.contact.contactBant.budget : "",
+        authority: contact.contact.contactBant ? contact.contact.contactBant.authority : "",
+        time: contact.contact.contactBant ? contact.contact.contactBant.time : "",
+        need: contact.contact.contactBant ? contact.contact.contactBant.need : "",
+        nextStep: contact.contact.contactBant ? contact.contact.contactBant.next_step : "",
+        spesificationProject: contact.contact.contactBant
+          ? contact.contact.contactBant.spesification_project
           : "",
-        leadOwner: contact.contactBant ? contact.contactBant.lead_owner : "",
+        leadOwner: contact.contact.contactBant ? contact.contact.contactBant.lead_owner : "",
+        projectName: contact.contact.contactFinal ? contact.contact.contactFinal.project_name : "",
+        projectStartdate: contact.contact.contactFinal ? contact.contact.contactFinal.start_date : "",
+        projectEnddate: contact.contact.contactFinal ? contact.contact.contactFinal.end_date : "",
+        deal: contact.contact.contactFinal ? contact.contact.contactFinal.deal : "",
+        resultOfNegotiation: contact.contact.contactFinal ? contact.contact.contactFinal.result_negotiation : "",
+
+        dealDone: contact.contact.contactFinal ? contact.contact.contactFinal.deal_done : "",
+        evaluation: contact.contact.contactFinal ? contact.contact.contactFinal.evaluation : "",
+        feedback: contact.contact.contactFinal ? contact.contact.contactFinal.feedback : "",
+        documentation: contact.contact.contactFinal ? contact.contact.contactFinal.dorumentation : "",
+        paymentStatus: contact.contact.contactFinal ? contact.contact.contactFinal.payment_status : "",
       });
     }
     console.log(contact);
   }, [contact]);
+
+  const saveNote = async () => {
+    const data = {
+      contactId: contact.contact.id,
+      subCampaignId: contact.contact.sub_campaign_id,
+      note: formData.note,
+      userId: Cookies.get('mccrm_user_id')
+    }
+
+    const addNote = await apiService.addNote(data)
+    if (addNote.error == false) {
+      const msg = await messageBox(
+        "",
+        "Note Berhasil di tambahkan !!",
+        "success",
+        "no"
+      );
+      setError("")
+      formData.note = ""
+    } else {
+      setError(addNote.message)
+    }
+  }
+
+  const saveActivity = async () => {
+    const data = {
+      contactId: contact.contact.id,
+      description: formData.description,
+      title: formData.inputProgress,
+      userId: Cookies.get('mccrm_user_id')
+    }
+
+    const addNote = await apiService.addActivity(data)
+    if (addNote.error == false) {
+      const msg = await messageBox(
+        "",
+        "Activity successfully added !!",
+        "success",
+        "no"
+      );
+      setError("")
+      formData.description = ""
+      formData.inputProgress = ""
+    } else {
+      setError(addNote.message)
+    }
+  }
+
+
 
   if (!contact) {
     return <>please wait..</>;
@@ -285,36 +454,33 @@ const Contact = () => {
                 >
                   button aktif
                 </button> */}
-
+                <ErrorElement error={error} />
                 <div className="mt-3 flex space-x-1 mb-4">
                   <button
                     onClick={() => switchTab("notes")}
-                    className={`hover:bg-[#1c3458] px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${
-                      activeTab == "notes"
-                        ? "bg-[#5C708E] text-white"
-                        : "bg-[#F3F4F6] text-black"
-                    }`}
+                    className={`hover:bg-[#1c3458] px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${activeTab == "notes"
+                      ? "bg-[#5C708E] text-white"
+                      : "bg-[#F3F4F6] text-black"
+                      }`}
                   >
                     Notes
                   </button>
                   <button
                     onClick={() => switchTab("progress")}
-                    className={`hover:bg-[#1c3458] px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${
-                      activeTab == "progress"
-                        ? "bg-[#5C708E] text-white"
-                        : "bg-[#F3F4F6] text-black"
-                    }`}
+                    className={`hover:bg-[#1c3458] px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${activeTab == "progress"
+                      ? "bg-[#5C708E] text-white"
+                      : "bg-[#F3F4F6] text-black"
+                      }`}
                   >
                     Activity
                   </button>
                   {formData.status >= 4 && formData.status != 9 && (
                     <button
                       onClick={() => switchTab("status")}
-                      className={`hover:bg-[#1c3458] px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${
-                        activeTab == "status"
-                          ? "bg-[#5C708E] text-white"
-                          : "bg-[#F3F4F6] text-black"
-                      }`}
+                      className={`hover:bg-[#1c3458] px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${activeTab == "status"
+                        ? "bg-[#5C708E] text-white"
+                        : "bg-[#F3F4F6] text-black"
+                        }`}
                     >
                       Qualification
                     </button>
@@ -322,11 +488,10 @@ const Contact = () => {
                   {formData.status >= 5 && formData.status != 9 && (
                     <button
                       onClick={() => switchTab("negotiation")}
-                      className={`hover:bg-[#1c3458] px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${
-                        activeTab == "negotiation"
-                          ? "bg-[#5C708E] text-white"
-                          : "bg-[#F3F4F6] text-black"
-                      }`}
+                      className={`hover:bg-[#1c3458] px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${activeTab == "negotiation"
+                        ? "bg-[#5C708E] text-white"
+                        : "bg-[#F3F4F6] text-black"
+                        }`}
                     >
                       Negotiation
                     </button>
@@ -334,11 +499,10 @@ const Contact = () => {
                   {formData.status == 8 && formData.status != 9 && (
                     <button
                       onClick={() => switchTab("done")}
-                      className={`hover:bg-[#1c3458] px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${
-                        activeTab == "done"
-                          ? "bg-[#5C708E] text-white"
-                          : "bg-[#F3F4F6] text-black"
-                      }`}
+                      className={`hover:bg-[#1c3458] px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${activeTab == "done"
+                        ? "bg-[#5C708E] text-white"
+                        : "bg-[#F3F4F6] text-black"
+                        }`}
                     >
                       Done
                     </button>
@@ -361,7 +525,7 @@ const Contact = () => {
                       />
                     </div>
                     <div className="mb-3">
-                      <button className="btn-orange-sm">Save Notes</button>
+                      <button className="btn-orange-sm" onClick={saveNote}>Save Notes</button>
                     </div>
                     <div className="grid grid-cols-4 gap-2">
                       <div>
@@ -437,14 +601,21 @@ const Contact = () => {
                       </div> */}
                       <div>
                         <label className="label-gray">Input Progress</label>
-                        <input className="input-orange" />
+                        <input className="input-orange"
+                          name="inputProgress"
+                          value={formData.inputProgress}
+                          onChange={handleChange}
+                        />
                       </div>
                       <div>
-                        <label className="label-gray">Keterangan</label>
-                        <textarea className="input-orange"></textarea>
+                        <label className="label-gray">Description</label>
+                        <textarea className="input-orange"
+                          name="description"
+                          value={formData.description}
+                          onChange={handleChange}></textarea>
                       </div>
                       <div className="mb-3">
-                        <button className="btn-orange-sm">
+                        <button className="btn-orange-sm" onClick={saveActivity}>
                           Update Activity
                         </button>
                       </div>
@@ -458,21 +629,29 @@ const Contact = () => {
                     <div className="grid grid-cols-1 gap-2">
                       <div>
                         <label className="label-gray">Project Name</label>
-                        <input type="text" className="input-orange" />
+                        <input type="text" className="input-orange" name="projectName"
+                          onChange={handleChange}
+                          value={formData.projectName} />
                       </div>
                     </div>
                     <div className="grid grid-cols-3 gap-2 mt-3">
                       <div>
                         <label className="label-gray">Project Startdate</label>
-                        <input type="date" className="input-orange" />
+                        <input type="text" className="input-orange" name="projectStartdate"
+                          onChange={handleChange}
+                          value={formData.projectStartdate} />
                       </div>
                       <div>
                         <label className="label-gray">Deadline Project</label>
-                        <input type="date" className="input-orange" />
+                        <input type="text" className="input-orange" name="projectEnddate"
+                          onChange={handleChange}
+                          value={formData.projectEnddate} />
                       </div>
                       <div>
                         <label className="label-gray">Deal</label>
-                        <input type="number" className="input-orange" />
+                        <input type="number" className="input-orange" name="deal"
+                          onChange={handleChange}
+                          value={formData.deal} />
                       </div>
                     </div>
                     <div className="grid grid-cols-1 gap-2 mt-3">
@@ -498,16 +677,21 @@ const Contact = () => {
                     <div className="grid grid-cols-4 gap-2 mt-3">
                       <div>
                         <label className="label-gray">Payment Status</label>
-                        <select name="" className="select-orange">
-                          <option value="">Pilih</option>
-                          <option value="">Lunas</option>
-                          <option value="">Belum</option>
+                        <select name="" className="select-orange"
+                          value={formData.paymentStatus}
+                          name="paymentStatus"
+                          onChange={handleChange}>
+                          <option value="1">Paid</option>
+                          <option value="0">Not</option>
                         </select>
                       </div>
 
                       <div>
                         <label className="label-gray">Deal</label>
-                        <input type="number" className="input-orange" />
+                        <input type="number" className="input-orange"
+                          value={formData.dealDone}
+                          name="dealDone"
+                          onChange={handleChange} />
                       </div>
                     </div>
                     <div className="grid grid-cols-1 gap-2 mt-3">
@@ -572,35 +756,68 @@ const Contact = () => {
                       </div>
                       <div>
                         <label className="label-gray">Lead Owner</label>
-                        <select className="select-orange">
-                          <option value="">Lead Owner</option>
+                        <select
+                          className="select-orange"
+                          name="leadOwner"
+                          onChange={handleChange}
+                          value={formData.leadOwner}>
+                          {users.map((user, index) => (
+                            <option key={index} value={user.id}>
+                              {user.name}
+                            </option>
+                          ))}
                         </select>
                       </div>
                       <div>
                         <label className="label-gray">Budget</label>
-                        <textarea className="input-orange"></textarea>
+                        <textarea
+                          className="input-orange"
+                          name="budget"
+                          onChange={handleChange}
+                          value={formData.budget}
+                        ></textarea>
                       </div>
                       <div>
                         <label className="label-gray">Authority</label>
-                        <textarea className="input-orange"></textarea>
+                        <textarea
+                          className="input-orange"
+                          name="authority"
+                          onChange={handleChange}
+                          value={formData.authority}
+                        ></textarea>
                       </div>
                       <div>
                         <label className="label-gray">Need</label>
-                        <textarea className="input-orange"></textarea>
+                        <textarea
+                          className="input-orange"
+                          name="need"
+                          onChange={handleChange}
+                          value={formData.need}
+                        ></textarea>
                       </div>
                       <div>
                         <label className="label-gray">Time</label>
-                        <textarea className="input-orange"></textarea>
+                        <textarea
+                          className="input-orange"
+                          name="time"
+                          onChange={handleChange}
+                          value={formData.time}></textarea>
                       </div>
                       <div>
                         <label className="label-gray">
                           Spesification of Project
                         </label>
-                        <textarea className="input-orange"></textarea>
+                        <textarea className="input-orange"
+                          name="spesificationProject"
+                          onChange={handleChange}
+                          value={formData.spesificationProject}></textarea>
                       </div>
                       <div>
                         <label className="label-gray">Next Step</label>
-                        <textarea className="input-orange"></textarea>
+                        <textarea className="input-orange"
+                          name="nextStep"
+                          onChange={handleChange}
+                          value={formData.nextStep}></textarea>
                       </div>
                     </div>
                   </div>
@@ -613,11 +830,10 @@ const Contact = () => {
                   {tabs.map((tab) => (
                     <button
                       key={tab.id}
-                      className={`flex-1 py-1 text-center ${
-                        activeTimelineTab === tab.id
-                          ? "bg-[#5C708E] text-white"
-                          : "bg-gray-200 text-gray-700"
-                      }`}
+                      className={`flex-1 py-1 text-center ${activeTimelineTab === tab.id
+                        ? "bg-[#5C708E] text-white"
+                        : "bg-gray-200 text-gray-700"
+                        }`}
                       onClick={() => handleTabClick(tab.id)}
                     >
                       {tab.label}
