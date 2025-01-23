@@ -171,6 +171,36 @@ class ApiService {
       console.log(error);
     }
   }
+
+  header(type: string = "GET", formData: object = {}) {
+    return {
+      method: type,
+      headers: this.headerAuth,
+      ...(type === 'POST' && { body: JSON.stringify(formData) })
+    }
+  }
+
+  async addNote(data: object) {
+    try {
+      const response = await api(
+        "campaign/sub-campaign/contact/note", this.header('POST', data)
+      );
+      return response.json();
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async addActivity(data: object) {
+    try {
+      const response = await api(
+        "campaign/sub-campaign/contact/activity", this.header('POST', data)
+      );
+      return response.json();
+    } catch (error) {
+      console.log(error);
+    }
+  }
 }
 
 export default ApiService;

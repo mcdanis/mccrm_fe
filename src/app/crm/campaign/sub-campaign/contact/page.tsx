@@ -149,8 +149,8 @@ const Contact = () => {
                   <button
                     onClick={() => switchTab("notes")}
                     className={`hover:bg-[#3c5d8f] py-2 px-4 border border-[#3c5d8f] hover:text-white rounded ${activeTab == "notes"
-                        ? "bg-[#5C708E] text-white"
-                        : "bg-[#F3F4F6] text-black"
+                      ? "bg-[#5C708E] text-white"
+                      : "bg-[#F3F4F6] text-black"
                       }`}
                   >
                     Notes
@@ -158,8 +158,8 @@ const Contact = () => {
                   <button
                     onClick={() => switchTab("progress")}
                     className={`hover:bg-[#3c5d8f] py-2 px-4 border border-[#3c5d8f] hover:text-white rounded ${activeTab == "progress"
-                        ? "bg-[#5C708E] text-white"
-                        : "bg-[#F3F4F6] text-black"
+                      ? "bg-[#5C708E] text-white"
+                      : "bg-[#F3F4F6] text-black"
                       }`}
                   >
                     Activity
@@ -167,8 +167,8 @@ const Contact = () => {
                   <button
                     onClick={() => switchTab("status")}
                     className={`hover:bg-[#3c5d8f] py-2 px-4 border border-[#3c5d8f] hover:text-white rounded ${activeTab == "status"
-                        ? "bg-[#5C708E] text-white"
-                        : "bg-[#F3F4F6] text-black"
+                      ? "bg-[#5C708E] text-white"
+                      : "bg-[#F3F4F6] text-black"
                       }`}
                   >
                     Qualification
@@ -176,8 +176,8 @@ const Contact = () => {
                   <button
                     onClick={() => switchTab("negotiation")}
                     className={`hover:bg-[#3c5d8f] py-2 px-4 border border-[#3c5d8f] hover:text-white rounded ${activeTab == "negotiation"
-                        ? "bg-[#5C708E] text-white"
-                        : "bg-[#F3F4F6] text-black"
+                      ? "bg-[#5C708E] text-white"
+                      : "bg-[#F3F4F6] text-black"
                       }`}
                   >
                     Negotiation
@@ -337,8 +337,8 @@ const Contact = () => {
                     <button
                       key={tab.id}
                       className={`flex-1 py-1 text-center ${activeTimelineTab === tab.id
-                          ? "bg-[#5C708E] text-white"
-                          : "bg-gray-200 text-gray-700"
+                        ? "bg-[#5C708E] text-white"
+                        : "bg-gray-200 text-gray-700"
                         }`}
                       onClick={() => handleTabClick(tab.id)}
                     >

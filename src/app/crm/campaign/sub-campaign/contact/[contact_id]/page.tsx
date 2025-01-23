@@ -4,25 +4,126 @@ import React from "react";
 import { useState, useEffect } from "react";
 import Header from "@/app/crm/header";
 import { Inter } from "@next/font/google";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import ApiService from "@/utils/services/ApiService";
+import Cookies from "js-cookie";
+import ErrorElement from "@/components/error-element";
 import {
   convertTime,
   contact_status,
   tag,
   level_priority,
-  lead_type
+  lead_type,
+  messageBox
 } from "@/utils/utils";
 import Editor from "react-simple-wysiwyg";
 
 const inter = Inter({ subsets: ["latin"], weight: ["400", "700"] });
 
+interface ContactBant {
+  id: number;
+  contact_id: number;
+  lead_type: number;
+  lead_owner: number;
+  budget: string;
+  authority: string;
+  need: string;
+  time: string;
+  spesification_project: string;
+  next_step: string;
+  createdAt: string;
+}
+
+interface ContactActivity {
+  // Misalkan ada beberapa properti di dalam array ini
+  // Contoh: 
+  id: number;
+  contact_id: number;
+  sub_campaign_id: number;
+  title: string;
+  description: string;
+  createdAt: string;
+}
+
+interface ContactTimeline {
+  id: number;
+  contact_id: number;
+  sub_campaign_id: number;
+  title: string;
+  description: string;
+  createdAt: string;
+}
+
+interface ContactFinal {
+  id: number;
+  sub_campaign_id: number;
+  contact_id: number;
+  result_negotiation: string | null;
+  project_name: string;
+  start_date: string;
+  end_date: string;
+  deal: number;
+  payment_status: number;
+  deal_done: number;
+  evaluation: string;
+  feedback: string;
+  dorumentation: string;
+  createdAt: string;
+}
+
+interface Contact {
+  id: number;
+  sub_campaign_id: number;
+  full_name: string;
+  email: string;
+  phone_number: string;
+  country: string;
+  company: string;
+  address: string;
+  tag: string;
+  level_priority: string;
+  source: string;
+  status: string;
+  result_negotiation: string | null;
+  createdAt: string;
+  contactBant: ContactBant;
+  contactActivity: ContactActivity[];
+  contactTimeline: ContactTimeline[];
+  contactFinal: ContactFinal;
+}
+
+interface Campaign {
+  name: string;
+}
+
+interface SubCampaign {
+  id: number;
+  campaign_id: number;
+  name: string;
+  owner: number;
+  manager: number;
+  status: string;
+  client_id: number;
+  created_by: number;
+  createdAt: string;
+  campaign: Campaign;
+}
+
+interface Data {
+  contact: Contact;
+  subCampaign: SubCampaign;
+}
+
+
 const Contact = () => {
   const apiService = new ApiService();
   const params = useParams();
+  const router = useRouter();
+
   const { contact_id } = params;
 
   const [activeTab, setActiveTab] = useState("notes");
+  const [error, setError] = useState("");
 
   const switchTab = (tab: string) => {
     setActiveTab(tab);
@@ -30,7 +131,7 @@ const Contact = () => {
 
   const [users, setUsers] = useState();
   const [activeTimelineTab, setActiveTimelineTab] = useState("All");
-  const [contact, setContact] = useState();
+  const [contact, setContact] = useState<Data>();
   const [html, setHtml] = useState("my <b>HTML</b>");
 
   const tabs = [
@@ -177,6 +278,55 @@ const Contact = () => {
     console.log(contact);
   }, [contact]);
 
+  const saveNote = async () => {
+    const data = {
+      contactId: contact.contact.id,
+      subCampaignId: contact.contact.sub_campaign_id,
+      note: formData.note,
+      userId: Cookies.get('mccrm_user_id')
+    }
+
+    const addNote = await apiService.addNote(data)
+    if (addNote.error == false) {
+      const msg = await messageBox(
+        "",
+        "Note Berhasil di tambahkan !!",
+        "success",
+        "no"
+      );
+      setError("")
+      formData.note = ""
+    } else {
+      setError(addNote.message)
+    }
+  }
+
+  const saveActivity = async () => {
+    const data = {
+      contactId: contact.contact.id,
+      description: formData.description,
+      title: formData.inputProgress,
+      userId: Cookies.get('mccrm_user_id')
+    }
+
+    const addNote = await apiService.addActivity(data)
+    if (addNote.error == false) {
+      const msg = await messageBox(
+        "",
+        "Activity successfully added !!",
+        "success",
+        "no"
+      );
+      setError("")
+      formData.description = ""
+      formData.inputProgress = ""
+    } else {
+      setError(addNote.message)
+    }
+  }
+
+
+
   if (!contact) {
     return <>please wait..</>;
   }
@@ -304,7 +454,7 @@ const Contact = () => {
                 >
                   button aktif
                 </button> */}
-
+                <ErrorElement error={error} />
                 <div className="mt-3 flex space-x-1 mb-4">
                   <button
                     onClick={() => switchTab("notes")}
@@ -375,7 +525,7 @@ const Contact = () => {
                       />
                     </div>
                     <div className="mb-3">
-                      <button className="btn-orange-sm">Save Notes</button>
+                      <button className="btn-orange-sm" onClick={saveNote}>Save Notes</button>
                     </div>
                     <div className="grid grid-cols-4 gap-2">
                       <div>
@@ -451,14 +601,21 @@ const Contact = () => {
                       </div> */}
                       <div>
                         <label className="label-gray">Input Progress</label>
-                        <input className="input-orange" />
+                        <input className="input-orange"
+                          name="inputProgress"
+                          value={formData.inputProgress}
+                          onChange={handleChange}
+                        />
                       </div>
                       <div>
-                        <label className="label-gray">Keterangan</label>
-                        <textarea className="input-orange"></textarea>
+                        <label className="label-gray">Description</label>
+                        <textarea className="input-orange"
+                          name="description"
+                          value={formData.description}
+                          onChange={handleChange}></textarea>
                       </div>
                       <div className="mb-3">
-                        <button className="btn-orange-sm">
+                        <button className="btn-orange-sm" onClick={saveActivity}>
                           Update Activity
                         </button>
                       </div>
