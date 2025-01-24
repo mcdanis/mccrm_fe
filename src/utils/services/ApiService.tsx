@@ -215,6 +215,18 @@ class ApiService {
       console.log(error);
     }
   }
+
+  async getContactTimeline(contactId: number) {
+    try {
+      const response = await api(
+        "campaign/sub-campaign/contact/timeline/" + contactId,
+        this.header()
+      );
+      return response.json();
+    } catch (error) {
+      console.log(error);
+    }
+  }
 }
 
 export default ApiService;

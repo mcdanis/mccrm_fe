@@ -131,15 +131,15 @@ const Contact = () => {
   const [users, setUsers] = useState();
   const [activeTimelineTab, setActiveTimelineTab] = useState("all");
   const [contact, setContact] = useState<Data>();
-  const [html, setHtml] = useState("my <b>HTML</b>");
+  const [timeline, setTimeline] = useState();
 
   const tabs = [
     { id: "all", label: "All (4)" },
-    { id: "notes", label: "Notes" },
-    { id: "activity", label: "Activity" },
-    { id: "qualification", label: "Qualification (4)" },
-    { id: "negotiation", label: "Negotiation" },
-    { id: "done", label: "Done" },
+    { id: "not", label: "Notes" },
+    { id: "act", label: "Activity" },
+    { id: "qua", label: "Qualification (4)" },
+    { id: "neg", label: "Negotiation" },
+    { id: "don", label: "Done" },
   ];
 
   const timelineData = [
@@ -170,10 +170,15 @@ const Contact = () => {
     };
     fetchContact();
     const fetchUsers = async () => {
-      const contact = await apiService.getUsers();
-      setUsers(contact);
+      const users = await apiService.getUsers();
+      setUsers(users);
     };
     fetchUsers();
+    const fetchTimeline = async () => {
+      const timeline = await apiService.getContactTimeline(contact_id);
+      setTimeline(timeline);
+    };
+    fetchTimeline();
   }, []);
 
   const [formData, setFormData] = useState({
@@ -214,6 +219,7 @@ const Contact = () => {
     feedback: "",
     documentation: "",
     contactId: contact_id,
+    subCampaignId: "",
     userId: Cookies.get("mccrm_user_id"),
   });
 
@@ -235,7 +241,7 @@ const Contact = () => {
       | React.ChangeEvent<HTMLInputElement>
       | React.ChangeEvent<HTMLSelectElement>
       | React.ChangeEvent<HTMLTextAreaElement>
-  ) => {};
+  ) => { };
 
   useEffect(() => {
     if (contact) {
@@ -306,6 +312,9 @@ const Contact = () => {
         paymentStatus: contact.contact.contactFinal
           ? contact.contact.contactFinal.payment_status
           : "",
+        subCampaignId: contact.contact
+          ? contact.contact.sub_campaign_id
+          : "",
       });
     }
     console.log(contact);
@@ -372,6 +381,10 @@ const Contact = () => {
       setError(updateContact.message);
     }
   };
+
+  const filteredTimeline = activeTimelineTab === 'all'
+    ? timeline
+    : timeline.filter(item => item.type === activeTimelineTab);
 
   if (!contact) {
     return <>please wait..</>;
@@ -507,32 +520,29 @@ const Contact = () => {
                 <div className="mt-3 flex space-x-1 mb-4">
                   <button
                     onClick={() => switchTab("notes")}
-                    className={`hover:bg-[#1c3458] px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${
-                      activeTab == "notes"
-                        ? "bg-[#5C708E] text-white"
-                        : "bg-[#F3F4F6] text-black"
-                    }`}
+                    className={`hover:bg-[#1c3458] px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${activeTab == "notes"
+                      ? "bg-[#5C708E] text-white"
+                      : "bg-[#F3F4F6] text-black"
+                      }`}
                   >
                     Notes
                   </button>
                   <button
                     onClick={() => switchTab("progress")}
-                    className={`hover:bg-[#1c3458] px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${
-                      activeTab == "progress"
-                        ? "bg-[#5C708E] text-white"
-                        : "bg-[#F3F4F6] text-black"
-                    }`}
+                    className={`hover:bg-[#1c3458] px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${activeTab == "progress"
+                      ? "bg-[#5C708E] text-white"
+                      : "bg-[#F3F4F6] text-black"
+                      }`}
                   >
                     Activity
                   </button>
                   {formData.status >= 4 && formData.status != 9 && (
                     <button
                       onClick={() => switchTab("status")}
-                      className={`hover:bg-[#1c3458] px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${
-                        activeTab == "status"
-                          ? "bg-[#5C708E] text-white"
-                          : "bg-[#F3F4F6] text-black"
-                      }`}
+                      className={`hover:bg-[#1c3458] px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${activeTab == "status"
+                        ? "bg-[#5C708E] text-white"
+                        : "bg-[#F3F4F6] text-black"
+                        }`}
                     >
                       Qualification
                     </button>
@@ -540,11 +550,10 @@ const Contact = () => {
                   {formData.status >= 5 && formData.status != 9 && (
                     <button
                       onClick={() => switchTab("negotiation")}
-                      className={`hover:bg-[#1c3458] px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${
-                        activeTab == "negotiation"
-                          ? "bg-[#5C708E] text-white"
-                          : "bg-[#F3F4F6] text-black"
-                      }`}
+                      className={`hover:bg-[#1c3458] px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${activeTab == "negotiation"
+                        ? "bg-[#5C708E] text-white"
+                        : "bg-[#F3F4F6] text-black"
+                        }`}
                     >
                       Negotiation
                     </button>
@@ -552,11 +561,10 @@ const Contact = () => {
                   {formData.status == 8 && formData.status != 9 && (
                     <button
                       onClick={() => switchTab("done")}
-                      className={`hover:bg-[#1c3458] px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${
-                        activeTab == "done"
-                          ? "bg-[#5C708E] text-white"
-                          : "bg-[#F3F4F6] text-black"
-                      }`}
+                      className={`hover:bg-[#1c3458] px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${activeTab == "done"
+                        ? "bg-[#5C708E] text-white"
+                        : "bg-[#F3F4F6] text-black"
+                        }`}
                     >
                       Done
                     </button>
@@ -921,11 +929,10 @@ const Contact = () => {
                   {tabs.map((tab) => (
                     <button
                       key={tab.id}
-                      className={`flex-1 py-1 text-center ${
-                        activeTimelineTab === tab.id
-                          ? "bg-[#5C708E] text-white"
-                          : "bg-gray-200 text-gray-700"
-                      }`}
+                      className={`flex-1 py-1 text-center ${activeTimelineTab === tab.id
+                        ? "bg-[#5C708E] text-white"
+                        : "bg-gray-200 text-gray-700"
+                        }`}
                       onClick={() => handleTabClick(tab.id)}
                     >
                       {tab.label}
@@ -933,13 +940,16 @@ const Contact = () => {
                   ))}
                 </div>
                 <div className="timeline">
-                  {timelineData.map((item) => (
-                    <div key={item.id} className="border-b py-4">
-                      <div className="text-sm text-gray-500">{item.date}</div>
-                      <div className="font-semibold text-gray-700">
+                  {filteredTimeline.map((item, index) => (
+                    <div key={index} className="border-b py-4">
+                      <div className="text-xs text-gray-500 italic">{item.createdAt}</div>
+                      <div className="font-semibold text-gray-700 text-lg">
                         {item.title}
                       </div>
-                      <div className="text-gray-700">{item.description}</div>
+                      <div
+                        className="text-gray-700 text-sm"
+                        dangerouslySetInnerHTML={{ __html: item.description }}
+                      ></div>
                     </div>
                   ))}
                 </div>
