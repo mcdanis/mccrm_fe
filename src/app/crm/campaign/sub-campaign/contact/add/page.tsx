@@ -6,7 +6,7 @@ import Header from "@/app/crm/header";
 import ErrorElement from "@/components/error-element";
 import { Inter } from "@next/font/google";
 import { useRouter, useSearchParams } from "next/navigation";
-import { messageBox } from "@/utils/utils";
+import { messageBox, tag, contact_status, level_priority } from "@/utils/utils";
 import ApiService from "@/utils/services/ApiService";
 
 const inter = Inter({ subsets: ["latin"], weight: ["400", "700"] });
@@ -39,6 +39,7 @@ const Contact = () => {
     contactStatus: 1,
     levelPriority: 1,
     subCampaignId: searchParams.get("sub_campaign_id"),
+    userId: apiService.getCookiesUserId(),
   });
 
   useEffect(() => {
@@ -114,6 +115,10 @@ const Contact = () => {
     }
   };
 
+  const back = () => {
+    router.back();
+  };
+
   return (
     <>
       <Header />
@@ -187,7 +192,10 @@ const Contact = () => {
         <div className="w-3/4 p-4 bg-white">
           <ErrorElement error={error} />
           <div className="flex items-center p-4 bg-[#F3F4F6] shadow-md">
-            <button className="flex items-center text-gray-600 hover:text-orange-500 focus:outline-none text-sm">
+            <button
+              onClick={back}
+              className="flex items-center text-gray-600 hover:text-orange-500 focus:outline-none text-sm"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-6 w-5 mr-1"
@@ -240,8 +248,12 @@ const Contact = () => {
                         name="tag"
                         onChange={handleChange}
                       >
-                        <option value="1">Tag 1</option>
-                        <option value="2">Tag 2</option>
+                        {Object.entries(tag).map(([key, value]) => (
+                          <option key={key} value={key}>
+                            {" "}
+                            {value}{" "}
+                          </option>
+                        ))}
                       </select>
                     </div>
                     <div>
@@ -252,16 +264,14 @@ const Contact = () => {
                         id="contact-status"
                         className="select-orange"
                         name="contactStatus"
+                        onChange={handleChange}
                       >
-                        <option value="1">Draf</option>
-                        <option value="2">Open</option>
-                        <option value="3">On Progress</option>
-                        <option value="4">Qualification Lead</option>
-                        <option value="5">Negotiation</option>
-                        <option value="6">Deal</option>
-                        <option value="7">Active Project</option>
-                        <option value="8">Done</option>
-                        <option value="9">Lost</option>
+                        {Object.entries(contact_status).map(([key, value]) => (
+                          <option key={key} value={key}>
+                            {" "}
+                            {value}{" "}
+                          </option>
+                        ))}
                       </select>
                     </div>
                     <div>
@@ -272,9 +282,12 @@ const Contact = () => {
                         name="levelPriority"
                         onChange={handleChange}
                       >
-                        <option value="1">Low</option>
-                        <option value="2">Medium</option>
-                        <option value="3">Priority</option>
+                        {Object.entries(level_priority).map(([key, value]) => (
+                          <option key={key} value={key}>
+                            {" "}
+                            {value}{" "}
+                          </option>
+                        ))}
                       </select>
                     </div>
                   </div>

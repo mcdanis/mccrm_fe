@@ -6,6 +6,7 @@ import Header from "@/app/crm/header";
 import { Inter } from "@next/font/google";
 import { useParams, useRouter } from "next/navigation";
 import ApiService from "@/utils/services/ApiService";
+import { ContactValidation } from "@/utils/validation";
 import Cookies from "js-cookie";
 import ErrorElement from "@/components/error-element";
 import {
@@ -134,10 +135,11 @@ const Contact = () => {
   const [timeline, setTimeline] = useState();
 
   const tabs = [
-    { id: "all", label: "All (4)" },
+    { id: "all", label: "All" },
     { id: "not", label: "Notes" },
+    { id: "con", label: "Contact" },
     { id: "act", label: "Activity" },
-    { id: "qua", label: "Qualification (4)" },
+    { id: "qua", label: "Qualification" },
     { id: "neg", label: "Negotiation" },
     { id: "don", label: "Done" },
   ];
@@ -197,7 +199,7 @@ const Contact = () => {
     inputProgress: "",
     description: "",
     // qualified
-    leadType: "",
+    leadType: 0,
     leadOwner: "",
     budget: "",
     authority: "",
@@ -241,7 +243,7 @@ const Contact = () => {
       | React.ChangeEvent<HTMLInputElement>
       | React.ChangeEvent<HTMLSelectElement>
       | React.ChangeEvent<HTMLTextAreaElement>
-  ) => { };
+  ) => {};
 
   useEffect(() => {
     if (contact) {
@@ -312,9 +314,7 @@ const Contact = () => {
         paymentStatus: contact.contact.contactFinal
           ? contact.contact.contactFinal.payment_status
           : "",
-        subCampaignId: contact.contact
-          ? contact.contact.sub_campaign_id
-          : "",
+        subCampaignId: contact.contact ? contact.contact.sub_campaign_id : "",
       });
     }
     console.log(contact);
@@ -368,6 +368,12 @@ const Contact = () => {
   };
 
   const handleSubmit = async () => {
+    const validateContact = await ContactValidation(formData);
+
+    if (validateContact.error) {
+      alert(validateContact.message);
+      return;
+    }
     const updateContact = await apiService.updateContact(formData);
     if (updateContact.error == false) {
       const msg = await messageBox(
@@ -382,9 +388,14 @@ const Contact = () => {
     }
   };
 
-  const filteredTimeline = activeTimelineTab === 'all'
-    ? timeline
-    : timeline.filter(item => item.type === activeTimelineTab);
+  const filteredTimeline =
+    activeTimelineTab === "all"
+      ? timeline
+      : timeline.filter((item) => item.type === activeTimelineTab);
+
+  const back = () => {
+    router.back();
+  };
 
   if (!contact) {
     return <>please wait..</>;
@@ -471,7 +482,10 @@ const Contact = () => {
         </div>
         <div className="w-3/4 p-4 bg-white">
           <div className="flex items-center p-4 bg-[#F3F4F6] shadow-md">
-            <button className="flex items-center text-gray-600 hover:text-orange-500 focus:outline-none text-sm">
+            <button
+              className="flex items-center text-gray-600 hover:text-orange-500 focus:outline-none text-sm"
+              onClick={back}
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-6 w-5 mr-1"
@@ -486,7 +500,7 @@ const Contact = () => {
                   d="M15 12H3m0 0l6-6m-6 6l6 6"
                 />
               </svg>
-              Kembali
+              Back
             </button>
 
             <div className="flex items-center w-full">
@@ -520,29 +534,32 @@ const Contact = () => {
                 <div className="mt-3 flex space-x-1 mb-4">
                   <button
                     onClick={() => switchTab("notes")}
-                    className={`hover:bg-[#1c3458] px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${activeTab == "notes"
-                      ? "bg-[#5C708E] text-white"
-                      : "bg-[#F3F4F6] text-black"
-                      }`}
+                    className={`hover:bg-[#1c3458]  text-xs  px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${
+                      activeTab == "notes"
+                        ? "bg-[#5C708E] text-white"
+                        : "bg-[#F3F4F6] text-black"
+                    }`}
                   >
                     Notes
                   </button>
                   <button
                     onClick={() => switchTab("progress")}
-                    className={`hover:bg-[#1c3458] px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${activeTab == "progress"
-                      ? "bg-[#5C708E] text-white"
-                      : "bg-[#F3F4F6] text-black"
-                      }`}
+                    className={`hover:bg-[#1c3458] text-xs px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${
+                      activeTab == "progress"
+                        ? "bg-[#5C708E] text-white"
+                        : "bg-[#F3F4F6] text-black"
+                    }`}
                   >
                     Activity
                   </button>
                   {formData.status >= 4 && formData.status != 9 && (
                     <button
                       onClick={() => switchTab("status")}
-                      className={`hover:bg-[#1c3458] px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${activeTab == "status"
-                        ? "bg-[#5C708E] text-white"
-                        : "bg-[#F3F4F6] text-black"
-                        }`}
+                      className={`hover:bg-[#1c3458] text-xs px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${
+                        activeTab == "status"
+                          ? "bg-[#5C708E] text-white"
+                          : "bg-[#F3F4F6] text-black"
+                      }`}
                     >
                       Qualification
                     </button>
@@ -550,10 +567,11 @@ const Contact = () => {
                   {formData.status >= 5 && formData.status != 9 && (
                     <button
                       onClick={() => switchTab("negotiation")}
-                      className={`hover:bg-[#1c3458] px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${activeTab == "negotiation"
-                        ? "bg-[#5C708E] text-white"
-                        : "bg-[#F3F4F6] text-black"
-                        }`}
+                      className={`hover:bg-[#1c3458] text-xs  px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${
+                        activeTab == "negotiation"
+                          ? "bg-[#5C708E] text-white"
+                          : "bg-[#F3F4F6] text-black"
+                      }`}
                     >
                       Negotiation
                     </button>
@@ -561,10 +579,11 @@ const Contact = () => {
                   {formData.status == 8 && formData.status != 9 && (
                     <button
                       onClick={() => switchTab("done")}
-                      className={`hover:bg-[#1c3458] px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${activeTab == "done"
-                        ? "bg-[#5C708E] text-white"
-                        : "bg-[#F3F4F6] text-black"
-                        }`}
+                      className={`hover:bg-[#1c3458] text-xs  px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${
+                        activeTab == "done"
+                          ? "bg-[#5C708E] text-white"
+                          : "bg-[#F3F4F6] text-black"
+                      }`}
                     >
                       Done
                     </button>
@@ -658,7 +677,7 @@ const Contact = () => {
                 {/* progress section */}
                 {activeTab == "progress" && (
                   <div className="bg-secondary p-4 rounded shadow-md">
-                    <div className="grid grid-cols-2 grid-rows-3 gap-2">
+                    <div className="grid grid-cols-2 gap-2">
                       {/* <div>
                         <label className="label-gray">Salesperson</label>
                         <input className="input-orange" />
@@ -771,6 +790,7 @@ const Contact = () => {
                           onChange={handleChange}
                         >
                           <option value="">Select</option>
+                          <option value="2">Half</option>
                           <option value="1">Paid</option>
                           <option value="0">Not</option>
                         </select>
@@ -839,6 +859,7 @@ const Contact = () => {
                           onChange={handleChange}
                           value={formData.leadType}
                         >
+                          <option value="">Select</option>
                           {Object.entries(lead_type).map(([key, value]) => (
                             <option key={key} value={key}>
                               {" "}
@@ -855,6 +876,7 @@ const Contact = () => {
                           onChange={handleChange}
                           value={formData.leadOwner}
                         >
+                          <option value="">Select</option>
                           {users.map((user, index) => (
                             <option key={index} value={user.id}>
                               {user.name}
@@ -929,20 +951,23 @@ const Contact = () => {
                   {tabs.map((tab) => (
                     <button
                       key={tab.id}
-                      className={`flex-1 py-1 text-center ${activeTimelineTab === tab.id
-                        ? "bg-[#5C708E] text-white"
-                        : "bg-gray-200 text-gray-700"
-                        }`}
+                      className={`flex-1 py-1 text-center ${
+                        activeTimelineTab === tab.id
+                          ? "bg-[#5C708E] text-white"
+                          : "bg-gray-200 text-gray-700"
+                      }`}
                       onClick={() => handleTabClick(tab.id)}
                     >
                       {tab.label}
                     </button>
                   ))}
                 </div>
-                <div className="timeline">
+                <div className="timeline max-h-80 overflow-y-auto">
                   {filteredTimeline.map((item, index) => (
                     <div key={index} className="border-b py-4">
-                      <div className="text-xs text-gray-500 italic">{item.createdAt}</div>
+                      <div className="text-xs text-gray-500 italic">
+                        {convertTime(item.createdAt)}
+                      </div>
                       <div className="font-semibold text-gray-700 text-lg">
                         {item.title}
                       </div>

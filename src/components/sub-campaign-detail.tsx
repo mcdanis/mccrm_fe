@@ -3,6 +3,7 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import Modal from "@/components/modals/modal-add-existing-contact";
+import ModalCsv from "@/components/modals/modal-csv-import-contact";
 import Link from "next/link";
 import ApiService from "@/utils/services/ApiService";
 import { useRouter } from "next/navigation";
@@ -16,10 +17,13 @@ export const Contact: React.FC<InfoProps> = ({ subCampaign }) => {
   const router = useRouter();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpenCsv, setIsModalOpenCsv] = useState(false);
   const [contacts, setContacts] = useState(false);
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
+  const openModalCsv = () => setIsModalOpenCsv(true);
+  const closeModalCsv = () => setIsModalOpenCsv(false);
 
   const apiService = new ApiService();
 
@@ -51,6 +55,11 @@ export const Contact: React.FC<InfoProps> = ({ subCampaign }) => {
   return (
     <>
       <Modal isOpen={isModalOpen} onClose={closeModal} />
+      <ModalCsv
+        subCampaignId={subCampaign.id}
+        isOpen={isModalOpenCsv}
+        onClose={closeModalCsv}
+      />
       <div className="relative">
         <button onClick={toggleDropdown} className="btn-orange-sm">
           Add contact
@@ -63,12 +72,12 @@ export const Contact: React.FC<InfoProps> = ({ subCampaign }) => {
             >
               Single
             </Link>
-            <a
-              href="/service2"
-              className="block px-4 py-2 text-gray-800 hover:bg-gray-100"
+            <button
+              onClick={openModalCsv}
+              className="block px-4 py-2 text-gray-800 hover:bg-gray-100 w-full text-start"
             >
               CSV
-            </a>
+            </button>
             <button
               onClick={openModal}
               className="block px-4 py-2 text-gray-800 hover:bg-gray-100 w-full text-start"
@@ -92,6 +101,7 @@ export const Contact: React.FC<InfoProps> = ({ subCampaign }) => {
               <th className="py-3 px-6 text-left">Status</th>
 
               <th className="py-3 px-6 text-left">Tag</th>
+              <th className="py-3 px-6 text-left"></th>
             </tr>
           </thead>
 
@@ -109,6 +119,11 @@ export const Contact: React.FC<InfoProps> = ({ subCampaign }) => {
                   {convert(contact.status, "status")}
                 </td>
                 <td className="py-3 px-6">{convert(contact.tag, "tag")}</td>
+                <td className="py-3 px-6">
+                  {contact.status == 8 && (
+                    <button className="btn-orange-sm">Add as Customer</button>
+                  )}
+                </td>
               </tr>
             ))}
           </tbody>

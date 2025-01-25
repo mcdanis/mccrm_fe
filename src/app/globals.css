@@ -39,7 +39,7 @@ body {
 }
 
 .btn-orange-sm {
-  @apply bg-[#5C708E] hover:bg-[#3c5d8f] text-white font-bold text-xs px-3 border border-[#3c5d8f] rounded;
+  @apply bg-[#5C708E] hover:bg-[#3c5d8f] text-white font-bold text-xs px-3 border-b-4  border-[#335280] rounded;
   padding-top: 7px;
   padding-bottom: 7px;
 }
@@ -53,7 +53,7 @@ body {
 .btn-orange-outline-sm-i {
   background-color: #e32424 !important;
   color: white;
-  font-size: .75rem;
+  font-size: 0.75rem;
   border: 1px solid #e32424;
   padding-top: 5px;
   padding-bottom: 5px;

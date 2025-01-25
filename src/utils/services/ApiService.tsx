@@ -10,6 +10,14 @@ class ApiService {
     };
   }
 
+  getCookiesUserId() {
+    return Cookies.get("mccrm_user_id");
+  }
+
+  getCookiesToken() {
+    return Cookies.get("mccrm_token");
+  }
+
   async getClients() {
     try {
       const response = await api("clients", {
@@ -221,6 +229,30 @@ class ApiService {
       const response = await api(
         "campaign/sub-campaign/contact/timeline/" + contactId,
         this.header()
+      );
+      return response.json();
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async findContacts(keyword: string) {
+    try {
+      const response = await api(
+        "campaign/contact/search?keyword=" + keyword,
+        this.header()
+      );
+      return response.json();
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async importContact(data: object) {
+    try {
+      const response = await api(
+        "campaign/sub-campaign/contact/import",
+        this.header("POST", data)
       );
       return response.json();
     } catch (error) {
