@@ -82,7 +82,7 @@ const User = () => {
                 <td className="py-3 px-6">{user.email}</td>
                 <td className="py-3 px-6">{user.title}</td>
                 <td className="py-3 px-6">{user.role}</td>
-                <td className="py-3 px-6">{user.client_id}</td>
+                <td className="py-3 px-6">{user.client.name}</td>
                 <td className="py-3 px-6">
                   <div
                     className="inline-flex rounded-md shadow-sm"

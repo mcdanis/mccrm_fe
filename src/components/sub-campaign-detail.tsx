@@ -94,8 +94,10 @@ export const Contact: React.FC<InfoProps> = ({ subCampaign }) => {
             <tr className="bg-primary text-gray-600 uppercase text-sm leading-normal">
               <th className="py-3 px-6 text-left">No</th>
 
-              <th className="py-3 px-6 text-left">Nama</th>
+              <th className="py-3 px-6 text-left">Name</th>
 
+              <th className="py-3 px-6 text-left">Phone</th>
+              <th className="py-3 px-6 text-left">E-Mail</th>
               <th className="py-3 px-6 text-left">Company</th>
 
               <th className="py-3 px-6 text-left">Status</th>
@@ -110,19 +112,72 @@ export const Contact: React.FC<InfoProps> = ({ subCampaign }) => {
               <tr
                 key={contact.id}
                 className="border-b border-gray-200 hover:bg-gray-100 cursor-pointer"
-                onClick={() => contactDetail(contact.id)}
+                onDoubleClick={() => contactDetail(contact.id)}
               >
                 <td className="py-3 px-6">{index + 1}</td>
                 <td className="py-3 px-6">{contact.full_name}</td>
+                <td className="py-3 px-6">{contact.phone_number}</td>
+                <td className="py-3 px-6">{contact.email}</td>
                 <td className="py-3 px-6">{contact.company}</td>
                 <td className="py-3 px-6">
                   {convert(contact.status, "status")}
                 </td>
                 <td className="py-3 px-6">{convert(contact.tag, "tag")}</td>
                 <td className="py-3 px-6">
+                  s
                   {contact.status == 8 && (
                     <button className="btn-orange-sm">Add as Customer</button>
                   )}
+                  <button
+                    id="dropdownDefaultButton"
+                    data-dropdown-toggle="dropdown"
+                    className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                    type="button"
+                  >
+                    Dropdown button{" "}
+                  </button>
+                  <div
+                    id="dropdown"
+                    className="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 dark:bg-gray-700"
+                  >
+                    <ul
+                      className="py-2 text-sm text-gray-700 dark:text-gray-200"
+                      aria-labelledby="dropdownDefaultButton"
+                    >
+                      <li>
+                        <a
+                          href="#"
+                          className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                        >
+                          Dashboard
+                        </a>
+                      </li>
+                      <li>
+                        <a
+                          href="#"
+                          className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                        >
+                          Settings
+                        </a>
+                      </li>
+                      <li>
+                        <a
+                          href="#"
+                          className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                        >
+                          Earnings
+                        </a>
+                      </li>
+                      <li>
+                        <a
+                          href="#"
+                          className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                        >
+                          Sign out
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
                 </td>
               </tr>
             ))}

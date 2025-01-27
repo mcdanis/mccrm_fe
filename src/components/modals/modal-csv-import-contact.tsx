@@ -20,7 +20,6 @@ const ModalCsv: React.FC<ModalProps> = ({ isOpen, onClose, subCampaignId }) => {
 
     Papa.parse(file, {
       complete: (result) => {
-        console.log("Parsed CSV Data:", result.data);
         setData(result.data);
       },
       header: true,
@@ -29,10 +28,12 @@ const ModalCsv: React.FC<ModalProps> = ({ isOpen, onClose, subCampaignId }) => {
 
   const handleSubmit = async () => {
     try {
-      const updatedData = data.map((item, index) => ({
-        ...item,
-        sub_campaign_id: subCampaignId,
-      }));
+      const updatedData = data
+        .filter((item) => item.full_name)
+        .map((item, index) => ({
+          ...item,
+          sub_campaign_id: subCampaignId,
+        }));
 
       const response = await apiService.importContact(updatedData);
 
@@ -76,7 +77,7 @@ const ModalCsv: React.FC<ModalProps> = ({ isOpen, onClose, subCampaignId }) => {
 
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
-      <div className="bg-white rounded-lg shadow-lg p-6 w-3/3">
+      <div className="bg-white rounded-lg shadow-lg p-6 w-2/3 h-2/3 overflow-auto">
         <h2 className="text-lg font-bold mb-4 text-gray-700">
           Import from CSV file
         </h2>

@@ -471,12 +471,12 @@ const Contact = () => {
             </div>
             <div>
               <label className="label-gray">Source</label>
-              <input
+              <textarea
                 className="input-orange"
                 name="source"
                 value={formData.source}
                 onChange={handleChange}
-              />
+              ></textarea>
             </div>
           </div>
         </div>
