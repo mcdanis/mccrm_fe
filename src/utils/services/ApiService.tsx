@@ -259,6 +259,18 @@ class ApiService {
       console.log(error);
     }
   }
+
+  async duplicateContact(id: number) {
+    try {
+      const response = await api(
+        "campaign/sub-campaign/contact/duplicate/" + id,
+        this.header("POST", {})
+      );
+      return response.json();
+    } catch (error) {
+      console.log(error);
+    }
+  }
 }
 
 export default ApiService;

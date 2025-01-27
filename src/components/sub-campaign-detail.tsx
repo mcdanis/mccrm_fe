@@ -7,7 +7,7 @@ import ModalCsv from "@/components/modals/modal-csv-import-contact";
 import Link from "next/link";
 import ApiService from "@/utils/services/ApiService";
 import { useRouter } from "next/navigation";
-import { convert } from "@/utils/utils";
+import { convert, messageBox } from "@/utils/utils";
 
 interface InfoProps {
   subCampaign: Record<string>;
@@ -43,6 +43,61 @@ export const Contact: React.FC<InfoProps> = ({ subCampaign }) => {
 
     fetchContacts();
   }, [subCampaign]);
+
+  const [action, setAction] = useState("");
+
+  const handleChangeAction = async (event, id, name) => {
+    const ev = event.target;
+    setAction(ev);
+
+    switch (ev.value) {
+      case "edit":
+        // Jalankan kode untuk aksi Edit
+        console.log("Edit action selected");
+        break;
+      case "delete":
+        const confirmDelete = await messageBox(
+          "",
+          "sure to delete this data '" + name + "'",
+          "question"
+        );
+        if (confirmDelete) {
+          const del = await apiService.delete("contact", id);
+          if (!del.error) {
+            const success = await messageBox("", del.message, "success", "no");
+            if (success) {
+              window.location.reload();
+            }
+          }
+        }
+        break;
+      case "duplicate":
+        const confirm = await messageBox(
+          "",
+          "sure duplicat this contact " + name + "?",
+          "question"
+        );
+        if (confirm) {
+          const duplicated = await apiService.duplicateContact(id);
+          if (!duplicated.error) {
+            const success = await messageBox(
+              "",
+              duplicated.message,
+              "info",
+              "no"
+            );
+            if (success) {
+              window.location.reload();
+            }
+          }
+        }
+
+        break;
+      default:
+        // Jika tidak ada aksi yang dipilih
+        console.log("No action selected");
+    }
+  };
 
   if (!contacts) {
     return;
@@ -114,6 +169,7 @@ export const Contact: React.FC<InfoProps> = ({ subCampaign }) => {
                 className="border-b border-gray-200 hover:bg-gray-100 cursor-pointer"
                 onDoubleClick={() => contactDetail(contact.id)}
               >
+                {/* onDoubleCdlick={() => contactDetail(contact.id)} */}
                 <td className="py-3 px-6">{index + 1}</td>
                 <td className="py-3 px-6">{contact.full_name}</td>
                 <td className="py-3 px-6">{contact.phone_number}</td>
@@ -124,60 +180,22 @@ export const Contact: React.FC<InfoProps> = ({ subCampaign }) => {
                 </td>
                 <td className="py-3 px-6">{convert(contact.tag, "tag")}</td>
                 <td className="py-3 px-6">
-                  s
                   {contact.status == 8 && (
                     <button className="btn-orange-sm">Add as Customer</button>
                   )}
-                  <button
-                    id="dropdownDefaultButton"
-                    data-dropdown-toggle="dropdown"
-                    className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                    type="button"
+                  <select
+                    name=""
+                    id=""
+                    className="select-orange"
+                    onChange={(event) =>
+                      handleChangeAction(event, contact.id, contact.full_name)
+                    }
                   >
-                    Dropdown button{" "}
-                  </button>
-                  <div
-                    id="dropdown"
-                    className="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 dark:bg-gray-700"
-                  >
-                    <ul
-                      className="py-2 text-sm text-gray-700 dark:text-gray-200"
-                      aria-labelledby="dropdownDefaultButton"
-                    >
-                      <li>
-                        <a
-                          href="#"
-                          className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                        >
-                          Dashboard
-                        </a>
-                      </li>
-                      <li>
-                        <a
-                          href="#"
-                          className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                        >
-                          Settings
-                        </a>
-                      </li>
-                      <li>
-                        <a
-                          href="#"
-                          className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                        >
-                          Earnings
-                        </a>
-                      </li>
-                      <li>
-                        <a
-                          href="#"
-                          className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                        >
-                          Sign out
-                        </a>
-                      </li>
-                    </ul>
-                  </div>
+                    <option value="">Action</option>
+                    <option value="edit">Edit</option>
+                    <option value="delete">Delete</option>
+                    <option value="duplicate">Duplicate</option>
+                  </select>
                 </td>
               </tr>
             ))}
