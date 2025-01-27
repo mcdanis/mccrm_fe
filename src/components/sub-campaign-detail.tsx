@@ -58,7 +58,9 @@ export const Contact: React.FC<InfoProps> = ({ subCampaign }) => {
       case "delete":
         const confirmDelete = await messageBox(
           "",
-          "sure to delete this data '" + name + "'",
+          "Sure to delete this data '" +
+            name +
+            "', This will REMOVE ALL DATA related with this contact",
           "question"
         );
         if (confirmDelete) {
