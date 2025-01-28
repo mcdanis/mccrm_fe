@@ -55,6 +55,8 @@ const ModalCsv: React.FC<ModalProps> = ({ isOpen, onClose, subCampaignId }) => {
         phone_number: "",
         email: "",
         country: "",
+        website: "",
+        sosmed: "",
         address: "",
         source: "",
         tag: "",
@@ -100,6 +102,8 @@ const ModalCsv: React.FC<ModalProps> = ({ isOpen, onClose, subCampaignId }) => {
                   <th className="py-3 px-6 text-left">status</th>
                   <th className="py-3 px-6 text-left">level_priority</th>
                   <th className="py-3 px-6 text-left">company</th>
+                  <th className="py-3 px-6 text-left">sosmed</th>
+                  <th className="py-3 px-6 text-left">website</th>
                 </tr>
               </thead>
               <tbody>
@@ -118,6 +122,8 @@ const ModalCsv: React.FC<ModalProps> = ({ isOpen, onClose, subCampaignId }) => {
                       {item.level_priority}
                     </td>
                     <td className="py-3 px-6 text-left">{item.company}</td>
+                    <td className="py-3 px-6 text-left">{item.sosmed}</td>
+                    <td className="py-3 px-6 text-left">{item.website}</td>
                   </tr>
                 ))}
               </tbody>

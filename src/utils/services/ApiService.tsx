@@ -93,6 +93,18 @@ class ApiService {
     }
   }
 
+  async addAsCustomer(id: number) {
+    try {
+      const response = await api(
+        "campaign/sub-campaign/contact/customer",
+        this.header("POST", { id: id, note: "" })
+      );
+      return response.json();
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   async delete(model: string, id: number) {
     try {
       const response = await api("client/delete/" + model + "/" + id, {

@@ -397,6 +397,13 @@ const Contact = () => {
     router.back();
   };
 
+  const [isPopoverVisible, setPopoverVisible] = useState(false);
+
+  // Toggle popover visibility
+  const togglePopover = () => {
+    setPopoverVisible(!isPopoverVisible);
+  };
+
   if (!contact) {
     return <>please wait..</>;
   }
@@ -632,8 +639,83 @@ const Contact = () => {
                       </div>
                       <div>
                         <label className="label-gray" htmlFor="contact-status">
-                          Contact Status
+                          Contact Status{" "}
+                          <svg
+                            onClick={togglePopover}
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            width="14"
+                            height="14"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            className="text-black-500 text-xs"
+                            style={{ display: "inline" }}
+                          >
+                            <circle cx="12" cy="12" r="10" />
+                            <line x1="12" y1="8" x2="12" y2="8" />
+                            <line x1="12" y1="12" x2="12" y2="16" />
+                          </svg>
                         </label>
+                        <div className="relative inline-block text-left h-100">
+                          {isPopoverVisible && (
+                            <div
+                              className="absolute z-10 w-64 p-4 mt-2 text-sm text-gray-700 bg-white border border-gray-300 rounded shadow-lg"
+                              style={{
+                                top: "100%",
+                                left: "50%",
+                                transform: "translateX(-50%)",
+                              }}
+                            >
+                              <h3 className="font-semibold text-sm">
+                                CONTACT STATUS INFO
+                              </h3>
+                              <p className="mt-2">
+                                <b>Draf</b> = Kontak belum bisa di proses
+                                <br />
+                                <br />
+                                <b>Open</b> = Kontak bisa di ambil dan di proses
+                                <br />
+                                <br />
+                                <b>On Progress</b> = Kontak masih di
+                                kontak/hubungi untuk di tawari produk
+                                <br />
+                                <br />
+                                <b>Quafilication lead</b> = Kontak yang sudah
+                                merespon dan menjelaskan apa kemauan mereka
+                                <br />
+                                <br />
+                                <b>Negotiation</b> = Kontak yang sudah membahasa
+                                harga dan fitur
+                                <br />
+                                <br />
+                                <b>Deal</b> = Kontak yang sudah setuju dengan
+                                fitur dan harga, tetapi belum menyelesaikan
+                                transaksi
+                                <br />
+                                <br />
+                                <b>Active Project</b> = Projek sedang di
+                                kerjakan dan aktif
+                                <br />
+                                <br />
+                                <b>Done</b> = Projek selesai
+                                <br />
+                                <br />
+                                <b>Lost</b> = Kontak tidak tertarik, tidak
+                                merespon samasekali
+                                <br />
+                              </p>
+                              <button
+                                onClick={togglePopover}
+                                className="mt-2 text-xs text-blue-500 hover:text-blue-700"
+                              >
+                                Tutup
+                              </button>
+                            </div>
+                          )}
+                        </div>
                         <select
                           id="contact-status"
                           className="select-orange"

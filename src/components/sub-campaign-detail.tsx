@@ -95,6 +95,22 @@ export const Contact: React.FC<InfoProps> = ({ subCampaign }) => {
         }
 
         break;
+      case "aac":
+        const confirmAcc = await messageBox(
+          "",
+          "Sure adding " + name + " as a customer?",
+          "question"
+        );
+        if (confirmAcc) {
+          const acc = await apiService.addAsCustomer(id);
+          if (!acc.error) {
+            const success = await messageBox("", acc.message, "success", "no");
+            if (success) {
+              window.location.reload();
+            }
+          }
+        }
+        break;
       default:
         // Jika tidak ada aksi yang dipilih
         console.log("No action selected");
@@ -169,18 +185,50 @@ export const Contact: React.FC<InfoProps> = ({ subCampaign }) => {
               <tr
                 key={contact.id}
                 className="border-b border-gray-200 hover:bg-gray-100 cursor-pointer"
-                onDoubleClick={() => contactDetail(contact.id)}
               >
                 {/* onDoubleCdlick={() => contactDetail(contact.id)} */}
-                <td className="py-3 px-6">{index + 1}</td>
-                <td className="py-3 px-6">{contact.full_name}</td>
-                <td className="py-3 px-6">{contact.phone_number}</td>
-                <td className="py-3 px-6">{contact.email}</td>
-                <td className="py-3 px-6">{contact.company}</td>
-                <td className="py-3 px-6">
+                <td
+                  onDoubleClick={() => contactDetail(contact.id)}
+                  className="py-3 px-6"
+                >
+                  {index + 1}
+                </td>
+                <td
+                  onDoubleClick={() => contactDetail(contact.id)}
+                  className="py-3 px-6"
+                >
+                  {contact.full_name}
+                </td>
+                <td
+                  onDoubleClick={() => contactDetail(contact.id)}
+                  className="py-3 px-6"
+                >
+                  {contact.phone_number}
+                </td>
+                <td
+                  onDoubleClick={() => contactDetail(contact.id)}
+                  className="py-3 px-6"
+                >
+                  {contact.email}
+                </td>
+                <td
+                  onDoubleClick={() => contactDetail(contact.id)}
+                  className="py-3 px-6"
+                >
+                  {contact.company}
+                </td>
+                <td
+                  onDoubleClick={() => contactDetail(contact.id)}
+                  className="py-3 px-6"
+                >
                   {convert(contact.status, "status")}
                 </td>
-                <td className="py-3 px-6">{convert(contact.tag, "tag")}</td>
+                <td
+                  className="py-3 px-6"
+                  onDoubleClick={() => contactDetail(contact.id)}
+                >
+                  {convert(contact.tag, "tag")}
+                </td>
                 <td className="py-3 px-6">
                   {contact.status == 8 && (
                     <button className="btn-orange-sm">Add as Customer</button>
@@ -197,6 +245,10 @@ export const Contact: React.FC<InfoProps> = ({ subCampaign }) => {
                     <option value="edit">Edit</option>
                     <option value="delete">Delete</option>
                     <option value="duplicate">Duplicate</option>
+                    <option value="aac">Add as Customer</option>
+                    {contact.status == 8 && (
+                      <option value="aac">Add as Customer</option>
+                    )}
                   </select>
                 </td>
               </tr>
