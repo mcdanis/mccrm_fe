@@ -9,9 +9,24 @@ interface ModalProps {
   onClose: () => void;
 }
 
+interface Csv {
+  full_name: string;
+  phone_number: string;
+  email: string;
+  country: string;
+  address: string;
+  source: string;
+  tag: string;
+  status: string;
+  level_priority: string;
+  sosmed: string;
+  website: string;
+  company: string;
+}
+
 const ModalCsv: React.FC<ModalProps> = ({ isOpen, onClose, subCampaignId }) => {
   const apiService = new ApiService();
-  const [data, setData] = useState<[]>([]);
+  const [data, setData] = useState<Csv[]>([]);
   const [error, setError] = useState("");
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -21,8 +36,7 @@ const ModalCsv: React.FC<ModalProps> = ({ isOpen, onClose, subCampaignId }) => {
     Papa.parse(file, {
       delimiter: ";",
       complete: (result) => {
-        console.log(result.data);
-        setData(result.data);
+        setData(result.data as Csv[]);
       },
       header: true,
       skipEmptyLines: true,
@@ -47,7 +61,7 @@ const ModalCsv: React.FC<ModalProps> = ({ isOpen, onClose, subCampaignId }) => {
         setError("");
       }
     } catch (error) {
-      setError(error.message);
+      setError((error as Error).message);
     }
   };
 
