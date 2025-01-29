@@ -4,6 +4,7 @@ import React from "react";
 import { useState, useEffect } from "react";
 import Modal from "@/components/modals/modal-add-existing-contact";
 import ModalCsv from "@/components/modals/modal-csv-import-contact";
+import ModalMoveContact from "@/components/modals/modal-move-contact";
 import Link from "next/link";
 import ApiService from "@/utils/services/ApiService";
 import { useRouter } from "next/navigation";
@@ -16,12 +17,21 @@ interface InfoProps {
 export const Contact: React.FC<InfoProps> = ({ subCampaign }) => {
   const router = useRouter();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [contactId, setContactId] = useState(0);
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalOpenCsv, setIsModalOpenCsv] = useState(false);
+
+  const [isModalMoveContactOpen, setIsModalMoveContactOpen] = useState(false);
+
   const [contacts, setContacts] = useState(false);
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
+
+  const openModalMoveContact = () => setIsModalMoveContactOpen(true);
+  const closeModalMoveContact = () => setIsModalMoveContactOpen(false);
+
   const openModalCsv = () => setIsModalOpenCsv(true);
   const closeModalCsv = () => setIsModalOpenCsv(false);
 
@@ -44,11 +54,8 @@ export const Contact: React.FC<InfoProps> = ({ subCampaign }) => {
     fetchContacts();
   }, [subCampaign]);
 
-  const [action, setAction] = useState("");
-
   const handleChangeAction = async (event, id, name) => {
     const ev = event.target;
-    setAction(ev);
 
     switch (ev.value) {
       case "edit":
@@ -95,6 +102,17 @@ export const Contact: React.FC<InfoProps> = ({ subCampaign }) => {
         }
 
         break;
+      case "move":
+        const confimMove = await messageBox(
+          "",
+          "Sure move this contact " + name + " to another campaign?",
+          "question"
+        );
+        if (confimMove) {
+          setIsModalMoveContactOpen(true);
+          setContactId(id);
+        }
+        break;
       case "aac":
         const confirmAcc = await messageBox(
           "",
@@ -128,6 +146,11 @@ export const Contact: React.FC<InfoProps> = ({ subCampaign }) => {
   return (
     <>
       <Modal isOpen={isModalOpen} onClose={closeModal} />
+      <ModalMoveContact
+        isOpen={isModalMoveContactOpen}
+        onClose={closeModalMoveContact}
+        contactId={contactId}
+      />
       <ModalCsv
         subCampaignId={subCampaign.id}
         isOpen={isModalOpenCsv}
@@ -230,9 +253,6 @@ export const Contact: React.FC<InfoProps> = ({ subCampaign }) => {
                   {convert(contact.tag, "tag")}
                 </td>
                 <td className="py-3 px-6">
-                  {contact.status == 8 && (
-                    <button className="btn-orange-sm">Add as Customer</button>
-                  )}
                   <select
                     name=""
                     id=""
@@ -245,7 +265,7 @@ export const Contact: React.FC<InfoProps> = ({ subCampaign }) => {
                     <option value="edit">Edit</option>
                     <option value="delete">Delete</option>
                     <option value="duplicate">Duplicate</option>
-                    <option value="aac">Add as Customer</option>
+                    <option value="move">Move</option>
                     {contact.status == 8 && (
                       <option value="aac">Add as Customer</option>
                     )}

@@ -33,7 +33,10 @@ export default function Campaign() {
 
   useEffect(() => {
     const fetchCampaigns = async () => {
-      const campaignsData = await apiService.getCampaignsWithSubs(statusValue, filterValue);
+      const campaignsData = await apiService.getCampaignsWithSubs(
+        statusValue,
+        filterValue
+      );
       setCampaigns(campaignsData);
     };
     fetchCampaigns();
@@ -47,12 +50,29 @@ export default function Campaign() {
     setStatusValue(Number(event.target.value));
   };
 
+  const highlightText = (text: string) => {
+    if (!filterValue) return text;
+
+    const regex = new RegExp(`(${filterValue})`, "gi"); // Regex untuk mencari kata yang sesuai (case-insensitive)
+    return text.split(regex).map((part, index) =>
+      part.toLowerCase() === filterValue.toLowerCase() ? (
+        <mark
+          key={index}
+          style={{ backgroundColor: "#ff0", fontWeight: "bold" }}
+        >
+          {part}
+        </mark>
+      ) : (
+        part
+      )
+    );
+  };
   return (
     <>
       <Header />
       <div className="container mx-auto p-4 my-5">
         <div className="grid grid-cols-2">
-          <div className="grid grid-cols-2 mb-4 gap-4">
+          <div className="grid grid-cols-2 mb-4 gap-5">
             <div className="items-center">
               <input
                 type="text"
@@ -86,9 +106,21 @@ export default function Campaign() {
           {campaigns.map((campaign) => (
             <div className="inline-block" key={campaign.id}>
               <div className="max-w-xs overflow-hidden rounded-lg shadow-lg border-2 border-gray-100 hover:shadow-xl transition-shadow duration-300 ease-in-out p-5">
-                <p className={`font-bold text-md text-gray-700 ${montserrat.className} flex items-center`}>
-                  {campaign.name}
-                  <Link href={`/crm/campaign/sub-campaign/add?campaign_id=${campaign.id}`} className="ml-auto text-center btn-orange-sm">+</Link>
+                <p
+                  className={`font-bold text-md text-gray-700 ${montserrat.className} flex items-center`}
+                >
+                  <Link
+                    href={`/crm/campaign/` + campaign.id}
+                    className="hover:underline"
+                  >
+                    {campaign.name}
+                  </Link>
+                  <Link
+                    href={`/crm/campaign/sub-campaign/add?campaign_id=${campaign.id}`}
+                    className="ml-auto text-center btn-orange-sm"
+                  >
+                    +
+                  </Link>
                 </p>
                 <div className="mt-4 overflow-y-auto h-[200px]">
                   <table className="min-w-full">
@@ -105,7 +137,7 @@ export default function Campaign() {
                               href={`/crm/campaign/sub-campaign/${subCampaign.id}`}
                               className="label-gray underline"
                             >
-                              {subCampaign.name}
+                              {highlightText(subCampaign.name)}
                             </Link>
                           </td>
                         </tr>

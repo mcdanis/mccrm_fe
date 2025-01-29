@@ -54,6 +54,18 @@ class ApiService {
     }
   }
 
+  async getCampaign(id: number) {
+    try {
+      const response = await api("campaign/" + id, {
+        method: "GET",
+        headers: this.headerAuth,
+      });
+      return await response.json();
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   async getCampaignsWithSubs(status: number, name: string) {
     try {
       const response = await api(
@@ -98,6 +110,18 @@ class ApiService {
       const response = await api(
         "campaign/sub-campaign/contact/customer",
         this.header("POST", { id: id, note: "" })
+      );
+      return response.json();
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async moveContact(id: number, newSubCampaignId: number) {
+    try {
+      const response = await api(
+        "campaign/sub-campaign/contact/move",
+        this.header("POST", { id: id, newSubCampaignId: newSubCampaignId })
       );
       return response.json();
     } catch (error) {
@@ -278,6 +302,15 @@ class ApiService {
         "campaign/sub-campaign/contact/duplicate/" + id,
         this.header("POST", {})
       );
+      return response.json();
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async updateCampaign(data: object) {
+    try {
+      const response = await api("campaign/update", this.header("POST", data));
       return response.json();
     } catch (error) {
       console.log(error);

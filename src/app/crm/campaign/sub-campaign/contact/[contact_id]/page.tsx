@@ -144,23 +144,6 @@ const Contact = () => {
     { id: "don", label: "Done" },
   ];
 
-  const timelineData = [
-    {
-      id: "farahzia",
-      date: "05/09/2024 15:33:55",
-      title: "Farah Zia",
-      description:
-        "Moved this contact from campaign Arctic Wolf SDR - QLD to Arctic Wolf Bin",
-    },
-    {
-      id: "joshuacoates1",
-      date: "03/09/2024 13:05:24",
-      title: "Joshua Coates",
-      description:
-        "Status changed from Approaching to Lost with the reason: Do not call",
-    },
-  ];
-
   const handleTabClick = (tabId: string) => {
     setActiveTimelineTab(tabId);
   };
@@ -238,13 +221,6 @@ const Contact = () => {
     }));
   };
 
-  const handleChangeNote = (
-    event:
-      | React.ChangeEvent<HTMLInputElement>
-      | React.ChangeEvent<HTMLSelectElement>
-      | React.ChangeEvent<HTMLTextAreaElement>
-  ) => {};
-
   useEffect(() => {
     if (contact) {
       setFormData({
@@ -317,7 +293,6 @@ const Contact = () => {
         subCampaignId: contact.contact ? contact.contact.sub_campaign_id : "",
       });
     }
-    console.log(contact);
   }, [contact]);
 
   const saveNote = async () => {
@@ -330,12 +305,7 @@ const Contact = () => {
 
     const addNote = await apiService.addNote(data);
     if (addNote.error == false) {
-      const msg = await messageBox(
-        "",
-        "Note Berhasil di tambahkan !!",
-        "success",
-        "no"
-      );
+      await messageBox("", "Note Berhasil di tambahkan !!", "success", "no");
       setError("");
       formData.note = "";
     } else {
@@ -353,12 +323,7 @@ const Contact = () => {
 
     const addNote = await apiService.addActivity(data);
     if (addNote.error == false) {
-      const msg = await messageBox(
-        "",
-        "Activity successfully added !!",
-        "success",
-        "no"
-      );
+      await messageBox("", "Activity successfully added !!", "success", "no");
       setError("");
       formData.description = "";
       formData.inputProgress = "";
@@ -376,12 +341,7 @@ const Contact = () => {
     }
     const updateContact = await apiService.updateContact(formData);
     if (updateContact.error == false) {
-      const msg = await messageBox(
-        "",
-        "Contact successfully updated !!",
-        "success",
-        "no"
-      );
+      await messageBox("", "Contact successfully updated !!", "success", "no");
       setError("");
     } else {
       setError(updateContact.message);

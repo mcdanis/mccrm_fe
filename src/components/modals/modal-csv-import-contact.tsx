@@ -11,7 +11,7 @@ interface ModalProps {
 
 const ModalCsv: React.FC<ModalProps> = ({ isOpen, onClose, subCampaignId }) => {
   const apiService = new ApiService();
-  const [data, setData] = useState<any[]>([]);
+  const [data, setData] = useState<[]>([]);
   const [error, setError] = useState("");
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -19,10 +19,13 @@ const ModalCsv: React.FC<ModalProps> = ({ isOpen, onClose, subCampaignId }) => {
     if (!file) return;
 
     Papa.parse(file, {
+      delimiter: ";",
       complete: (result) => {
+        console.log(result.data);
         setData(result.data);
       },
       header: true,
+      skipEmptyLines: true,
     });
   };
 
@@ -30,7 +33,7 @@ const ModalCsv: React.FC<ModalProps> = ({ isOpen, onClose, subCampaignId }) => {
     try {
       const updatedData = data
         .filter((item) => item.full_name)
-        .map((item, index) => ({
+        .map((item) => ({
           ...item,
           sub_campaign_id: subCampaignId,
         }));

@@ -74,6 +74,11 @@ export const contact_status: { [key: number]: string } = {
   9: "Lost ",
 };
 
+export const status: { [key: number]: string } = {
+  0: "Non-Aktive",
+  1: "Active",
+};
+
 export const lead_type: { [key: number]: string } = {
   1: "Cold",
   2: "Warm (MQL)",

@@ -3,7 +3,6 @@
 import React from "react";
 import Header from "@/app/crm/header";
 import { useState, useEffect } from "react";
-import Link from "next/link";
 import ApiService from "@/utils/services/ApiService";
 import { contact_status } from "@/utils/utils";
 const Crm = () => {
@@ -40,11 +39,7 @@ const Crm = () => {
           <div className="grid grid-cols-2 mb-4 gap-4">
             <h1 className="text-2xl text-bold text-gray-700">Dashboard</h1>
           </div>
-          <div className="text-end">
-            {/* <Link href="/crm/client/add" className="btn-orange-sm">
-              Add Client
-            </Link> */}
-          </div>
+          <div className="text-end"></div>
         </div>
         <div className="text-gray-700 grid grid-cols-2 gap-3">
           <div>
