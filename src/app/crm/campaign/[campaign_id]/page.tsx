@@ -6,9 +6,16 @@ import { useParams } from "next/navigation";
 import { messageBox, status } from "@/utils/utils";
 import { useRouter } from "next/navigation";
 
+interface Campaign {
+  id: string;
+  name: string;
+  status: string;
+}
+
 const ReportDashboard = () => {
   const apiService = new ApiService();
-  const [campaign, setCampaign] = useState();
+  const [campaign, setCampaign] = useState<Campaign | null>(null);
+
   const router = useRouter();
   const params = useParams();
 
@@ -31,7 +38,7 @@ const ReportDashboard = () => {
   useEffect(() => {
     if (campaign) {
       setFormData({
-        campaignId: campaign.id,
+        campaignId: Number(campaign.id),
         campaignName: campaign.name,
         campaignStatus: campaign.status,
       });
