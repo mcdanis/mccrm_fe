@@ -17,7 +17,7 @@ import {
   lead_type,
   messageBox,
 } from "@/utils/utils";
-import Editor from "react-simple-wysiwyg";
+import { Editor, ContentEditableEvent } from "react-simple-wysiwyg";
 
 const inter = Inter({ subsets: ["latin"], weight: ["400", "700"] });
 
@@ -115,6 +115,18 @@ interface Data {
   subCampaign: SubCampaign;
 }
 
+interface TimelineItem {
+  type: string;
+  createdAt: string;
+  title: string;
+  description: string;
+}
+
+interface User {
+  id: number;
+  name: string;
+}
+
 const Contact = () => {
   const apiService = new ApiService();
   const params = useParams();
@@ -129,10 +141,10 @@ const Contact = () => {
     setActiveTab(tab);
   };
 
-  const [users, setUsers] = useState();
+  const [users, setUsers] = useState<User[]>([]);
   const [activeTimelineTab, setActiveTimelineTab] = useState("all");
   const [contact, setContact] = useState<Data>();
-  const [timeline, setTimeline] = useState();
+  const [timeline, setTimeline] = useState<TimelineItem[]>([]); // Definisikan tipe state
 
   const tabs = [
     { id: "all", label: "All" },
@@ -150,7 +162,7 @@ const Contact = () => {
 
   useEffect(() => {
     const fetchContact = async () => {
-      const contact = await apiService.getContact(contact_id);
+      const contact = await apiService.getContact(Number(contact_id));
       setContact(contact);
     };
     fetchContact();
@@ -160,7 +172,7 @@ const Contact = () => {
     };
     fetchUsers();
     const fetchTimeline = async () => {
-      const timeline = await apiService.getContactTimeline(contact_id);
+      const timeline = await apiService.getContactTimeline(Number(contact_id));
       setTimeline(timeline);
     };
     fetchTimeline();
@@ -194,7 +206,6 @@ const Contact = () => {
     projectName: "",
     projectStartdate: "",
     projectEnddate: "",
-    deal: "",
     resultOfNegotiation: "",
     // done
     paymentStatus: "",
@@ -206,18 +217,20 @@ const Contact = () => {
     contactId: contact_id,
     subCampaignId: "",
     userId: Cookies.get("mccrm_user_id"),
+    status: "",
   });
 
   const handleChange = (
     event:
-      | React.ChangeEvent<HTMLInputElement>
-      | React.ChangeEvent<HTMLSelectElement>
-      | React.ChangeEvent<HTMLTextAreaElement>
+      | React.ChangeEvent<
+          HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+        >
+      | ContentEditableEvent
   ) => {
     const { name, value } = event.target;
     setFormData((prevData) => ({
       ...prevData,
-      [name]: value,
+      [String(name)]: value,
     }));
   };
 
@@ -234,10 +247,10 @@ const Contact = () => {
         address: contact.contact.address || "",
         tag: contact.contact.tag || "",
         levelPriority: contact.contact.level_priority || "",
-        status: contact.contact.status || "",
+        status: contact.contact.status,
         leadType: contact.contact.contactBant
           ? contact.contact.contactBant.lead_type
-          : "",
+          : 0,
         budget: contact.contact.contactBant
           ? contact.contact.contactBant.budget
           : "",
@@ -257,7 +270,7 @@ const Contact = () => {
           ? contact.contact.contactBant.spesification_project
           : "",
         leadOwner: contact.contact.contactBant
-          ? contact.contact.contactBant.lead_owner
+          ? String(contact.contact.contactBant.lead_owner)
           : "",
         projectName: contact.contact.contactFinal
           ? contact.contact.contactFinal.project_name
@@ -269,14 +282,14 @@ const Contact = () => {
           ? contact.contact.contactFinal.end_date
           : "",
         deal: contact.contact.contactFinal
-          ? contact.contact.contactFinal.deal
+          ? String(contact.contact.contactFinal.deal)
           : "",
         resultOfNegotiation: contact.contact.contactFinal
-          ? contact.contact.contactFinal.result_negotiation
+          ? String(contact.contact.contactFinal.result_negotiation)
           : "",
 
         dealDone: contact.contact.contactFinal
-          ? contact.contact.contactFinal.deal_done
+          ? String(contact.contact.contactFinal.deal_done)
           : "",
         evaluation: contact.contact.contactFinal
           ? contact.contact.contactFinal.evaluation
@@ -288,47 +301,53 @@ const Contact = () => {
           ? contact.contact.contactFinal.dorumentation
           : "",
         paymentStatus: contact.contact.contactFinal
-          ? contact.contact.contactFinal.payment_status
+          ? String(contact.contact.contactFinal.payment_status)
           : "",
-        subCampaignId: contact.contact ? contact.contact.sub_campaign_id : "",
+        subCampaignId: contact.contact
+          ? String(contact.contact.sub_campaign_id)
+          : "",
       });
     }
   }, [contact]);
 
   const saveNote = async () => {
-    const data = {
-      contactId: contact.contact.id,
-      subCampaignId: contact.contact.sub_campaign_id,
-      note: formData.note,
-      userId: Cookies.get("mccrm_user_id"),
-    };
+    if (contact) {
+      const data = {
+        contactId: contact.contact.id,
+        subCampaignId: contact.contact.sub_campaign_id,
+        note: formData.note,
+        userId: Cookies.get("mccrm_user_id"),
+      };
 
-    const addNote = await apiService.addNote(data);
-    if (addNote.error == false) {
-      await messageBox("", "Note Berhasil di tambahkan !!", "success", "no");
-      setError("");
-      formData.note = "";
-    } else {
-      setError(addNote.message);
+      const addNote = await apiService.addNote(data);
+      if (addNote.error == false) {
+        await messageBox("", "Note Berhasil di tambahkan !!", "success", "no");
+        setError("");
+        formData.note = "";
+      } else {
+        setError(addNote.message);
+      }
     }
   };
 
   const saveActivity = async () => {
-    const data = {
-      contactId: contact.contact.id,
-      description: formData.description,
-      title: formData.inputProgress,
-      userId: Cookies.get("mccrm_user_id"),
-    };
+    if (contact) {
+      const data = {
+        contactId: contact.contact.id,
+        description: formData.description,
+        title: formData.inputProgress,
+        userId: Cookies.get("mccrm_user_id"),
+      };
 
-    const addNote = await apiService.addActivity(data);
-    if (addNote.error == false) {
-      await messageBox("", "Activity successfully added !!", "success", "no");
-      setError("");
-      formData.description = "";
-      formData.inputProgress = "";
-    } else {
-      setError(addNote.message);
+      const addNote = await apiService.addActivity(data);
+      if (addNote.error == false) {
+        await messageBox("", "Activity successfully added !!", "success", "no");
+        setError("");
+        formData.description = "";
+        formData.inputProgress = "";
+      } else {
+        setError(addNote.message);
+      }
     }
   };
 
@@ -350,8 +369,8 @@ const Contact = () => {
 
   const filteredTimeline =
     activeTimelineTab === "all"
-      ? timeline
-      : timeline.filter((item) => item.type === activeTimelineTab);
+      ? timeline ?? []
+      : (timeline ?? []).filter((item) => item.type === activeTimelineTab);
 
   const back = () => {
     router.back();
@@ -519,42 +538,45 @@ const Contact = () => {
                   >
                     Activity
                   </button>
-                  {formData.status >= 4 && formData.status != 9 && (
-                    <button
-                      onClick={() => switchTab("status")}
-                      className={`hover:bg-[#1c3458] text-xs px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${
-                        activeTab == "status"
-                          ? "bg-[#5C708E] text-white"
-                          : "bg-[#F3F4F6] text-black"
-                      }`}
-                    >
-                      Qualification
-                    </button>
-                  )}
-                  {formData.status >= 5 && formData.status != 9 && (
-                    <button
-                      onClick={() => switchTab("negotiation")}
-                      className={`hover:bg-[#1c3458] text-xs  px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${
-                        activeTab == "negotiation"
-                          ? "bg-[#5C708E] text-white"
-                          : "bg-[#F3F4F6] text-black"
-                      }`}
-                    >
-                      Negotiation
-                    </button>
-                  )}
-                  {formData.status == 8 && formData.status != 9 && (
-                    <button
-                      onClick={() => switchTab("done")}
-                      className={`hover:bg-[#1c3458] text-xs  px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${
-                        activeTab == "done"
-                          ? "bg-[#5C708E] text-white"
-                          : "bg-[#F3F4F6] text-black"
-                      }`}
-                    >
-                      Done
-                    </button>
-                  )}
+                  {Number(formData.status) >= 4 &&
+                    Number(formData.status) != 9 && (
+                      <button
+                        onClick={() => switchTab("status")}
+                        className={`hover:bg-[#1c3458] text-xs px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${
+                          activeTab == "status"
+                            ? "bg-[#5C708E] text-white"
+                            : "bg-[#F3F4F6] text-black"
+                        }`}
+                      >
+                        Qualification
+                      </button>
+                    )}
+                  {Number(formData.status) >= 5 &&
+                    Number(formData.status) != 9 && (
+                      <button
+                        onClick={() => switchTab("negotiation")}
+                        className={`hover:bg-[#1c3458] text-xs  px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${
+                          activeTab == "negotiation"
+                            ? "bg-[#5C708E] text-white"
+                            : "bg-[#F3F4F6] text-black"
+                        }`}
+                      >
+                        Negotiation
+                      </button>
+                    )}
+                  {Number(formData.status) == 8 &&
+                    Number(formData.status) != 9 && (
+                      <button
+                        onClick={() => switchTab("done")}
+                        className={`hover:bg-[#1c3458] text-xs  px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${
+                          activeTab == "done"
+                            ? "bg-[#5C708E] text-white"
+                            : "bg-[#F3F4F6] text-black"
+                        }`}
+                      >
+                        Done
+                      </button>
+                    )}
                 </div>
 
                 {/* Notes Section */}
