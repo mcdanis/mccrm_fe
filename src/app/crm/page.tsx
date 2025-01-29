@@ -5,10 +5,18 @@ import Header from "@/app/crm/header";
 import { useState, useEffect } from "react";
 import ApiService from "@/utils/services/ApiService";
 import { contact_status } from "@/utils/utils";
+interface Contacts {
+  full_name: string;
+  subCampaign: {
+    name: string;
+  };
+  status: number; // Pastikan untuk menyesuaikan tipe ini sesuai dengan data Anda
+}
+
 const Crm = () => {
   const apiService = new ApiService();
   const [keyword, setKeyword] = useState("");
-  const [contacts, setContacts] = useState();
+  const [contacts, setContacts] = useState<Contacts[]>();
 
   const findContacts = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
