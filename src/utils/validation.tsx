@@ -1,5 +1,3 @@
-import { error } from "console";
-
 export const ContactValidation = (formData: object) => {
   if (formData.status >= 4 && formData.status <= 8) {
     if (

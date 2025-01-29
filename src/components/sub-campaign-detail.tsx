@@ -29,7 +29,6 @@ export const Contact: React.FC<InfoProps> = ({ subCampaign }) => {
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
-  const openModalMoveContact = () => setIsModalMoveContactOpen(true);
   const closeModalMoveContact = () => setIsModalMoveContactOpen(false);
 
   const openModalCsv = () => setIsModalOpenCsv(true);
