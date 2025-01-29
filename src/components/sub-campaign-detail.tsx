@@ -10,8 +10,32 @@ import ApiService from "@/utils/services/ApiService";
 import { useRouter } from "next/navigation";
 import { convert, messageBox } from "@/utils/utils";
 
+interface SubCampaign {
+  id: number; // atau string, tergantung pada tipe id yang Anda gunakan
+  name: string;
+  status: string;
+  owner: number;
+  manager: number;
+  createdAt: string;
+  created_by: number;
+}
+
 interface InfoProps {
-  subCampaign: Record<string>;
+  subCampaign: SubCampaign; // Menggunakan tipe yang lebih spesifik
+}
+
+interface Contacts {
+  id: number;
+  name: string;
+  full_name: string;
+  phone_number: string;
+  email: string;
+  company: string;
+  status: number;
+  tag: number;
+  owner: number;
+  createdAt: string;
+  created_by: number;
 }
 
 export const Contact: React.FC<InfoProps> = ({ subCampaign }) => {
@@ -24,7 +48,7 @@ export const Contact: React.FC<InfoProps> = ({ subCampaign }) => {
 
   const [isModalMoveContactOpen, setIsModalMoveContactOpen] = useState(false);
 
-  const [contacts, setContacts] = useState(false);
+  const [contacts, setContacts] = useState<Contacts[]>([]);
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
@@ -53,7 +77,11 @@ export const Contact: React.FC<InfoProps> = ({ subCampaign }) => {
     fetchContacts();
   }, [subCampaign]);
 
-  const handleChangeAction = async (event, id, name) => {
+  const handleChangeAction = async (
+    event: React.ChangeEvent<HTMLSelectElement>,
+    id: number,
+    name: string
+  ) => {
     const ev = event.target;
 
     switch (ev.value) {

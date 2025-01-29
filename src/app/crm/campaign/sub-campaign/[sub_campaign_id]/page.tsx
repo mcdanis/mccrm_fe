@@ -20,7 +20,7 @@ interface SubCampaign {
   status: string;
   client_id: number;
   created_by: number;
-  createdAt: number;
+  createdAt: string;
   campaign: Campaign;
 }
 

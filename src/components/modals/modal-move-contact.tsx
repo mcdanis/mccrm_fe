@@ -3,6 +3,16 @@ import { useState, useEffect } from "react";
 import ApiService from "@/utils/services/ApiService";
 import { messageBox } from "@/utils/utils";
 
+interface subCampaigns {
+  name: string;
+  id: number;
+}
+
+interface Campaigns {
+  name: string;
+  id: number;
+  subCampaigns: subCampaigns[];
+}
 interface ModalProps {
   isOpen: boolean;
   contactId: number;
@@ -11,8 +21,8 @@ interface ModalProps {
 
 const Modal: React.FC<ModalProps> = ({ isOpen, onClose, contactId }) => {
   const apiService = new ApiService();
-  const [campaigns, setCampaigns] = useState();
-  const [newSubCampaignId, setNewSubCampaignId] = useState();
+  const [campaigns, setCampaigns] = useState<Campaigns[]>([]);
+  const [newSubCampaignId, setNewSubCampaignId] = useState("");
 
   useEffect(() => {
     const fetchCampaigns = async () => {
@@ -22,7 +32,9 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, contactId }) => {
     fetchCampaigns();
   }, []);
 
-  const handleSelectCampaign = (event) => {
+  const handleSelectCampaign = (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
     const value = event.target.value;
     setNewSubCampaignId(value);
   };
