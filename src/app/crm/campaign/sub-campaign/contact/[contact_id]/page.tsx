@@ -825,7 +825,6 @@ const Contact = () => {
                       <div>
                         <label className="label-gray">Payment Status</label>
                         <select
-                          name=""
                           className="select-orange"
                           value={formData.paymentStatus}
                           name="paymentStatus"
