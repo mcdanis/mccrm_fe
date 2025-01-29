@@ -6,6 +6,9 @@ import Link from "next/link";
 import ApiService from "@/utils/services/ApiService";
 import { PencilIcon, TrashIcon } from "@heroicons/react/24/solid";
 import { messageBox } from "@/utils/utils";
+interface Client {
+  name: string;
+}
 
 interface User {
   id: number;
@@ -14,6 +17,7 @@ interface User {
   name: string;
   email: string;
   client_id: number;
+  client: Client;
 }
 
 const User = () => {
