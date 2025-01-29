@@ -32,7 +32,8 @@ export default function Home() {
   const [error, setError] = useState("");
 
   const [subCampaignName, setSubCampaignName] = useState("");
-  const [clientId, setClientId] = useState("");
+  const [clientId, setClientId] = useState<number | undefined>(undefined); // Definisikan tipe state
+
   const [subCampaignOwner, setSubCampaignOwner] = useState("");
   const [subCampaignManager, setSubCampaignManager] = useState("");
   const [subCampaignStatus, setSubCampaignStatus] = useState("");
@@ -75,11 +76,11 @@ export default function Home() {
       "dummy",
       "1",
       subCampaignName,
-      Number(clientId),
-      Number(subCampaignOwner),
-      Number(subCampaignManager),
-      Number(subCampaignStatus),
-      Number(campaignId)
+      String(clientId),
+      String(subCampaignOwner),
+      String(subCampaignManager),
+      String(subCampaignStatus),
+      String(campaignId)
     );
     if (response.error == false) {
       const msg = await messageBox(
@@ -174,7 +175,7 @@ export default function Home() {
               <select
                 className="select-orange"
                 value={clientId}
-                onChange={(e) => setClientId(e.target.value)}
+                onChange={(e) => setClientId(Number(e.target.value))}
               >
                 <option>Pilih Client</option>
                 {clients.map((client, index) => (

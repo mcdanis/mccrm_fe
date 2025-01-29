@@ -6,10 +6,20 @@ import { useParams } from "next/navigation";
 import { messageBox, status } from "@/utils/utils";
 import { useRouter } from "next/navigation";
 
+interface User {
+  name: string;
+}
+interface SubCampaign {
+  id: number;
+  name: string;
+  status: number;
+}
 interface Campaign {
   id: string;
   name: string;
   status: string;
+  user: User;
+  subCampaigns: SubCampaign[];
 }
 
 const ReportDashboard = () => {

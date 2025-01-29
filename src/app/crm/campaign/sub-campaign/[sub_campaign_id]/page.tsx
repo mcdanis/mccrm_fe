@@ -6,6 +6,10 @@ import Link from "next/link";
 import { Contact, Info } from "@/components/sub-campaign-detail";
 import ApiService from "@/utils/services/ApiService";
 import { useParams } from "next/navigation";
+interface Campaign {
+  id: number;
+  name: string;
+}
 
 interface SubCampaign {
   id: number;
@@ -17,6 +21,7 @@ interface SubCampaign {
   client_id: number;
   created_by: number;
   createdAt: number;
+  campaign: Campaign;
 }
 
 const Crm = () => {
