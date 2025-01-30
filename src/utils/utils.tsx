@@ -41,7 +41,7 @@ export const useIsLogin = () => {
   });
 };
 
-export const convertTime = (dateTime: Date) => {
+export const convertTime = (dateTime: string) => {
   const date = new Date(dateTime);
   const options: Intl.DateTimeFormatOptions = {
     weekday: "long", // "long", "short", or "narrow"
