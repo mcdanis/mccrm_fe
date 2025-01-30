@@ -1,4 +1,23 @@
-export const ContactValidation = (formData: object) => {
+interface FormData {
+  status: number;
+  budget?: string;
+  authority?: string;
+  need?: string;
+  time?: string;
+  nextStep?: string;
+  spesificationProject?: string;
+  projectName?: string;
+  projectStartdate?: string;
+  projectEnddate?: string;
+  deal?: string;
+  resultOfNegotiation?: string;
+  dealDone?: string;
+  evaluation?: string;
+  feedback?: string;
+  documentation?: string;
+}
+
+export const ContactValidation = (formData: FormData) => {
   if (formData.status >= 4 && formData.status <= 8) {
     if (
       !formData.budget ||
