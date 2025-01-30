@@ -3,7 +3,7 @@
 import React from "react";
 import { useState } from "react";
 import Header from "@/app/crm/header";
-import { Inter } from "@next/font/google";
+import { Inter } from "next/font/google";
 
 const inter = Inter({ subsets: ["latin"], weight: ["400", "700"] });
 

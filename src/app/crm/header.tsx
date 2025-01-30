@@ -3,11 +3,8 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useIsNotLogin } from "../../utils/utils";
-import { Inter } from "next/font/google";
 import ApiService from "@/utils/services/ApiService";
 import Cookies from "js-cookie";
-
-const inter = Inter({ subsets: ["latin"], weight: ["400", "700"] });
 
 interface User {
   id: number;
@@ -53,7 +50,7 @@ const Header = () => {
           <div className="hidden md:flex space-x-4">
             <Link
               href="/crm"
-              className={`text-white hover:bg-[#3c5d8f] px-3 py-2 rounded ${inter.className}`}
+              className={`text-white hover:bg-[#3c5d8f] px-3 py-2 rounded `}
             >
               DASHBOARD
             </Link>
@@ -61,7 +58,7 @@ const Header = () => {
               <div className="relative">
                 <button
                   onClick={toggleDropdown}
-                  className={`text-white hover:bg-[#3c5d8f] px-3 py-2 rounded ${inter.className}`}
+                  className={`text-white hover:bg-[#3c5d8f] px-3 py-2 rounded `}
                 >
                   ACCOUNT
                 </button>
@@ -85,19 +82,19 @@ const Header = () => {
             )}
             <Link
               href="/crm/campaign"
-              className={`text-white hover:bg-[#3c5d8f] px-3 py-2 rounded ${inter.className}`}
+              className={`text-white hover:bg-[#3c5d8f] px-3 py-2 rounded `}
             >
               CAMPAIGN
             </Link>
             <a
               href="/crm/customer"
-              className={`text-white hover:bg-[#3c5d8f] px-3 py-2 rounded ${inter.className}`}
+              className={`text-white hover:bg-[#3c5d8f] px-3 py-2 rounded `}
             >
               CUSTOMER
             </a>
             <a
               href="/crm/report"
-              className={`text-white hover:bg-[#3c5d8f] px-3 py-2 rounded ${inter.className}`}
+              className={`text-white hover:bg-[#3c5d8f] px-3 py-2 rounded `}
             >
               REPORT
             </a>
