@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { Suspense } from "react";
 import Header from "@/app/crm/header";
 import { useState, useEffect } from "react";
 import ApiService from "@/utils/services/ApiService";
@@ -100,97 +100,100 @@ export default function Home() {
   return (
     <>
       <Header />
-      <div className="flex items-center justify-center mt-10 rounded-sm">
-        <div className="p-6 shadow-lg w-3/4">
-          <h3 className="text-xl text-gray-700 font-bold mt-2 ">
-            + Sub Campaign
-          </h3>
-          <ErrorElement error={error} />
+      <Suspense fallback={<div>Loading...</div>}>
 
-          <div className="grid grid-cols-3 gap-3 mt-2">
-            <div>
-              <label htmlFor="sub-campaign-name" className="label-gray">
-                Sub Campaign Name
-              </label>
-              <input
-                type="text"
-                className="input-orange"
-                id="sub-campaign-name"
-                value={subCampaignName}
-                onChange={(e) => setSubCampaignName(e.target.value)}
-              />
+        <div className="flex items-center justify-center mt-10 rounded-sm">
+          <div className="p-6 shadow-lg w-3/4">
+            <h3 className="text-xl text-gray-700 font-bold mt-2 ">
+              + Sub Campaign
+            </h3>
+            <ErrorElement error={error} />
+
+            <div className="grid grid-cols-3 gap-3 mt-2">
+              <div>
+                <label htmlFor="sub-campaign-name" className="label-gray">
+                  Sub Campaign Name
+                </label>
+                <input
+                  type="text"
+                  className="input-orange"
+                  id="sub-campaign-name"
+                  value={subCampaignName}
+                  onChange={(e) => setSubCampaignName(e.target.value)}
+                />
+              </div>
+              <div>
+                <label htmlFor="sub-campaign-owner" className="label-gray">
+                  Sub Campaign Owner
+                </label>
+                <select
+                  className="select-orange"
+                  value={subCampaignOwner}
+                  onChange={(e) => setSubCampaignOwner(e.target.value)}
+                >
+                  <option>Pilih</option>
+                  {users.map((user, index) => (
+                    <option key={index} value={user.id}>
+                      {user.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label htmlFor="sub-campaign-manager" className="label-gray">
+                  Sub Campaign Manager
+                </label>
+                <select
+                  className="select-orange"
+                  value={subCampaignManager}
+                  onChange={(e) => setSubCampaignManager(e.target.value)}
+                >
+                  <option>Pilih</option>
+                  {users.map((user, index) => (
+                    <option key={index} value={user.id}>
+                      {user.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label htmlFor="sub-campaign-status" className="label-gray">
+                  Status
+                </label>
+                <select
+                  className="select-orange"
+                  value={subCampaignStatus}
+                  onChange={(e) => setSubCampaignStatus(e.target.value)}
+                >
+                  <option>Pilih</option>
+                  <option value={1}>Active</option>
+                  <option value={0}>Non-Active</option>
+                </select>
+              </div>
+              <div>
+                <label htmlFor="client-id" className="label-gray">
+                  Client
+                </label>
+                <select
+                  className="select-orange"
+                  value={clientId}
+                  onChange={(e) => setClientId(Number(e.target.value))}
+                >
+                  <option>Pilih Client</option>
+                  {clients.map((client, index) => (
+                    <option key={index} value={client.id}>
+                      {client.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
-            <div>
-              <label htmlFor="sub-campaign-owner" className="label-gray">
-                Sub Campaign Owner
-              </label>
-              <select
-                className="select-orange"
-                value={subCampaignOwner}
-                onChange={(e) => setSubCampaignOwner(e.target.value)}
-              >
-                <option>Pilih</option>
-                {users.map((user, index) => (
-                  <option key={index} value={user.id}>
-                    {user.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <label htmlFor="sub-campaign-manager" className="label-gray">
-                Sub Campaign Manager
-              </label>
-              <select
-                className="select-orange"
-                value={subCampaignManager}
-                onChange={(e) => setSubCampaignManager(e.target.value)}
-              >
-                <option>Pilih</option>
-                {users.map((user, index) => (
-                  <option key={index} value={user.id}>
-                    {user.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <label htmlFor="sub-campaign-status" className="label-gray">
-                Status
-              </label>
-              <select
-                className="select-orange"
-                value={subCampaignStatus}
-                onChange={(e) => setSubCampaignStatus(e.target.value)}
-              >
-                <option>Pilih</option>
-                <option value={1}>Active</option>
-                <option value={0}>Non-Active</option>
-              </select>
-            </div>
-            <div>
-              <label htmlFor="client-id" className="label-gray">
-                Client
-              </label>
-              <select
-                className="select-orange"
-                value={clientId}
-                onChange={(e) => setClientId(Number(e.target.value))}
-              >
-                <option>Pilih Client</option>
-                {clients.map((client, index) => (
-                  <option key={index} value={client.id}>
-                    {client.name}
-                  </option>
-                ))}
-              </select>
-            </div>
+            <button onClick={handleSubmit} className="btn-orange-sm w-full mt-3">
+              Save
+            </button>
           </div>
-          <button onClick={handleSubmit} className="btn-orange-sm w-full mt-3">
-            Save
-          </button>
         </div>
-      </div>
+      </Suspense>
     </>
   );
 }
