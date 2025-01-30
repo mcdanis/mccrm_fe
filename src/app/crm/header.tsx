@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useIsNotLogin } from "../../utils/utils";
-import { Inter } from "@next/font/google";
+import { Inter } from "next/font/google";
 import ApiService from "@/utils/services/ApiService";
 import Cookies from "js-cookie";
 

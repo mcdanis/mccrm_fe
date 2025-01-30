@@ -5,6 +5,7 @@ dotenv.config()
 
 const nextConfig: NextConfig = {
   optimizeFonts: true,
+  reactStrictMode: true,
   env: {
     JWT: process.env.JWT,
     URL: process.env.URL,
