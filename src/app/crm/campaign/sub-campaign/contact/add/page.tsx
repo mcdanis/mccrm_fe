@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, Suspense } from "react";
 import { useState } from "react";
 import Header from "@/app/crm/header";
 import ErrorElement from "@/components/error-element";
@@ -15,7 +15,8 @@ interface SubCampaign {
   name: string;
 }
 
-const Contact = () => {
+
+function MainContent() {
   const router = useRouter();
   const apiService = new ApiService();
 
@@ -297,5 +298,13 @@ const Contact = () => {
     </>
   );
 };
+
+const Contact = () => {
+  return (<>
+    <Suspense fallback={<>loading</>}>
+      <MainContent />
+    </Suspense>
+  </>)
+}
 
 export default Contact;
