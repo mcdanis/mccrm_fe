@@ -23,7 +23,7 @@ interface Client_User {
   id: number;
   name: string;
 }
-export default function Home() {
+function MainContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -196,4 +196,12 @@ export default function Home() {
       </Suspense>
     </>
   );
+}
+
+export default function Home() {
+  return (<>
+    <Suspense fallback={<>loading</>}>
+      <MainContent />
+    </Suspense>
+  </>)
 }
