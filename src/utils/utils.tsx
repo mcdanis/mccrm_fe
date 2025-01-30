@@ -41,17 +41,17 @@ export const useIsLogin = () => {
   });
 };
 
-export const convertTime = (dateTime) => {
+export const convertTime = (dateTime: Date) => {
   const date = new Date(dateTime);
-  const options = {
-    weekday: "long",
+  const options: Intl.DateTimeFormatOptions = {
+    weekday: "long", // "long", "short", or "narrow"
     day: "numeric",
-    month: "long",
-    year: "numeric",
-    hour: "numeric",
-    minute: "numeric",
-    second: "numeric",
-    timeZoneName: "short",
+    month: "long", // "numeric", "2-digit", "long", "short", or "narrow"
+    year: "numeric", // "numeric" or "2-digit"
+    hour: "numeric", // "numeric" or "2-digit"
+    minute: "numeric", // "numeric" or "2-digit"
+    second: "numeric", // "numeric" or "2-digit"
+    timeZoneName: "short", // "short" or "long"
   };
   const formattedDate = date.toLocaleString("id-ID", options);
 
