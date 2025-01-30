@@ -4,15 +4,9 @@ import React, { useEffect } from "react";
 import { useState } from "react";
 import Header from "@/app/crm/header";
 import ErrorElement from "@/components/error-element";
-import { Inter } from "next/font/google";
 import { useRouter, useSearchParams } from "next/navigation";
 import { messageBox, tag, contact_status, level_priority } from "@/utils/utils";
 import ApiService from "@/utils/services/ApiService";
-
-const inter = Inter({
-  subsets: ["latin"],
-  weight: ["400", "700"]
-});
 
 interface SubCampaign {
   campaign: {
