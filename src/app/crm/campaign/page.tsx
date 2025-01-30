@@ -4,14 +4,7 @@ import React from "react";
 import Header from "@/app/crm/header";
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Inter, Montserrat } from "@next/font/google";
 import ApiService from "@/utils/services/ApiService";
-
-const inter = Inter({ subsets: ["latin"], weight: ["400", "700"] });
-const montserrat = Montserrat({
-  subsets: ["latin"],
-  weight: ["400", "700"],
-});
 
 interface SubCampaign {
   id: number;
@@ -107,7 +100,7 @@ export default function Campaign() {
             <div className="inline-block" key={campaign.id}>
               <div className="max-w-xs overflow-hidden rounded-lg shadow-lg border-2 border-gray-100 hover:shadow-xl transition-shadow duration-300 ease-in-out p-5">
                 <p
-                  className={`font-bold text-md text-gray-700 ${montserrat.className} flex items-center`}
+                  className={`font-bold text-md text-gray-700 flex items-center`}
                 >
                   <Link
                     href={`/crm/campaign/` + campaign.id}
@@ -131,7 +124,7 @@ export default function Campaign() {
                           className="hover:bg-gray-200 hover:text-black"
                         >
                           <td
-                            className={`px-4 py-2 border-b border-gray-300 ${inter.className}`}
+                            className={`px-4 py-2 border-b border-gray-300`}
                           >
                             <Link
                               href={`/crm/campaign/sub-campaign/${subCampaign.id}`}

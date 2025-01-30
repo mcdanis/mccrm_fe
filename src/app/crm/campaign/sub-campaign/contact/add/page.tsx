@@ -128,7 +128,7 @@ const Contact = () => {
       <div className="flex h-auto items-stretch">
         <div className="bg-[#F3F4F6] w-1/4 p-4">
           <h2
-            className={`font-bold text-lg mb-4 text-gray-700 ${inter.className}`}
+            className={`font-bold text-lg mb-4 text-gray-700 `}
           >
             PERSONAL INFORMATION
           </h2>
@@ -217,7 +217,7 @@ const Contact = () => {
             </button>
 
             <div className="flex items-center w-full">
-              <h1 className={`ml-4 font-bold text-gray-800 ${inter.className}`}>
+              <h1 className={`ml-4 font-bold text-gray-800 `}>
                 {subCampaign.campaign.name} \ {subCampaign.name}
               </h1>
               <button className="ml-auto btn-orange-sm" onClick={handleSubmit}>
