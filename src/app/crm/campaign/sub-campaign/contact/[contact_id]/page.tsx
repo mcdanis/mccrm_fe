@@ -17,7 +17,23 @@ import {
   lead_type,
   messageBox,
 } from "@/utils/utils";
-import { Editor, ContentEditableEvent } from "react-simple-wysiwyg";
+
+import {
+  Editor,
+  EditorProvider,
+  Toolbar,
+  BtnBold,
+  BtnItalic,
+  BtnUnderline,
+  BtnStrikeThrough,
+  BtnNumberedList,
+  BtnUndo,
+  BtnRedo,
+  BtnLink,
+  BtnBulletList,
+  BtnStyles,
+  ContentEditableEvent,
+} from "react-simple-wysiwyg";
 
 const inter = Inter({ subsets: ["latin"], weight: ["400", "700"] });
 
@@ -223,11 +239,12 @@ const Contact = () => {
   const handleChange = (
     event:
       | React.ChangeEvent<
-        HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-      >
+          HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+        >
       | ContentEditableEvent
   ) => {
     const { name, value } = event.target;
+    console.log("Changed value:", value); // Log untuk debugging
     setFormData((prevData) => ({
       ...prevData,
       [String(name)]: value,
@@ -520,19 +537,21 @@ const Contact = () => {
                 <div className="mt-3 flex space-x-1 mb-4">
                   <button
                     onClick={() => switchTab("notes")}
-                    className={`hover:bg-[#1c3458]  text-xs  px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${activeTab == "notes"
-                      ? "bg-[#5C708E] text-white"
-                      : "bg-[#F3F4F6] text-black"
-                      }`}
+                    className={`hover:bg-[#1c3458]  text-xs  px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${
+                      activeTab == "notes"
+                        ? "bg-[#5C708E] text-white"
+                        : "bg-[#F3F4F6] text-black"
+                    }`}
                   >
                     Notes
                   </button>
                   <button
                     onClick={() => switchTab("progress")}
-                    className={`hover:bg-[#1c3458] text-xs px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${activeTab == "progress"
-                      ? "bg-[#5C708E] text-white"
-                      : "bg-[#F3F4F6] text-black"
-                      }`}
+                    className={`hover:bg-[#1c3458] text-xs px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${
+                      activeTab == "progress"
+                        ? "bg-[#5C708E] text-white"
+                        : "bg-[#F3F4F6] text-black"
+                    }`}
                   >
                     Activity
                   </button>
@@ -540,10 +559,11 @@ const Contact = () => {
                     Number(formData.status) != 9 && (
                       <button
                         onClick={() => switchTab("status")}
-                        className={`hover:bg-[#1c3458] text-xs px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${activeTab == "status"
-                          ? "bg-[#5C708E] text-white"
-                          : "bg-[#F3F4F6] text-black"
-                          }`}
+                        className={`hover:bg-[#1c3458] text-xs px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${
+                          activeTab == "status"
+                            ? "bg-[#5C708E] text-white"
+                            : "bg-[#F3F4F6] text-black"
+                        }`}
                       >
                         Qualification
                       </button>
@@ -552,10 +572,11 @@ const Contact = () => {
                     Number(formData.status) != 9 && (
                       <button
                         onClick={() => switchTab("negotiation")}
-                        className={`hover:bg-[#1c3458] text-xs  px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${activeTab == "negotiation"
-                          ? "bg-[#5C708E] text-white"
-                          : "bg-[#F3F4F6] text-black"
-                          }`}
+                        className={`hover:bg-[#1c3458] text-xs  px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${
+                          activeTab == "negotiation"
+                            ? "bg-[#5C708E] text-white"
+                            : "bg-[#F3F4F6] text-black"
+                        }`}
                       >
                         Negotiation
                       </button>
@@ -564,10 +585,11 @@ const Contact = () => {
                     Number(formData.status) != 9 && (
                       <button
                         onClick={() => switchTab("done")}
-                        className={`hover:bg-[#1c3458] text-xs  px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${activeTab == "done"
-                          ? "bg-[#5C708E] text-white"
-                          : "bg-[#F3F4F6] text-black"
-                          }`}
+                        className={`hover:bg-[#1c3458] text-xs  px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${
+                          activeTab == "done"
+                            ? "bg-[#5C708E] text-white"
+                            : "bg-[#F3F4F6] text-black"
+                        }`}
                       >
                         Done
                       </button>
@@ -581,13 +603,28 @@ const Contact = () => {
                       <label className="label-gray" htmlFor="note">
                         Input Note
                       </label>
-                      <Editor
-                        className="text-black bg-white"
-                        containerProps={{ style: { resize: "vertical" } }}
-                        value={formData.note}
-                        name="note"
-                        onChange={handleChange}
-                      />
+                      <EditorProvider>
+                        <Editor
+                          className="text-black bg-white"
+                          containerProps={{ style: { resize: "vertical" } }}
+                          value={formData.note}
+                          name="note"
+                          onChange={handleChange}
+                        >
+                          <Toolbar>
+                            <BtnBold />
+                            <BtnItalic />
+                            <BtnUnderline />
+                            <BtnStrikeThrough />
+                            <BtnNumberedList />
+                            <BtnUndo />
+                            <BtnRedo />
+                            <BtnLink />
+                            <BtnBulletList />
+                            <BtnStyles />
+                          </Toolbar>
+                        </Editor>
+                      </EditorProvider>
                     </div>
                     <div className="mb-3">
                       <button className="btn-orange-sm" onClick={saveNote}>
@@ -823,13 +860,28 @@ const Contact = () => {
                         <label className="label-gray">
                           Result of Negotiation
                         </label>
-                        <Editor
-                          className="text-black bg-white"
-                          containerProps={{ style: { resize: "vertical" } }}
-                          value={formData.resultOfNegotiation}
-                          name="resultOfNegotiation"
-                          onChange={handleChange}
-                        />
+                        <EditorProvider>
+                          <Editor
+                            className="text-black bg-white"
+                            containerProps={{ style: { resize: "vertical" } }}
+                            value={formData.resultOfNegotiation}
+                            name="resultOfNegotiation"
+                            onChange={handleChange}
+                          >
+                            <Toolbar>
+                              <BtnBold />
+                              <BtnItalic />
+                              <BtnUnderline />
+                              <BtnStrikeThrough />
+                              <BtnNumberedList />
+                              <BtnUndo />
+                              <BtnRedo />
+                              <BtnLink />
+                              <BtnBulletList />
+                              <BtnStyles />
+                            </Toolbar>
+                          </Editor>
+                        </EditorProvider>
                       </div>
                     </div>
                   </div>
@@ -868,23 +920,53 @@ const Contact = () => {
                     <div className="grid grid-cols-1 gap-2 mt-3">
                       <div>
                         <label className="label-gray">Evaluation</label>
-                        <Editor
-                          className="text-black bg-white"
-                          containerProps={{ style: { resize: "vertical" } }}
-                          value={formData.evaluation}
-                          name="evaluation"
-                          onChange={handleChange}
-                        />
+                        <EditorProvider>
+                          <Editor
+                            className="text-black bg-white"
+                            containerProps={{ style: { resize: "vertical" } }}
+                            value={formData.evaluation}
+                            name="evaluation"
+                            onChange={handleChange}
+                          >
+                            <Toolbar>
+                              <BtnBold />
+                              <BtnItalic />
+                              <BtnUnderline />
+                              <BtnStrikeThrough />
+                              <BtnNumberedList />
+                              <BtnUndo />
+                              <BtnRedo />
+                              <BtnLink />
+                              <BtnBulletList />
+                              <BtnStyles />
+                            </Toolbar>
+                          </Editor>
+                        </EditorProvider>
                       </div>
                       <div>
                         <label className="label-gray">Feedback</label>
-                        <Editor
-                          className="text-black bg-white"
-                          containerProps={{ style: { resize: "vertical" } }}
-                          value={formData.feedback}
-                          name="feedback"
-                          onChange={handleChange}
-                        />
+                        <EditorProvider>
+                          <Editor
+                            className="text-black bg-white"
+                            containerProps={{ style: { resize: "vertical" } }}
+                            value={formData.feedback}
+                            name="feedback"
+                            onChange={handleChange}
+                          >
+                            <Toolbar>
+                              <BtnBold />
+                              <BtnItalic />
+                              <BtnUnderline />
+                              <BtnStrikeThrough />
+                              <BtnNumberedList />
+                              <BtnUndo />
+                              <BtnRedo />
+                              <BtnLink />
+                              <BtnBulletList />
+                              <BtnStyles />
+                            </Toolbar>
+                          </Editor>
+                        </EditorProvider>
                       </div>
                       <div>
                         <label className="label-gray">Documentation</label>
@@ -893,13 +975,28 @@ const Contact = () => {
                           link web nya apa dll pokoknya supaya hasil kerja bisa
                           di lihat oleh ceo{" "}
                         </small>
-                        <Editor
-                          className="text-black bg-white"
-                          containerProps={{ style: { resize: "vertical" } }}
-                          value={formData.documentation}
-                          name="documentation"
-                          onChange={handleChange}
-                        />
+                        <EditorProvider>
+                          <Editor
+                            className="text-black bg-white"
+                            containerProps={{ style: { resize: "vertical" } }}
+                            value={formData.documentation}
+                            name="documentation"
+                            onChange={handleChange}
+                          >
+                            <Toolbar>
+                              <BtnBold />
+                              <BtnItalic />
+                              <BtnUnderline />
+                              <BtnStrikeThrough />
+                              <BtnNumberedList />
+                              <BtnUndo />
+                              <BtnRedo />
+                              <BtnLink />
+                              <BtnBulletList />
+                              <BtnStyles />
+                            </Toolbar>
+                          </Editor>
+                        </EditorProvider>
                       </div>
                     </div>
                   </div>
@@ -1009,10 +1106,11 @@ const Contact = () => {
                   {tabs.map((tab) => (
                     <button
                       key={tab.id}
-                      className={`flex-1 py-1 text-center ${activeTimelineTab === tab.id
-                        ? "bg-[#5C708E] text-white"
-                        : "bg-gray-200 text-gray-700"
-                        }`}
+                      className={`flex-1 py-1 text-center ${
+                        activeTimelineTab === tab.id
+                          ? "bg-[#5C708E] text-white"
+                          : "bg-gray-200 text-gray-700"
+                      }`}
                       onClick={() => handleTabClick(tab.id)}
                     >
                       {tab.label}

@@ -1,41 +1,41 @@
-"use client"
-import React, { useState } from 'react';
+"use client";
+import React, { useState } from "react";
 import Cookies from "js-cookie";
-import {useIsLogin, api} from "../utils/utils"
+import { useIsLogin, api } from "../utils/utils";
 
 const LoginPage = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault(); 
+    e.preventDefault();
 
     try {
-      const response = await api('login', {
-        method: 'POST',
+      const response = await api("login", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ email, password }),
       });
 
       if (!response.ok) {
-        throw new Error('Login failed');
+        throw new Error("Login failed");
       }
 
       const data = await response.json();
-      localStorage.setItem('mccrm_token', data.token);
-      sessionStorage.setItem('mccrm_token', data.token);
-      Cookies.set('mccrm_token', data.token, { expires: 7 });
-      Cookies.set('mccrm_user_id', data.userId, { expires: 7 });
-      window.location.href = '/crm';
+      localStorage.setItem("mccrm_token", data.token);
+      sessionStorage.setItem("mccrm_token", data.token);
+      Cookies.set("mccrm_token", data.token, { expires: 7 });
+      Cookies.set("mccrm_user_id", data.userId, { expires: 7 });
+      window.location.href = "/crm";
     } catch (err) {
       setError((err as Error).message);
-    }    
+    }
   };
 
-  useIsLogin()
+  useIsLogin();
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
@@ -44,7 +44,10 @@ const LoginPage = () => {
         {error && <p className="text-red-500 text-center">{error}</p>}
         <form className="space-y-6" onSubmit={handleLogin}>
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium text-gray-700"
+            >
               Email
             </label>
             <input
@@ -53,12 +56,15 @@ const LoginPage = () => {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="block w-full px-3 py-2 mt-1 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-500"
+              className="block w-full px-3 text-gray-800 py-2 mt-1 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-500"
               placeholder="you@example.com"
             />
           </div>
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium text-gray-700"
+            >
               Password
             </label>
             <input
@@ -67,7 +73,7 @@ const LoginPage = () => {
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="block w-full px-3 py-2 mt-1 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-500"
+              className="block w-full px-3 text-gray-800 py-2 mt-1 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-500"
               placeholder="********"
             />
           </div>
@@ -79,7 +85,7 @@ const LoginPage = () => {
           </button>
         </form>
         <p className="text-sm text-center">
-          Dont have an account?{' '}
+          Dont have an account?{" "}
           <a href="/register" className="text-blue-600 hover:underline">
             Register here
           </a>
