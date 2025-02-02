@@ -94,6 +94,8 @@ interface Contact {
   full_name: string;
   email: string;
   phone_number: string;
+  sosmed: string;
+  website: string;
   country: string;
   company: string;
   address: string;
@@ -199,6 +201,8 @@ const Contact = () => {
     phoneNumber: "",
     email: "",
     company: "",
+    sosmed: "",
+    website: "",
     country: "",
     address: "",
     source: "",
@@ -257,6 +261,8 @@ const Contact = () => {
         ...formData,
         fullName: contact.contact.full_name || "",
         phoneNumber: contact.contact.phone_number || "",
+        sosmed: contact.contact.sosmed || "",
+        website: contact.contact.website || "",
         email: contact.contact.email || "",
         company: contact.contact.company || "",
         country: contact.contact.country || "",
@@ -338,9 +344,15 @@ const Contact = () => {
 
       const addNote = await apiService.addNote(data);
       if (addNote.error == false) {
-        await messageBox("", "Note Berhasil di tambahkan !!", "success", "no");
-        setError("");
-        formData.note = "";
+        const msg = await messageBox(
+          "",
+          "Note successfully added !!",
+          "success",
+          "no"
+        );
+        if (msg) {
+          window.location.reload();
+        }
       } else {
         setError(addNote.message);
       }
@@ -358,10 +370,15 @@ const Contact = () => {
 
       const addNote = await apiService.addActivity(data);
       if (addNote.error == false) {
-        await messageBox("", "Activity successfully added !!", "success", "no");
-        setError("");
-        formData.description = "";
-        formData.inputProgress = "";
+        const msg = await messageBox(
+          "",
+          "Activity successfully added !!",
+          "success",
+          "no"
+        );
+        if (msg) {
+          window.location.reload();
+        }
       } else {
         setError(addNote.message);
       }
@@ -377,8 +394,16 @@ const Contact = () => {
     }
     const updateContact = await apiService.updateContact(formData);
     if (updateContact.error == false) {
-      await messageBox("", "Contact successfully updated !!", "success", "no");
-      setError("");
+      const msg = await messageBox(
+        "",
+        "Contact successfully updated !!",
+        "success",
+        "no"
+      );
+      if (msg) {
+        window.location.reload();
+      }
+      // setError("");
     } else {
       setError(updateContact.message);
     }
@@ -462,6 +487,24 @@ const Contact = () => {
                 value={formData.country}
                 onChange={handleChange}
               />
+            </div>
+            <div>
+              <label className="label-gray">Sosmed</label>
+              <textarea
+                className="input-orange"
+                name="sosmed"
+                value={formData.sosmed}
+                onChange={handleChange}
+              ></textarea>
+            </div>
+            <div>
+              <label className="label-gray">Website</label>
+              <textarea
+                className="input-orange"
+                value={formData.website}
+                name="website"
+                onChange={handleChange}
+              ></textarea>
             </div>
             <div>
               <label className="label-gray">Address</label>

@@ -15,7 +15,6 @@ interface SubCampaign {
   name: string;
 }
 
-
 function MainContent() {
   const router = useRouter();
   const apiService = new ApiService();
@@ -29,6 +28,8 @@ function MainContent() {
     phoneNumber: "",
     email: "",
     country: "",
+    sosmed: "",
+    website: "",
     address: "",
     source: "",
     note: "",
@@ -122,9 +123,7 @@ function MainContent() {
       <Header />
       <div className="flex h-auto items-stretch">
         <div className="bg-[#F3F4F6] w-1/4 p-4">
-          <h2
-            className={`font-bold text-lg mb-4 text-gray-700 `}
-          >
+          <h2 className={`font-bold text-lg mb-4 text-gray-700 `}>
             PERSONAL INFORMATION
           </h2>
 
@@ -154,7 +153,7 @@ function MainContent() {
               />
             </div>
             <div>
-              <label className="label-gray">Company</label>
+              <label className="label-gray">Company Name</label>
               <input
                 className="input-orange"
                 name="company"
@@ -168,6 +167,22 @@ function MainContent() {
                 name="country"
                 onChange={handleChange}
               />
+            </div>
+            <div>
+              <label className="label-gray">Sosmed</label>
+              <textarea
+                className="input-orange"
+                name="sosmed"
+                onChange={handleChange}
+              ></textarea>
+            </div>
+            <div>
+              <label className="label-gray">Website</label>
+              <textarea
+                className="input-orange"
+                name="website"
+                onChange={handleChange}
+              ></textarea>
             </div>
             <div>
               <label className="label-gray">Address</label>
@@ -297,14 +312,16 @@ function MainContent() {
       </div>
     </>
   );
-};
+}
 
 const Contact = () => {
-  return (<>
-    <Suspense fallback={<>loading</>}>
-      <MainContent />
-    </Suspense>
-  </>)
-}
+  return (
+    <>
+      <Suspense fallback={<>loading</>}>
+        <MainContent />
+      </Suspense>
+    </>
+  );
+};
 
 export default Contact;
