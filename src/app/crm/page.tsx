@@ -5,7 +5,10 @@ import Header from "@/app/crm/header";
 import { useState, useEffect } from "react";
 import ApiService from "@/utils/services/ApiService";
 import { contact_status } from "@/utils/utils";
+import { useRouter } from "next/navigation";
+
 interface Contacts {
+  id: number;
   full_name: string;
   subCampaign: {
     name: string;
@@ -15,6 +18,7 @@ interface Contacts {
 
 const Crm = () => {
   const apiService = new ApiService();
+  const router = useRouter();
   const [keyword, setKeyword] = useState("");
   const [contacts, setContacts] = useState<Contacts[]>();
 
@@ -34,6 +38,10 @@ const Crm = () => {
 
     return () => clearTimeout(timer);
   }, [keyword]);
+
+  const redirectToContact = (contactId: number) => {
+    router.push(`/crm/campaign/sub-campaign/contact/${contactId}`);
+  };
 
   if (!contacts) {
     return <>please wait..</>;
@@ -61,19 +69,23 @@ const Crm = () => {
             <table className="min-w-full bg-white border mt-4 border-gray-200">
               <thead>
                 <tr className="bg-primary text-gray-600 uppercase text-sm leading-normal">
-                  <th>No</th>
-                  <th>Name</th>
-                  <th>Campaign</th>
-                  <th>Status</th>
+                  <th className="p-2 ">No</th>
+                  <th className="p-2 ">Name</th>
+                  <th className="p-2 ">Campaign</th>
+                  <th className="p-2 ">Status</th>
                 </tr>
               </thead>
               <tbody>
                 {contacts.map((item, index: number) => (
-                  <tr key={index}>
-                    <td>{index + 1}</td>
-                    <td>{item.full_name}</td>
-                    <td>{item.subCampaign.name}</td>
-                    <td>{contact_status[item.status]}</td>
+                  <tr
+                    key={index}
+                    className="hover:bg-slate-300 hover:text-black cursor-pointer"
+                    onDoubleClick={() => redirectToContact(item.id)}
+                  >
+                    <td className="p-2">{index + 1}</td>
+                    <td className="p-2">{item.full_name}</td>
+                    <td className="p-2">{item.subCampaign.name}</td>
+                    <td className="p-2">{contact_status[item.status]}</td>
                   </tr>
                 ))}
               </tbody>

@@ -3,7 +3,7 @@
 import React from "react";
 import Header from "@/app/crm/header";
 import { useState, useEffect } from "react";
-import { api } from "@/utils/utils";
+import { api, roles } from "@/utils/utils";
 import Cookies from "js-cookie";
 import ApiService from "@/utils/services/ApiService";
 // import Link from "next/link";
@@ -117,12 +117,12 @@ export default function Client() {
                 onChange={(e) => setRole(e.target.value)}
               >
                 <option>Pilih Role</option>
-                <option value="MR">Marketing Representative (MR)</option>
-                <option value="SDR">
-                  Sales Development Representative (SDR)
-                </option>
-                <option value="AE">Account Executive (AE)</option>
-                <option value="ADM">Admin</option>
+                {Object.entries(roles).map(([key, value]) => (
+                  <option key={key} value={key}>
+                    {" "}
+                    {value}{" "}
+                  </option>
+                ))}
               </select>
             </div>
             <div>

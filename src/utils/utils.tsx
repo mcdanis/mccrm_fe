@@ -62,6 +62,13 @@ export const api = async (path: string, payload: object) => {
   return fetch(process.env.URL + path, payload);
 };
 
+export const roles: { [key: string]: string } = {
+  MR: "Marketing Representative",
+  SDR: "Sales Development Representative",
+  AE: "Account Executive",
+  ADM: "Admin",
+};
+
 export const contact_status: { [key: number]: string } = {
   1: "Draf",
   2: "Open",
