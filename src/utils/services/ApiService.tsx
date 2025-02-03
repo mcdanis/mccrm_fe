@@ -275,7 +275,7 @@ class ApiService {
   async findContacts(keyword: string) {
     try {
       const response = await api(
-        "campaign/contact/search?keyword=" + keyword,
+        "campaign/contact/search?" + keyword,
         this.header()
       );
       return response.json();
@@ -311,6 +311,18 @@ class ApiService {
   async updateCampaign(data: object) {
     try {
       const response = await api("campaign/update", this.header("POST", data));
+      return response.json();
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async splitContact(contactId: number, type: string, data: object) {
+    try {
+      const response = await api(
+        "campaign/sub-campaign/contact/split",
+        this.header("POST", { contactId, type, data })
+      );
       return response.json();
     } catch (error) {
       console.log(error);

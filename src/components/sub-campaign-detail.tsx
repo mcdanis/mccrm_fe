@@ -219,8 +219,7 @@ export const Contact: React.FC<InfoProps> = ({ subCampaign }) => {
 
               <th className="py-3 px-6 text-left">Name</th>
 
-              <th className="py-3 px-6 text-left">Phone</th>
-              <th className="py-3 px-6 text-left">E-Mail</th>
+              <th className="py-3 px-6 text-left">Contact</th>
               <th className="py-3 px-6 text-left">Company</th>
 
               <th className="py-3 px-6 text-left">Status</th>
@@ -253,13 +252,9 @@ export const Contact: React.FC<InfoProps> = ({ subCampaign }) => {
                   onDoubleClick={() => contactDetail(contact.id)}
                   className="py-3 px-6"
                 >
-                  {contact.phone_number}
-                </td>
-                <td
-                  onDoubleClick={() => contactDetail(contact.id)}
-                  className="py-3 px-6"
-                >
-                  {contact.email}
+                  Phone : {contact.phone_number}
+                  <br />
+                  E-Mail : {contact.email}
                 </td>
                 <td
                   onDoubleClick={() => contactDetail(contact.id)}
@@ -289,7 +284,6 @@ export const Contact: React.FC<InfoProps> = ({ subCampaign }) => {
                     }
                   >
                     <option value="">Action</option>
-                    <option value="edit">Edit</option>
                     <option value="delete">Delete</option>
                     <option value="duplicate">Duplicate</option>
                     <option value="move">Move</option>

@@ -40,7 +40,7 @@ const LoginPage = () => {
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="w-full max-w-md p-8 space-y-8 bg-white rounded-lg shadow-md">
-        <h2 className="text-2xl font-bold text-center">Login</h2>
+        <h2 className="text-2xl font-bold text-center text-black">Login</h2>
         {error && <p className="text-red-500 text-center">{error}</p>}
         <form className="space-y-6" onSubmit={handleLogin}>
           <div>
@@ -84,12 +84,12 @@ const LoginPage = () => {
             Login
           </button>
         </form>
-        <p className="text-sm text-center">
+        {/* <p className="text-sm text-center">
           Dont have an account?{" "}
           <a href="/register" className="text-blue-600 hover:underline">
             Register here
           </a>
-        </p>
+        </p> */}
       </div>
     </div>
   );

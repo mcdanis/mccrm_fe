@@ -7,6 +7,7 @@ import { Inter } from "next/font/google";
 import { useParams, useRouter } from "next/navigation";
 import ApiService from "@/utils/services/ApiService";
 import { ContactValidation } from "@/utils/validation";
+import Link from "next/link";
 import Cookies from "js-cookie";
 import ErrorElement from "@/components/error-element";
 import {
@@ -176,6 +177,35 @@ const Contact = () => {
 
   const handleTabClick = (tabId: string) => {
     setActiveTimelineTab(tabId);
+  };
+
+  const handleSplitContact = async (type: string) => {
+    const msg = await messageBox(
+      "Sure to Split this contact By " + type + "?",
+      "*This contact will remain",
+      "question"
+    );
+    if (msg && contact) {
+      let data = contact.contact.phone_number;
+      if (type == "email") {
+        data = contact.contact.email;
+      }
+      const newData = data
+        .split("\n")
+        .map((item) => item.trim())
+        .filter((item) => item !== "");
+      if (newData.length > 1) {
+        const response = await apiService.splitContact(
+          Number(contact_id),
+          type,
+          newData
+        );
+        messageBox("", response.message, "success", "no");
+      } else {
+        messageBox("Sorry", "Contact is not eligible for split", "info", "no");
+      }
+      // window.location.reload();
+    }
   };
 
   useEffect(() => {
@@ -453,8 +483,16 @@ const Contact = () => {
               />
             </div>
             <div>
-              <label className="label-gray">Phone Number</label>
-              <input
+              <label className="label-gray">
+                Phone Number{" "}
+                <button
+                  className="hover:underline text-cyan-600 "
+                  onClick={() => handleSplitContact("phone")}
+                >
+                  Split
+                </button>
+              </label>
+              <textarea
                 className="input-orange"
                 name="phoneNumber"
                 value={formData.phoneNumber}
@@ -462,8 +500,16 @@ const Contact = () => {
               />
             </div>
             <div>
-              <label className="label-gray">Email</label>
-              <input
+              <label className="label-gray">
+                Email{" "}
+                <button
+                  className="hover:underline text-cyan-600 "
+                  onClick={() => handleSplitContact("email")}
+                >
+                  Split
+                </button>
+              </label>
+              <textarea
                 className="input-orange"
                 name="email"
                 value={formData.email}
@@ -489,7 +535,17 @@ const Contact = () => {
               />
             </div>
             <div>
-              <label className="label-gray">Sosmed</label>
+              <label className="label-gray">
+                Sosmed
+                <Link
+                  className="hover:underline text-cyan-600"
+                  href={formData.sosmed}
+                  target="_blank"
+                >
+                  {" "}
+                  Open
+                </Link>
+              </label>
               <textarea
                 className="input-orange"
                 name="sosmed"
@@ -498,7 +554,17 @@ const Contact = () => {
               ></textarea>
             </div>
             <div>
-              <label className="label-gray">Website</label>
+              <label className="label-gray">
+                Website
+                <Link
+                  className="hover:underline text-cyan-600"
+                  href={formData.website}
+                  target="_blank"
+                >
+                  {" "}
+                  Open
+                </Link>
+              </label>
               <textarea
                 className="input-orange"
                 value={formData.website}

@@ -46,11 +46,11 @@ const Header = () => {
     <>
       <nav className="bg-[#5C708E]">
         <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-          <div className="text-white text-lg font-bold">MyApp</div>
+          <div className="text-white text-lg font-bold">McCRM v1</div>
           <div className="hidden md:flex space-x-4">
             <Link
               href="/crm"
-              className={`text-white hover:bg-[#3c5d8f] px-3 py-2 rounded `}
+              className={`text-white hover:bg-[#3c5d8f] px-3 py-2 rounded text-sm`}
             >
               DASHBOARD
             </Link>

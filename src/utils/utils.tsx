@@ -99,9 +99,10 @@ export const level_priority: { [key: number]: string } = {
 };
 
 export const tag: { [key: number]: string } = {
-  1: "Tag1",
-  2: "Tag2",
-  3: "Tag3",
+  1: "Without Phone & E-Mail",
+  2: "Without Phone Number",
+  3: "Without Email",
+  4: "Lengkap",
 };
 
 export const convert = (value: number, type: string) => {
