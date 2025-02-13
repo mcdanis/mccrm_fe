@@ -111,58 +111,61 @@ const Header = () => {
         </div>
         {/* Menu Mobile */}
         {isMobileMenuOpen && (
-          <div className="md:hidden bg-orange-600">
+          <div className="md:hidden bg-orange">
             <Link
-              href="/"
+              href="/crm"
               className="block text-white hover:bg-[#3c5d8f] px-4 py-2"
             >
-              Home
+              DASHBOARD
             </Link>
-            <div className="relative">
-              <button
-                onClick={toggleDropdown}
-                className="block w-full text-left text-white hover:bg-[#3c5d8f] px-4 py-2"
-              >
-                Services
-              </button>
-              {isDropdownOpen && (
-                <div className="bg-white rounded-md shadow-lg z-10">
-                  <a
-                    href="/service1"
-                    className="block px-4 py-2 text-gray-800 hover:bg-gray-100"
-                  >
-                    Service 1
-                  </a>
-                  <a
-                    href="/service2"
-                    className="block px-4 py-2 text-gray-800 hover:bg-gray-100"
-                  >
-                    Service 2
-                  </a>
-                  <a
-                    href="/service3"
-                    className="block px-4 py-2 text-gray-800 hover:bg-gray-100"
-                  >
-                    Service 3
-                  </a>
-                </div>
-              )}
-            </div>
-            <a
-              href="/about"
+            {user.role == "ADM" && (
+              <div className="relative">
+                <button
+                  onClick={toggleDropdown}
+                  className="block w-full text-left text-white hover:bg-[#3c5d8f] px-4 py-2"
+                >
+                  ACCOUNT
+                </button>
+                {isDropdownOpen && (
+                  <div className="bg-white rounded-md shadow-lg z-10">
+                    <Link
+                      href="/crm/client"
+                      className="block px-4 py-2 text-gray-800 hover:bg-gray-100"
+                    >
+                      Client
+                    </Link>
+                    <Link
+                      href="/crm/user"
+                      className="block px-4 py-2 text-gray-800 hover:bg-gray-100"
+                    >
+                      User
+                    </Link>
+                  </div>
+                )}
+              </div>
+            )}
+            <Link
+              href="/crm/campaign"
               className="block text-white hover:bg-[#3c5d8f] px-4 py-2"
             >
-              About
-            </a>
-            <a
-              href="/contact"
+              CAMPAIGN
+            </Link>
+            <Link
+              href="/crm/customer"
               className="block text-white hover:bg-[#3c5d8f] px-4 py-2"
             >
-              Contact
-            </a>
+              CUSTOMER
+            </Link>
+            <Link
+              href="/crm/report"
+              className="block text-white hover:bg-[#3c5d8f] px-4 py-2"
+            >
+              REPORT
+            </Link>
           </div>
         )}
       </nav>
+
     </>
   );
 };
