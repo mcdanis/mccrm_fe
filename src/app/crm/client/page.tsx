@@ -60,67 +60,69 @@ const Clients = () => {
             </Link>
           </div>
         </div>
-        <table className="min-w-full bg-white border border-gray-200">
-          <thead>
-            <tr className="bg-primary text-gray-600 uppercase text-sm leading-normal">
-              <th className="py-3 px-6 text-left">No</th>
-              <th className="py-3 px-6 text-left">Nama</th>
-              <th className="py-3 px-6 text-left">E-mail</th>
-              <th className="py-3 px-6 text-left">Kontak</th>
-              <th className="py-3 px-6 text-left">Alamat</th>
-              <th className="py-3 px-6 text-left">Status</th>
-              <th className="py-3 px-6 text-left"></th>
-            </tr>
-          </thead>
-
-          <tbody className="text-gray-600 text-sm font-light">
-            {clients.map((client, index) => (
-              <tr
-                key={index}
-                className="border-b border-gray-200 hover:bg-gray-100"
-              >
-                <td className="py-3 px-6">{index + 1}</td>
-                <td className="py-3 px-6">{client.name}</td>
-                <td className="py-3 px-6">{client.email}</td>
-                <td className="py-3 px-6">{client.phone_number}</td>
-                <td className="py-3 px-6">{client.address}</td>
-                <td className="py-3 px-6">{client.status}</td>
-                <td className="py-3 px-6">
-                  <div
-                    className="inline-flex rounded-md shadow-sm"
-                    role="group"
-                  >
-                    <button
-                      onClick={() =>
-                        handleDelete(Number(client.id), client.name)
-                      }
-                      type="button"
-                      className="flex items-center px-2 py-1 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-s-lg hover:bg-gray-100 hover:text-red-700 focus:z-10 focus:ring-2 focus:ring-red-700 focus:text-red-700 "
-                    >
-                      <TrashIcon className="h-4 w-6 text-red-500" />
-                      <span>Delete</span>
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={() =>
-                        messageBox(
-                          "Hapus client",
-                          "Yakin hapus client " + client.name + "?",
-                          "question"
-                        )
-                      }
-                      className="flex items-center px-2 py-1 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-e-lg hover:bg-gray-100 hover:text-green-700 focus:z-10 focus:ring-2 focus:ring-green-700 focus:text-green-700 dark:focus:ring-green-500 "
-                    >
-                      <PencilIcon className="h-4 w-6 text-green-500" />
-                      <span>Edit</span>
-                    </button>
-                  </div>
-                </td>
+        <div className="overflow-x-auto">
+          <table className="min-w-full bg-white border border-gray-200">
+            <thead>
+              <tr className="bg-primary text-gray-600 uppercase text-sm leading-normal">
+                <th className="py-3 px-6 text-left">No</th>
+                <th className="py-3 px-6 text-left">Nama</th>
+                <th className="py-3 px-6 text-left">E-mail</th>
+                <th className="py-3 px-6 text-left">Kontak</th>
+                <th className="py-3 px-6 text-left">Alamat</th>
+                <th className="py-3 px-6 text-left">Status</th>
+                <th className="py-3 px-6 text-left"></th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+
+            <tbody className="text-gray-600 text-sm font-light">
+              {clients.map((client, index) => (
+                <tr
+                  key={index}
+                  className="border-b border-gray-200 hover:bg-gray-100"
+                >
+                  <td className="py-3 px-6">{index + 1}</td>
+                  <td className="py-3 px-6">{client.name}</td>
+                  <td className="py-3 px-6">{client.email}</td>
+                  <td className="py-3 px-6">{client.phone_number}</td>
+                  <td className="py-3 px-6">{client.address}</td>
+                  <td className="py-3 px-6">{client.status}</td>
+                  <td className="py-3 px-6">
+                    <div
+                      className="inline-flex rounded-md shadow-sm"
+                      role="group"
+                    >
+                      <button
+                        onClick={() =>
+                          handleDelete(Number(client.id), client.name)
+                        }
+                        type="button"
+                        className="flex items-center px-2 py-1 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-s-lg hover:bg-gray-100 hover:text-red-700 focus:z-10 focus:ring-2 focus:ring-red-700 focus:text-red-700 "
+                      >
+                        <TrashIcon className="h-4 w-6 text-red-500" />
+                        <span>Delete</span>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() =>
+                          messageBox(
+                            "Hapus client",
+                            "Yakin hapus client " + client.name + "?",
+                            "question"
+                          )
+                        }
+                        className="flex items-center px-2 py-1 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-e-lg hover:bg-gray-100 hover:text-green-700 focus:z-10 focus:ring-2 focus:ring-green-700 focus:text-green-700 dark:focus:ring-green-500 "
+                      >
+                        <PencilIcon className="h-4 w-6 text-green-500" />
+                        <span>Edit</span>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </>
   );

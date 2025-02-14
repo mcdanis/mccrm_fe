@@ -93,7 +93,7 @@ export default function Home() {
               {error}
             </div>
           }
-          <div className="grid grid-cols-2 gap-3 mt-2">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-2">
             <div>
               <label htmlFor="campaign-name" className="label-gray">
                 Campaign Name
@@ -123,7 +123,7 @@ export default function Home() {
           </div>
 
           <h3 className="text-lg text-gray-700 font-bold mt-5">Sub Campaign</h3>
-          <div className="grid grid-cols-3 gap-3 mt-2">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mt-2">
             <div>
               <label htmlFor="sub-campaign-name" className="label-gray">
                 Sub Campaign Name

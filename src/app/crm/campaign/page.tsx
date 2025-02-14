@@ -64,7 +64,7 @@ export default function Campaign() {
     <>
       <Header />
       <div className="container mx-auto p-4 my-5">
-        <div className="grid grid-cols-2">
+        <div className="grid grid-cols-1 md:grid-cols-2">
           <div className="grid grid-cols-2 mb-4 gap-5">
             <div className="items-center">
               <input
@@ -94,11 +94,10 @@ export default function Campaign() {
             </Link>
           </div>
         </div>
-
-        <div className="grid grid-cols-4 gap-4">
+        <div className="grid mt-5 grid-cols-1 md:grid-cols-4 gap-4">
           {campaigns.map((campaign) => (
             <div className="inline-block" key={campaign.id}>
-              <div className="max-w-xs overflow-hidden rounded-lg shadow-lg border-2 border-gray-100 hover:shadow-xl transition-shadow duration-300 ease-in-out p-5">
+              <div className="md:max-w-xs overflow-hidden rounded-lg shadow-lg border-2 border-gray-100 hover:shadow-xl transition-shadow duration-300 ease-in-out p-5">
                 <p
                   className={`font-bold text-md text-gray-700 flex items-center`}
                 >

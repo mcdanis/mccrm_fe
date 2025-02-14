@@ -273,8 +273,8 @@ const Contact = () => {
   const handleChange = (
     event:
       | React.ChangeEvent<
-          HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-        >
+        HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+      >
       | ContentEditableEvent
   ) => {
     const { name, value } = event.target;
@@ -462,8 +462,8 @@ const Contact = () => {
   return (
     <>
       <Header />
-      <div className="flex h-auto items-stretch">
-        <div className="bg-[#F3F4F6] w-1/4 p-4">
+      <div className="flex flex-col md:flex-row h-auto items-stretch">
+        <div className="bg-[#F3F4F6] w-full md:w-1/4 p-4">
           <h2
             className={`font-bold text-lg mb-4 text-gray-700 ${inter.className}`}
           >
@@ -592,7 +592,7 @@ const Contact = () => {
             </div>
           </div>
         </div>
-        <div className="w-3/4 p-4 bg-white">
+        <div className="md:w-3/4 w-full p-4 bg-white">
           <div className="flex items-center p-4 bg-[#F3F4F6] shadow-md">
             <button
               className="flex items-center text-gray-600 hover:text-orange-500 focus:outline-none text-sm"
@@ -646,21 +646,19 @@ const Contact = () => {
                 <div className="mt-3 flex space-x-1 mb-4">
                   <button
                     onClick={() => switchTab("notes")}
-                    className={`hover:bg-[#1c3458]  text-xs  px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${
-                      activeTab == "notes"
-                        ? "bg-[#5C708E] text-white"
-                        : "bg-[#F3F4F6] text-black"
-                    }`}
+                    className={`hover:bg-[#1c3458]  text-xs  px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${activeTab == "notes"
+                      ? "bg-[#5C708E] text-white"
+                      : "bg-[#F3F4F6] text-black"
+                      }`}
                   >
                     Notes
                   </button>
                   <button
                     onClick={() => switchTab("progress")}
-                    className={`hover:bg-[#1c3458] text-xs px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${
-                      activeTab == "progress"
-                        ? "bg-[#5C708E] text-white"
-                        : "bg-[#F3F4F6] text-black"
-                    }`}
+                    className={`hover:bg-[#1c3458] text-xs px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${activeTab == "progress"
+                      ? "bg-[#5C708E] text-white"
+                      : "bg-[#F3F4F6] text-black"
+                      }`}
                   >
                     Activity
                   </button>
@@ -668,11 +666,10 @@ const Contact = () => {
                     Number(formData.status) != 9 && (
                       <button
                         onClick={() => switchTab("status")}
-                        className={`hover:bg-[#1c3458] text-xs px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${
-                          activeTab == "status"
-                            ? "bg-[#5C708E] text-white"
-                            : "bg-[#F3F4F6] text-black"
-                        }`}
+                        className={`hover:bg-[#1c3458] text-xs px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${activeTab == "status"
+                          ? "bg-[#5C708E] text-white"
+                          : "bg-[#F3F4F6] text-black"
+                          }`}
                       >
                         Qualification
                       </button>
@@ -681,11 +678,10 @@ const Contact = () => {
                     Number(formData.status) != 9 && (
                       <button
                         onClick={() => switchTab("negotiation")}
-                        className={`hover:bg-[#1c3458] text-xs  px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${
-                          activeTab == "negotiation"
-                            ? "bg-[#5C708E] text-white"
-                            : "bg-[#F3F4F6] text-black"
-                        }`}
+                        className={`hover:bg-[#1c3458] text-xs  px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${activeTab == "negotiation"
+                          ? "bg-[#5C708E] text-white"
+                          : "bg-[#F3F4F6] text-black"
+                          }`}
                       >
                         Negotiation
                       </button>
@@ -694,11 +690,10 @@ const Contact = () => {
                     Number(formData.status) != 9 && (
                       <button
                         onClick={() => switchTab("done")}
-                        className={`hover:bg-[#1c3458] text-xs  px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${
-                          activeTab == "done"
-                            ? "bg-[#5C708E] text-white"
-                            : "bg-[#F3F4F6] text-black"
-                        }`}
+                        className={`hover:bg-[#1c3458] text-xs  px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${activeTab == "done"
+                          ? "bg-[#5C708E] text-white"
+                          : "bg-[#F3F4F6] text-black"
+                          }`}
                       >
                         Done
                       </button>
@@ -740,7 +735,7 @@ const Contact = () => {
                         Save Notes
                       </button>
                     </div>
-                    <div className="grid grid-cols-4 gap-2">
+                    <div className="grid md:grid-cols-4 grid-cols-1 gap-2">
                       <div>
                         <label className="label-gray" htmlFor="tag">
                           Tag
@@ -882,7 +877,7 @@ const Contact = () => {
                 {/* progress section */}
                 {activeTab == "progress" && (
                   <div className="bg-secondary p-4 rounded shadow-md">
-                    <div className="grid grid-cols-2 gap-2">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                       {/* <div>
                         <label className="label-gray">Salesperson</label>
                         <input className="input-orange" />
@@ -932,7 +927,7 @@ const Contact = () => {
                         />
                       </div>
                     </div>
-                    <div className="grid grid-cols-3 gap-2 mt-3">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-2 mt-3">
                       <div>
                         <label className="label-gray">Project Startdate</label>
                         <input
@@ -999,7 +994,7 @@ const Contact = () => {
                 {/* done section */}
                 {activeTab == "done" && (
                   <div className="bg-secondary p-4 rounded shadow-md">
-                    <div className="grid grid-cols-4 gap-2 mt-3">
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-2 mt-3">
                       <div>
                         <label className="label-gray">Payment Status</label>
                         <select
@@ -1079,7 +1074,7 @@ const Contact = () => {
                       </div>
                       <div>
                         <label className="label-gray">Documentation</label>
-                        <small>
+                        <small className="text-black">
                           di isi seperti tools module librari dll yg di gunakan,
                           link web nya apa dll pokoknya supaya hasil kerja bisa
                           di lihat oleh ceo{" "}
@@ -1114,7 +1109,7 @@ const Contact = () => {
                 {/* status section */}
                 {activeTab == "status" && (
                   <div className="bg-secondary p-4 rounded shadow-md">
-                    <div className="grid grid-cols-2 grid-rows-3 gap-3">
+                    <div className="grid grid-cols-1 md:grid-rows-3 gap-3">
                       <div>
                         <label className="label-gray">Lead Type</label>
                         <select
@@ -1211,15 +1206,14 @@ const Contact = () => {
             </div>
             <div className="">
               <div className="container mx-auto">
-                <div className="flex mb-4">
+                <div className="flex flex-col md:flex-row mb-4">
                   {tabs.map((tab) => (
                     <button
                       key={tab.id}
-                      className={`flex-1 py-1 text-center ${
-                        activeTimelineTab === tab.id
-                          ? "bg-[#5C708E] text-white"
-                          : "bg-gray-200 text-gray-700"
-                      }`}
+                      className={`flex-1 py-1 text-center ${activeTimelineTab === tab.id
+                        ? "bg-[#5C708E] text-white"
+                        : "bg-gray-200 text-gray-700"
+                        }`}
                       onClick={() => handleTabClick(tab.id)}
                     >
                       {tab.label}

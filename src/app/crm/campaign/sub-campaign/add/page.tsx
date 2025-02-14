@@ -109,7 +109,7 @@ function MainContent() {
             </h3>
             <ErrorElement error={error} />
 
-            <div className="grid grid-cols-3 gap-3 mt-2">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mt-2">
               <div>
                 <label htmlFor="sub-campaign-name" className="label-gray">
                   Sub Campaign Name
