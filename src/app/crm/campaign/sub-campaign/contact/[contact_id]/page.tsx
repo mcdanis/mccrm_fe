@@ -278,7 +278,6 @@ const Contact = () => {
       | ContentEditableEvent
   ) => {
     const { name, value } = event.target;
-    console.log("Changed value:", value); // Log untuk debugging
     setFormData((prevData) => ({
       ...prevData,
       [String(name)]: value,
@@ -963,7 +962,7 @@ const Contact = () => {
                       <div>
                         <label className="label-gray">Project Startdate</label>
                         <input
-                          type="text"
+                          type="date"
                           className="input-orange"
                           name="projectStartdate"
                           onChange={handleChange}
@@ -973,7 +972,7 @@ const Contact = () => {
                       <div>
                         <label className="label-gray">Deadline Project</label>
                         <input
-                          type="text"
+                          type="date"
                           className="input-orange"
                           name="projectEnddate"
                           onChange={handleChange}
