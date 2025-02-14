@@ -121,8 +121,8 @@ function MainContent() {
   return (
     <>
       <Header />
-      <div className="flex h-auto items-stretch">
-        <div className="bg-[#F3F4F6] w-1/4 p-4">
+      <div className="flex flex-col md:flex-row h-auto items-stretch">
+        <div className="bg-[#F3F4F6] w-full md:w-1/4 p-4">
           <h2 className={`font-bold text-lg mb-4 text-gray-700 `}>
             PERSONAL INFORMATION
           </h2>
@@ -202,7 +202,7 @@ function MainContent() {
             </div>
           </div>
         </div>
-        <div className="w-3/4 p-4 bg-white">
+        <div className="w-full md:w-3/4 p-4 bg-white">
           <ErrorElement error={error} />
           <div className="flex items-center p-4 bg-[#F3F4F6] shadow-md">
             <button
@@ -250,7 +250,7 @@ function MainContent() {
                       onChange={handleChange}
                     ></textarea>
                   </div>
-                  <div className="grid grid-cols-4 gap-2">
+                  <div className="grid grid-cols-1 md:grid-cols-4 gap-2">
                     <div>
                       <label className="label-gray" htmlFor="tag">
                         Tag

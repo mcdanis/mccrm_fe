@@ -52,20 +52,20 @@ const Crm = () => {
   return (
     <>
       <Header />
-      <div className="flex h-screen">
+      <div className="flex flex-col md:flex-row h-screen">
         {/* Sidebar */}
-        <div className="bg-gray-800 text-white w-64 flex flex-col justify-start items-start p-4">
+        <div className="grid-cols-1 bg-white w-full md:w-64 flex flex-col justify-start items-start p-4">
           <nav className="flex flex-col gap-4 w-full">
             <button
               onClick={() => handleNavClick("Contact")}
-              className={`text-white hover:bg-[#5C708E] px-4 py-2 rounded ${activeContent === "Contact" ? "bg-[#3c5d8f]" : ""
+              className={`hover:bg-[#5C708E] px-4 py-2 rounded ${activeContent === "Contact" ? "bg-[#3c5d8f] text-white" : "bg-gray-200 text-black"
                 }`}
             >
               Contact
             </button>
             <button
               onClick={() => handleNavClick("Info")}
-              className={`text-white hover:bg-[#5C708E] px-4 py-2 rounded ${activeContent === "Info" ? "bg-[#3c5d8f]" : ""
+              className={`hover:bg-[#5C708E] px-4 py-2 rounded ${activeContent === "Info" ? "bg-[#3c5d8f] text-white" : "bg-gray-200 text-black"
                 }`}
             >
               Info
@@ -74,7 +74,7 @@ const Crm = () => {
         </div>
 
         {/* Content Area */}
-        <div className="flex-1 p-6 bg-gray-100">
+        <div className="flex-1 p-6 bg-gray-100 w-full">
           <h2 className="text-xl font-semibold mb-3 text-gray-700">
             <Link
               href={`/crm/campaign/` + subCampaign.campaign.id}

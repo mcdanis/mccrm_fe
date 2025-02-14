@@ -93,8 +93,8 @@ export const Contact: React.FC<InfoProps> = ({ subCampaign }) => {
         const confirmDelete = await messageBox(
           "",
           "Sure to delete this data '" +
-            name +
-            "', This will REMOVE ALL DATA related with this contact",
+          name +
+          "', This will REMOVE ALL DATA related with this contact",
           "question"
         );
         if (confirmDelete) {
@@ -334,7 +334,7 @@ export const Info: React.FC<InfoProps> = ({ subCampaign }) => {
           onSubmit={handleSubmit}
           className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
         >
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             <div>
               <label
                 className="block text-gray-700 text-sm font-bold mb-2"

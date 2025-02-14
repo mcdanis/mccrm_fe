@@ -73,7 +73,7 @@ export default function Client() {
         <div className="p-6 shadow-lg w-3/4">
           <h3 className="text-lg text-gray-700 font-bold">+ Add User</h3>
           {error && <p className="text-red-500 italic text-sm mt-5">{error}</p>}
-          <div className="grid grid-cols-2 gap-3 mt-2">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-2">
             <div>
               <label htmlFor="campaign-name" className="label-gray">
                 Name
