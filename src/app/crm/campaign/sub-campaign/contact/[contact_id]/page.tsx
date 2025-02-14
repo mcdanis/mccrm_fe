@@ -459,6 +459,31 @@ const Contact = () => {
     return <>please wait..</>;
   }
 
+  const formatPhoneNumber = (input: string) => {
+
+    const cleaned = input.replace(/\D/g, '');
+
+
+    if (cleaned.startsWith('62')) {
+
+      return cleaned;
+
+    } else if (cleaned.startsWith('0')) {
+
+      return '62' + cleaned.slice(1);
+
+    } else if (cleaned.startsWith('8')) {
+
+      return '62' + cleaned;
+
+    } else {
+
+      return '62' + cleaned;
+
+    }
+
+  };
+
   return (
     <>
       <Header />
@@ -490,7 +515,14 @@ const Contact = () => {
                   onClick={() => handleSplitContact("phone")}
                 >
                   Split
-                </button>
+                </button>{" | "}
+                <Link
+                  className="hover:underline text-cyan-600 "
+                  href={`https://wa.me/${formatPhoneNumber(formData.phoneNumber)}`}
+                  target="_blank"
+                >
+                  Go WA
+                </Link>
               </label>
               <textarea
                 className="input-orange"
@@ -1240,7 +1272,7 @@ const Contact = () => {
             </div>
           </div>
         </div>
-      </div>
+      </div >
     </>
   );
 };
