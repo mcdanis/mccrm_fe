@@ -10,6 +10,7 @@ import { ContactValidation } from "@/utils/validation";
 import Link from "next/link";
 import Cookies from "js-cookie";
 import ErrorElement from "@/components/error-element";
+import EmailForm from "@/components/modals/email-form";
 import {
   convertTime,
   contact_status,
@@ -156,6 +157,16 @@ const Contact = () => {
   const [activeTab, setActiveTab] = useState("notes");
   const [error, setError] = useState("");
 
+  const [isEmailModalOpen, setIsEmailModalOpen] = useState(false);
+
+  const openEmailModal = () => {
+    setIsEmailModalOpen(true);
+  };
+
+  const closeEmailModal = () => {
+    setIsEmailModalOpen(false);
+  };
+
   const switchTab = (tab: string) => {
     setActiveTab(tab);
   };
@@ -273,8 +284,8 @@ const Contact = () => {
   const handleChange = (
     event:
       | React.ChangeEvent<
-        HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-      >
+          HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+        >
       | ContentEditableEvent
   ) => {
     const { name, value } = event.target;
@@ -459,33 +470,29 @@ const Contact = () => {
   }
 
   const formatPhoneNumber = (input: string) => {
+    const cleaned = input.replace(/\D/g, "");
 
-    const cleaned = input.replace(/\D/g, '');
-
-
-    if (cleaned.startsWith('62')) {
-
+    if (cleaned.startsWith("62")) {
       return cleaned;
-
-    } else if (cleaned.startsWith('0')) {
-
-      return '62' + cleaned.slice(1);
-
-    } else if (cleaned.startsWith('8')) {
-
-      return '62' + cleaned;
-
+    } else if (cleaned.startsWith("0")) {
+      return "62" + cleaned.slice(1);
+    } else if (cleaned.startsWith("8")) {
+      return "62" + cleaned;
     } else {
-
-      return '62' + cleaned;
-
+      return "62" + cleaned;
     }
-
   };
 
   return (
     <>
       <Header />
+      {isEmailModalOpen && (
+        <EmailForm
+          to={formData.email}
+          closeModal={closeEmailModal}
+          clientName={formData.fullName}
+        />
+      )}
       <div className="flex flex-col md:flex-row h-auto items-stretch">
         <div className="bg-[#F3F4F6] w-full md:w-1/4 p-4">
           <h2
@@ -493,6 +500,23 @@ const Contact = () => {
           >
             PERSONAL INFORMATION
           </h2>
+          <button className="btn-orange-sm mb-2" onClick={openEmailModal}>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              width="14"
+              height="14"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+              <polyline points="22,6 12,13 2,6" />
+            </svg>
+          </button>
+          <hr />
           <label className="text-xs italic text-gray-500">
             Created at : {convertTime(contact.contact.createdAt)}
           </label>
@@ -514,10 +538,13 @@ const Contact = () => {
                   onClick={() => handleSplitContact("phone")}
                 >
                   Split
-                </button>{" | "}
+                </button>
+                {" | "}
                 <Link
                   className="hover:underline text-cyan-600 "
-                  href={`https://wa.me/${formatPhoneNumber(formData.phoneNumber)}`}
+                  href={`https://wa.me/${formatPhoneNumber(
+                    formData.phoneNumber
+                  )}`}
                   target="_blank"
                 >
                   Go WA
@@ -677,19 +704,21 @@ const Contact = () => {
                 <div className="mt-3 flex space-x-1 mb-4">
                   <button
                     onClick={() => switchTab("notes")}
-                    className={`hover:bg-[#1c3458]  text-xs  px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${activeTab == "notes"
-                      ? "bg-[#5C708E] text-white"
-                      : "bg-[#F3F4F6] text-black"
-                      }`}
+                    className={`hover:bg-[#1c3458]  text-xs  px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${
+                      activeTab == "notes"
+                        ? "bg-[#5C708E] text-white"
+                        : "bg-[#F3F4F6] text-black"
+                    }`}
                   >
                     Notes
                   </button>
                   <button
                     onClick={() => switchTab("progress")}
-                    className={`hover:bg-[#1c3458] text-xs px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${activeTab == "progress"
-                      ? "bg-[#5C708E] text-white"
-                      : "bg-[#F3F4F6] text-black"
-                      }`}
+                    className={`hover:bg-[#1c3458] text-xs px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${
+                      activeTab == "progress"
+                        ? "bg-[#5C708E] text-white"
+                        : "bg-[#F3F4F6] text-black"
+                    }`}
                   >
                     Activity
                   </button>
@@ -697,10 +726,11 @@ const Contact = () => {
                     Number(formData.status) != 9 && (
                       <button
                         onClick={() => switchTab("status")}
-                        className={`hover:bg-[#1c3458] text-xs px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${activeTab == "status"
-                          ? "bg-[#5C708E] text-white"
-                          : "bg-[#F3F4F6] text-black"
-                          }`}
+                        className={`hover:bg-[#1c3458] text-xs px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${
+                          activeTab == "status"
+                            ? "bg-[#5C708E] text-white"
+                            : "bg-[#F3F4F6] text-black"
+                        }`}
                       >
                         Qualification
                       </button>
@@ -709,10 +739,11 @@ const Contact = () => {
                     Number(formData.status) != 9 && (
                       <button
                         onClick={() => switchTab("negotiation")}
-                        className={`hover:bg-[#1c3458] text-xs  px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${activeTab == "negotiation"
-                          ? "bg-[#5C708E] text-white"
-                          : "bg-[#F3F4F6] text-black"
-                          }`}
+                        className={`hover:bg-[#1c3458] text-xs  px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${
+                          activeTab == "negotiation"
+                            ? "bg-[#5C708E] text-white"
+                            : "bg-[#F3F4F6] text-black"
+                        }`}
                       >
                         Negotiation
                       </button>
@@ -721,10 +752,11 @@ const Contact = () => {
                     Number(formData.status) != 9 && (
                       <button
                         onClick={() => switchTab("done")}
-                        className={`hover:bg-[#1c3458] text-xs  px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${activeTab == "done"
-                          ? "bg-[#5C708E] text-white"
-                          : "bg-[#F3F4F6] text-black"
-                          }`}
+                        className={`hover:bg-[#1c3458] text-xs  px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${
+                          activeTab == "done"
+                            ? "bg-[#5C708E] text-white"
+                            : "bg-[#F3F4F6] text-black"
+                        }`}
                       >
                         Done
                       </button>
@@ -1241,10 +1273,11 @@ const Contact = () => {
                   {tabs.map((tab) => (
                     <button
                       key={tab.id}
-                      className={`flex-1 py-1 text-center ${activeTimelineTab === tab.id
-                        ? "bg-[#5C708E] text-white"
-                        : "bg-gray-200 text-gray-700"
-                        }`}
+                      className={`flex-1 py-1 text-center ${
+                        activeTimelineTab === tab.id
+                          ? "bg-[#5C708E] text-white"
+                          : "bg-gray-200 text-gray-700"
+                      }`}
                       onClick={() => handleTabClick(tab.id)}
                     >
                       {tab.label}
@@ -1271,7 +1304,7 @@ const Contact = () => {
             </div>
           </div>
         </div>
-      </div >
+      </div>
     </>
   );
 };
