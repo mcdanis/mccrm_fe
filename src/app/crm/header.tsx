@@ -50,7 +50,7 @@ const Header = () => {
           <div className="hidden md:flex space-x-4">
             <Link
               href="/crm"
-              className={`text-white hover:bg-[#3c5d8f] px-3 py-2 rounded text-sm`}
+              className={`text-white hover:bg-[#3c5d8f] px-3 py-2 rounded`}
             >
               DASHBOARD
             </Link>
@@ -165,7 +165,6 @@ const Header = () => {
           </div>
         )}
       </nav>
-
     </>
   );
 };
