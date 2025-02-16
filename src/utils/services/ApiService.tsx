@@ -68,7 +68,7 @@ class ApiService {
   async getEmailResponse(contactId: number) {
     try {
       const response = await api(
-        "/campaign/sub-campaign/contact/emails/responses/" + contactId,
+        "campaign/sub-campaign/contact/emails/responses/" + contactId,
         this.header()
       );
       return await response.json();
