@@ -69,10 +69,7 @@ class ApiService {
     try {
       const response = await api(
         "/campaign/sub-campaign/contact/emails/responses/" + contactId,
-        {
-          method: "GET",
-          headers: this.headerAuth,
-        }
+        this.header()
       );
       return await response.json();
     } catch (error) {
