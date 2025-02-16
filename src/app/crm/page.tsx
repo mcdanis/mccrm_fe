@@ -76,6 +76,7 @@ const Crm = () => {
   }, [keyword, status, tagFilter, priority, subCampaignId]);
 
   const redirectToContact = (contactId: number) => {
+    console.log(999);
     router.push(`/crm/campaign/sub-campaign/contact/${contactId}`);
   };
 

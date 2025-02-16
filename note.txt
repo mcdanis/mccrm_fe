@@ -1,13 +1,4 @@
 https://flowbite.com/docs/components/buttons/ = button bagus2
 
-
-di tab negosiasi hasil, tambkan : 
-nama projek
-waktu mulai
-waktu selesai 
-nilai projek
-
-tambah tab done = isinya untuk mengisi field jika projek selesai
-tab activity gunakan juga untuk projek on progress
-
-tab activity pindah dengan tab qualification
+next 
+- tracking aktivitas by contact id di webhook

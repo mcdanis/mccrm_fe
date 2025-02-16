@@ -10,12 +10,14 @@ import { ContactValidation } from "@/utils/validation";
 import Link from "next/link";
 import Cookies from "js-cookie";
 import ErrorElement from "@/components/error-element";
+import EmailForm from "@/components/modals/email-form";
 import {
   convertTime,
   contact_status,
   tag,
   level_priority,
   lead_type,
+  convertEmailActivity,
   messageBox,
 } from "@/utils/utils";
 
@@ -146,6 +148,21 @@ interface User {
   name: string;
 }
 
+interface EmailsHistory {
+  id: number;
+  event: string;
+  createdAt: string;
+}
+
+interface Emails {
+  id: number;
+  body: string;
+  subject: string;
+  to: string;
+  createdAt: string;
+  historyEmailTracking: EmailsHistory[];
+}
+
 const Contact = () => {
   const apiService = new ApiService();
   const params = useParams();
@@ -156,6 +173,16 @@ const Contact = () => {
   const [activeTab, setActiveTab] = useState("notes");
   const [error, setError] = useState("");
 
+  const [isEmailModalOpen, setIsEmailModalOpen] = useState(false);
+
+  const openEmailModal = () => {
+    setIsEmailModalOpen(true);
+  };
+
+  const closeEmailModal = () => {
+    setIsEmailModalOpen(false);
+  };
+
   const switchTab = (tab: string) => {
     setActiveTab(tab);
   };
@@ -163,7 +190,8 @@ const Contact = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [activeTimelineTab, setActiveTimelineTab] = useState("all");
   const [contact, setContact] = useState<Data>();
-  const [timeline, setTimeline] = useState<TimelineItem[]>([]); // Definisikan tipe state
+  const [timeline, setTimeline] = useState<TimelineItem[]>([]);
+  const [emailResponse, setEmailResponse] = useState<Emails[]>([]);
 
   const tabs = [
     { id: "all", label: "All" },
@@ -224,6 +252,13 @@ const Contact = () => {
       setTimeline(timeline);
     };
     fetchTimeline();
+    const fetchEmailResponse = async () => {
+      const emailResponse = await apiService.getEmailResponse(
+        Number(contact_id)
+      );
+      setEmailResponse(emailResponse.data);
+    };
+    fetchEmailResponse();
   }, []);
 
   const [formData, setFormData] = useState({
@@ -273,8 +308,8 @@ const Contact = () => {
   const handleChange = (
     event:
       | React.ChangeEvent<
-        HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-      >
+          HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+        >
       | ContentEditableEvent
   ) => {
     const { name, value } = event.target;
@@ -459,33 +494,32 @@ const Contact = () => {
   }
 
   const formatPhoneNumber = (input: string) => {
+    const cleaned = input.replace(/\D/g, "");
 
-    const cleaned = input.replace(/\D/g, '');
-
-
-    if (cleaned.startsWith('62')) {
-
+    if (cleaned.startsWith("62")) {
       return cleaned;
-
-    } else if (cleaned.startsWith('0')) {
-
-      return '62' + cleaned.slice(1);
-
-    } else if (cleaned.startsWith('8')) {
-
-      return '62' + cleaned;
-
+    } else if (cleaned.startsWith("0")) {
+      return "62" + cleaned.slice(1);
+    } else if (cleaned.startsWith("8")) {
+      return "62" + cleaned;
     } else {
-
-      return '62' + cleaned;
-
+      return "62" + cleaned;
     }
-
   };
 
   return (
     <>
       <Header />
+      {isEmailModalOpen && (
+        <EmailForm
+          to={formData.email}
+          closeModal={closeEmailModal}
+          clientName={formData.fullName}
+          userId={Number(Cookies.get("mccrm_user_id"))}
+          subCampaignId={Number(contact.subCampaign.id)}
+          contactId={Number(contact_id)}
+        />
+      )}
       <div className="flex flex-col md:flex-row h-auto items-stretch">
         <div className="bg-[#F3F4F6] w-full md:w-1/4 p-4">
           <h2
@@ -493,6 +527,23 @@ const Contact = () => {
           >
             PERSONAL INFORMATION
           </h2>
+          <button className="btn-orange-sm mb-2" onClick={openEmailModal}>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              width="14"
+              height="14"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+              <polyline points="22,6 12,13 2,6" />
+            </svg>
+          </button>
+          <hr />
           <label className="text-xs italic text-gray-500">
             Created at : {convertTime(contact.contact.createdAt)}
           </label>
@@ -514,10 +565,13 @@ const Contact = () => {
                   onClick={() => handleSplitContact("phone")}
                 >
                   Split
-                </button>{" | "}
+                </button>
+                {" | "}
                 <Link
                   className="hover:underline text-cyan-600 "
-                  href={`https://wa.me/${formatPhoneNumber(formData.phoneNumber)}`}
+                  href={`https://wa.me/${formatPhoneNumber(
+                    formData.phoneNumber
+                  )}`}
                   target="_blank"
                 >
                   Go WA
@@ -676,20 +730,32 @@ const Contact = () => {
                 <ErrorElement error={error} />
                 <div className="mt-3 flex space-x-1 mb-4">
                   <button
+                    onClick={() => switchTab("email-response")}
+                    className={`hover:bg-[#1c3458]  text-xs  px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${
+                      activeTab == "email-response"
+                        ? "bg-[#5C708E] text-white"
+                        : "bg-[#F3F4F6] text-black"
+                    }`}
+                  >
+                    Email Response
+                  </button>
+                  <button
                     onClick={() => switchTab("notes")}
-                    className={`hover:bg-[#1c3458]  text-xs  px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${activeTab == "notes"
-                      ? "bg-[#5C708E] text-white"
-                      : "bg-[#F3F4F6] text-black"
-                      }`}
+                    className={`hover:bg-[#1c3458]  text-xs  px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${
+                      activeTab == "notes"
+                        ? "bg-[#5C708E] text-white"
+                        : "bg-[#F3F4F6] text-black"
+                    }`}
                   >
                     Notes
                   </button>
                   <button
                     onClick={() => switchTab("progress")}
-                    className={`hover:bg-[#1c3458] text-xs px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${activeTab == "progress"
-                      ? "bg-[#5C708E] text-white"
-                      : "bg-[#F3F4F6] text-black"
-                      }`}
+                    className={`hover:bg-[#1c3458] text-xs px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${
+                      activeTab == "progress"
+                        ? "bg-[#5C708E] text-white"
+                        : "bg-[#F3F4F6] text-black"
+                    }`}
                   >
                     Activity
                   </button>
@@ -697,10 +763,11 @@ const Contact = () => {
                     Number(formData.status) != 9 && (
                       <button
                         onClick={() => switchTab("status")}
-                        className={`hover:bg-[#1c3458] text-xs px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${activeTab == "status"
-                          ? "bg-[#5C708E] text-white"
-                          : "bg-[#F3F4F6] text-black"
-                          }`}
+                        className={`hover:bg-[#1c3458] text-xs px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${
+                          activeTab == "status"
+                            ? "bg-[#5C708E] text-white"
+                            : "bg-[#F3F4F6] text-black"
+                        }`}
                       >
                         Qualification
                       </button>
@@ -709,10 +776,11 @@ const Contact = () => {
                     Number(formData.status) != 9 && (
                       <button
                         onClick={() => switchTab("negotiation")}
-                        className={`hover:bg-[#1c3458] text-xs  px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${activeTab == "negotiation"
-                          ? "bg-[#5C708E] text-white"
-                          : "bg-[#F3F4F6] text-black"
-                          }`}
+                        className={`hover:bg-[#1c3458] text-xs  px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${
+                          activeTab == "negotiation"
+                            ? "bg-[#5C708E] text-white"
+                            : "bg-[#F3F4F6] text-black"
+                        }`}
                       >
                         Negotiation
                       </button>
@@ -721,15 +789,80 @@ const Contact = () => {
                     Number(formData.status) != 9 && (
                       <button
                         onClick={() => switchTab("done")}
-                        className={`hover:bg-[#1c3458] text-xs  px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${activeTab == "done"
-                          ? "bg-[#5C708E] text-white"
-                          : "bg-[#F3F4F6] text-black"
-                          }`}
+                        className={`hover:bg-[#1c3458] text-xs  px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${
+                          activeTab == "done"
+                            ? "bg-[#5C708E] text-white"
+                            : "bg-[#F3F4F6] text-black"
+                        }`}
                       >
                         Done
                       </button>
                     )}
                 </div>
+
+                {/* Email Response Section */}
+                {activeTab == "email-response" && (
+                  <div>
+                    {emailResponse.map((item, index) => (
+                      <div
+                        className="bg-secondary p-4 rounded shadow-md"
+                        key={index}
+                      >
+                        <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-lg p-6">
+                          <div className="flex justify-between items-center border-b pb-4 mb-4">
+                            <div>
+                              <h2 className="text-lg font-semibold text-gray-800">
+                                Sent at
+                              </h2>
+                              {/* <p className="text-sm text-gray-500">Dani s</p> */}
+                            </div>
+                            <p className="text-sm text-gray-400">
+                              {convertTime(item.createdAt)}
+                            </p>
+                          </div>
+
+                          <div className="mb-6">
+                            <h3 className="text-xl font-semibold ">
+                              <span className="text-gray-400">Subject:</span>{" "}
+                              <span className="text-gray-700">
+                                {item.subject}
+                              </span>
+                            </h3>
+                          </div>
+
+                          <div className="prose text-gray-700 mb-6">
+                            <div
+                              dangerouslySetInnerHTML={{ __html: item.body }}
+                            />
+                          </div>
+                          <div className="mb-6 border-t-2">
+                            {item.historyEmailTracking.length >= 1 && (
+                              <>
+                                <h4 className="font-semibold text-gray-400">
+                                  Email Interactions:
+                                </h4>
+                                <ul className="list-disc pl-5 text-sm text-gray-600">
+                                  {item.historyEmailTracking.map(
+                                    (item, index) => (
+                                      <li key={index}>
+                                        <strong>
+                                          {convertEmailActivity(item.event)}
+                                        </strong>{" "}
+                                        <small>
+                                          {convertTime(item.createdAt)}
+                                        </small>
+                                      </li>
+                                    )
+                                  )}
+                                </ul>
+                              </>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
 
                 {/* Notes Section */}
                 {activeTab == "notes" && (
@@ -1241,10 +1374,11 @@ const Contact = () => {
                   {tabs.map((tab) => (
                     <button
                       key={tab.id}
-                      className={`flex-1 py-1 text-center ${activeTimelineTab === tab.id
-                        ? "bg-[#5C708E] text-white"
-                        : "bg-gray-200 text-gray-700"
-                        }`}
+                      className={`flex-1 py-1 text-center ${
+                        activeTimelineTab === tab.id
+                          ? "bg-[#5C708E] text-white"
+                          : "bg-gray-200 text-gray-700"
+                      }`}
                       onClick={() => handleTabClick(tab.id)}
                     >
                       {tab.label}
@@ -1271,7 +1405,7 @@ const Contact = () => {
             </div>
           </div>
         </div>
-      </div >
+      </div>
     </>
   );
 };

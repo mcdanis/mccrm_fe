@@ -41,6 +41,17 @@ class ApiService {
       console.log(error);
     }
   }
+  async getEmailTemplate(clientId: number = 0) {
+    try {
+      const response = await api("client/email-template/" + clientId, {
+        method: "GET",
+        headers: this.headerAuth,
+      });
+      return await response.json();
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   async getCampaigns() {
     try {
@@ -48,6 +59,21 @@ class ApiService {
         method: "GET",
         headers: this.headerAuth,
       });
+      return await response.json();
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async getEmailResponse(contactId: number) {
+    try {
+      const response = await api(
+        "/campaign/sub-campaign/contact/emails/responses/" + contactId,
+        {
+          method: "GET",
+          headers: this.headerAuth,
+        }
+      );
       return await response.json();
     } catch (error) {
       console.log(error);

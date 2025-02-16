@@ -41,6 +41,19 @@ export const useIsLogin = () => {
   });
 };
 
+export const convertEmailActivity = (status: string) => {
+  switch (status) {
+    case "message.opened":
+      return "Email Opened";
+    case "thread.replied":
+      return "Replied an Email";
+    case "message.link_clicked":
+      return "Clicked Link";
+    default:
+      return "unknow";
+  }
+};
+
 export const convertTime = (dateTime: string) => {
   const date = new Date(dateTime);
   const options: Intl.DateTimeFormatOptions = {
