@@ -19,22 +19,32 @@ import ApiService from "@/utils/services/ApiService";
 import { api, messageBox } from "@/utils/utils";
 import Cookies from "js-cookie";
 import ErrorElement from "@/components/error-element";
+import LoadingIcon from "../loading-icon";
 
 interface EmailTemplate {
   id: number;
   name: string;
   body: string;
   subject: string;
+  contactId: number;
+  subCampaignId: number;
+  userId: number;
 }
 
 const EmailForm = ({
   closeModal,
   to,
   clientName,
+  userId,
+  subCampaignId,
+  contactId,
 }: {
   closeModal: () => void;
   to: string;
   clientName: string;
+  userId: number;
+  subCampaignId: number;
+  contactId: number;
 }) => {
   const apiService = new ApiService();
   const [emailTemplates, setEmailTemplates] = useState<EmailTemplate[]>([]);
@@ -45,6 +55,8 @@ const EmailForm = ({
   const [subject, setSubject] = useState<string>("");
   const [body, setBody] = useState<string>("");
   const [name, setName] = useState<string>("");
+
+  const [isSendEmailLoading, setIsSendEmailLoading] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchEmailTemplate = async () => {
@@ -73,10 +85,12 @@ const EmailForm = ({
   };
 
   const sendEmail = async () => {
+    setIsSendEmailLoading(true);
     if (!body || !subject || !to || !name) {
       setError("There are field not valid");
       return;
     }
+
     try {
       const response = await api("campaign/sub-campaign/contact/email/send", {
         method: "POST",
@@ -89,13 +103,18 @@ const EmailForm = ({
           body,
           to,
           name,
+          contactId,
+          subCampaignId,
+          userId,
         }),
       });
 
       const data = await response.json();
       if (data.error) throw new Error(data.error || "Something went wrong");
+      setIsSendEmailLoading(false);
       messageBox("", data.message, "success", "no");
       setError("");
+      setSelectedTemplate(null);
     } catch (err) {
       setError((err as Error).message);
     }
@@ -189,18 +208,24 @@ const EmailForm = ({
             </EditorProvider>
           </div>
         </div>
-
-        <div className="flex justify-end mt-5">
-          <button className="btn-orange-sm" onClick={sendEmail}>
-            Send
-          </button>
-          <button
-            className="btn-orange-outline-sm ml-2 text-black"
-            onClick={closeModal}
-          >
-            Close
-          </button>
-        </div>
+        {isSendEmailLoading}
+        {!isSendEmailLoading ? (
+          <div className="flex justify-end mt-5">
+            <button className="btn-orange-sm" onClick={sendEmail}>
+              Send
+            </button>
+            <button
+              className="btn-orange-outline-sm ml-2 text-black"
+              onClick={closeModal}
+            >
+              Close
+            </button>
+          </div>
+        ) : (
+          <div>
+            <LoadingIcon></LoadingIcon>
+          </div>
+        )}
       </div>
     </div>
   );

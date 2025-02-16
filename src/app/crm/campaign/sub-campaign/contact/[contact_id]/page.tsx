@@ -491,6 +491,9 @@ const Contact = () => {
           to={formData.email}
           closeModal={closeEmailModal}
           clientName={formData.fullName}
+          userId={Number(Cookies.get("mccrm_user_id"))}
+          subCampaignId={Number(contact.subCampaign.id)}
+          contactId={Number(contact_id)}
         />
       )}
       <div className="flex flex-col md:flex-row h-auto items-stretch">
@@ -703,6 +706,16 @@ const Contact = () => {
                 <ErrorElement error={error} />
                 <div className="mt-3 flex space-x-1 mb-4">
                   <button
+                    onClick={() => switchTab("email-response")}
+                    className={`hover:bg-[#1c3458]  text-xs  px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${
+                      activeTab == "email-response"
+                        ? "bg-[#5C708E] text-white"
+                        : "bg-[#F3F4F6] text-black"
+                    }`}
+                  >
+                    Email Response
+                  </button>
+                  <button
                     onClick={() => switchTab("notes")}
                     className={`hover:bg-[#1c3458]  text-xs  px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${
                       activeTab == "notes"
@@ -762,6 +775,109 @@ const Contact = () => {
                       </button>
                     )}
                 </div>
+
+                {/* Email Response Section */}
+                {activeTab == "email-response" && (
+                  <div>
+                    <div className="bg-secondary p-4 rounded shadow-md">
+                      <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-lg p-6">
+                        <div className="flex justify-between items-center border-b pb-4 mb-4">
+                          <div>
+                            <h2 className="text-xl font-semibold text-gray-800">
+                              John Doe
+                            </h2>
+                            <p className="text-sm text-gray-500">
+                              johndoe@example.com
+                            </p>
+                          </div>
+                          <p className="text-sm text-gray-400">Feb 16, 2025</p>
+                        </div>
+
+                        <div className="mb-6">
+                          <h3 className="text-2xl font-semibold text-gray-900">
+                            Subject: Re: Meeting Request
+                          </h3>
+                        </div>
+
+                        <div className="prose text-gray-700 mb-6">
+                          <p>Hello Jane,</p>
+                          <p>
+                            Thank you for your email. I’d be happy to meet with
+                            you next week. Would Thursday at 2 PM work for you?
+                          </p>
+                          <p>Looking forward to hearing from you soon.</p>
+                          <p>Best regards,</p>
+                          <p>John Doe</p>
+                        </div>
+                        <div className="mb-6 border-t-2">
+                          <h4 className="font-semibold text-gray-400">
+                            Email Interactions:
+                          </h4>
+                          <ul className="list-disc pl-5 text-sm text-gray-600">
+                            <li>
+                              <strong>Opened:</strong> Feb 16, 2025, 10:05 AM
+                            </li>
+                            <li>
+                              <strong>Clicked:</strong> Feb 16, 2025, 10:07 AM
+                            </li>
+                            <li>
+                              <strong>Replied:</strong> Feb 16, 2025, 10:15 AM
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="bg-secondary p-4 rounded shadow-md">
+                      <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-lg p-6">
+                        <div className="flex justify-between items-center border-b pb-4 mb-4">
+                          <div>
+                            <h2 className="text-xl font-semibold text-gray-800">
+                              John Doe
+                            </h2>
+                            <p className="text-sm text-gray-500">
+                              johndoe@example.com
+                            </p>
+                          </div>
+                          <p className="text-sm text-gray-400">Feb 16, 2025</p>
+                        </div>
+
+                        <div className="mb-6">
+                          <h3 className="text-2xl font-semibold text-gray-900">
+                            Subject: Re: Meeting Request
+                          </h3>
+                        </div>
+
+                        <div className="prose text-gray-700 mb-6">
+                          <p>Hello Jane,</p>
+                          <p>
+                            Thank you for your email. I’d be happy to meet with
+                            you next week. Would Thursday at 2 PM work for you?
+                          </p>
+                          <p>Looking forward to hearing from you soon.</p>
+                          <p>Best regards,</p>
+                          <p>John Doe</p>
+                        </div>
+                        <div className="mb-6 border-t-2">
+                          <h4 className="font-semibold text-gray-400">
+                            Email Interactions:
+                          </h4>
+                          <ul className="list-disc pl-5 text-sm text-gray-600">
+                            <li>
+                              <strong>Opened:</strong> Feb 16, 2025, 10:05 AM
+                            </li>
+                            <li>
+                              <strong>Clicked:</strong> Feb 16, 2025, 10:07 AM
+                            </li>
+                            <li>
+                              <strong>Replied:</strong> Feb 16, 2025, 10:15 AM
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
 
                 {/* Notes Section */}
                 {activeTab == "notes" && (
