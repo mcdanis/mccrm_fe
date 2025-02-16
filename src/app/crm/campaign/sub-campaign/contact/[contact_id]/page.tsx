@@ -17,6 +17,7 @@ import {
   tag,
   level_priority,
   lead_type,
+  convertEmailActivity,
   messageBox,
 } from "@/utils/utils";
 
@@ -147,6 +148,21 @@ interface User {
   name: string;
 }
 
+interface EmailsHistory {
+  id: number;
+  event: string;
+  createdAt: string;
+}
+
+interface Emails {
+  id: number;
+  body: string;
+  subject: string;
+  to: string;
+  createdAt: string;
+  historyEmailTracking: EmailsHistory[];
+}
+
 const Contact = () => {
   const apiService = new ApiService();
   const params = useParams();
@@ -174,7 +190,8 @@ const Contact = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [activeTimelineTab, setActiveTimelineTab] = useState("all");
   const [contact, setContact] = useState<Data>();
-  const [timeline, setTimeline] = useState<TimelineItem[]>([]); // Definisikan tipe state
+  const [timeline, setTimeline] = useState<TimelineItem[]>([]);
+  const [emailResponse, setEmailResponse] = useState<Emails[]>([]);
 
   const tabs = [
     { id: "all", label: "All" },
@@ -235,6 +252,13 @@ const Contact = () => {
       setTimeline(timeline);
     };
     fetchTimeline();
+    const fetchEmailResponse = async () => {
+      const emailResponse = await apiService.getEmailResponse(
+        Number(contact_id)
+      );
+      setEmailResponse(emailResponse.data);
+    };
+    fetchEmailResponse();
   }, []);
 
   const [formData, setFormData] = useState({
@@ -779,103 +803,64 @@ const Contact = () => {
                 {/* Email Response Section */}
                 {activeTab == "email-response" && (
                   <div>
-                    <div className="bg-secondary p-4 rounded shadow-md">
-                      <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-lg p-6">
-                        <div className="flex justify-between items-center border-b pb-4 mb-4">
-                          <div>
-                            <h2 className="text-xl font-semibold text-gray-800">
-                              John Doe
-                            </h2>
-                            <p className="text-sm text-gray-500">
-                              johndoe@example.com
+                    {emailResponse.map((item, index) => (
+                      <div
+                        className="bg-secondary p-4 rounded shadow-md"
+                        key={index}
+                      >
+                        <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-lg p-6">
+                          <div className="flex justify-between items-center border-b pb-4 mb-4">
+                            <div>
+                              <h2 className="text-lg font-semibold text-gray-800">
+                                Sent at
+                              </h2>
+                              {/* <p className="text-sm text-gray-500">Dani s</p> */}
+                            </div>
+                            <p className="text-sm text-gray-400">
+                              {convertTime(item.createdAt)}
                             </p>
                           </div>
-                          <p className="text-sm text-gray-400">Feb 16, 2025</p>
-                        </div>
 
-                        <div className="mb-6">
-                          <h3 className="text-2xl font-semibold text-gray-900">
-                            Subject: Re: Meeting Request
-                          </h3>
-                        </div>
-
-                        <div className="prose text-gray-700 mb-6">
-                          <p>Hello Jane,</p>
-                          <p>
-                            Thank you for your email. I’d be happy to meet with
-                            you next week. Would Thursday at 2 PM work for you?
-                          </p>
-                          <p>Looking forward to hearing from you soon.</p>
-                          <p>Best regards,</p>
-                          <p>John Doe</p>
-                        </div>
-                        <div className="mb-6 border-t-2">
-                          <h4 className="font-semibold text-gray-400">
-                            Email Interactions:
-                          </h4>
-                          <ul className="list-disc pl-5 text-sm text-gray-600">
-                            <li>
-                              <strong>Opened:</strong> Feb 16, 2025, 10:05 AM
-                            </li>
-                            <li>
-                              <strong>Clicked:</strong> Feb 16, 2025, 10:07 AM
-                            </li>
-                            <li>
-                              <strong>Replied:</strong> Feb 16, 2025, 10:15 AM
-                            </li>
-                          </ul>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="bg-secondary p-4 rounded shadow-md">
-                      <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-lg p-6">
-                        <div className="flex justify-between items-center border-b pb-4 mb-4">
-                          <div>
-                            <h2 className="text-xl font-semibold text-gray-800">
-                              John Doe
-                            </h2>
-                            <p className="text-sm text-gray-500">
-                              johndoe@example.com
-                            </p>
+                          <div className="mb-6">
+                            <h3 className="text-xl font-semibold ">
+                              <span className="text-gray-400">Subject:</span>{" "}
+                              <span className="text-gray-700">
+                                {item.subject}
+                              </span>
+                            </h3>
                           </div>
-                          <p className="text-sm text-gray-400">Feb 16, 2025</p>
-                        </div>
 
-                        <div className="mb-6">
-                          <h3 className="text-2xl font-semibold text-gray-900">
-                            Subject: Re: Meeting Request
-                          </h3>
-                        </div>
-
-                        <div className="prose text-gray-700 mb-6">
-                          <p>Hello Jane,</p>
-                          <p>
-                            Thank you for your email. I’d be happy to meet with
-                            you next week. Would Thursday at 2 PM work for you?
-                          </p>
-                          <p>Looking forward to hearing from you soon.</p>
-                          <p>Best regards,</p>
-                          <p>John Doe</p>
-                        </div>
-                        <div className="mb-6 border-t-2">
-                          <h4 className="font-semibold text-gray-400">
-                            Email Interactions:
-                          </h4>
-                          <ul className="list-disc pl-5 text-sm text-gray-600">
-                            <li>
-                              <strong>Opened:</strong> Feb 16, 2025, 10:05 AM
-                            </li>
-                            <li>
-                              <strong>Clicked:</strong> Feb 16, 2025, 10:07 AM
-                            </li>
-                            <li>
-                              <strong>Replied:</strong> Feb 16, 2025, 10:15 AM
-                            </li>
-                          </ul>
+                          <div className="prose text-gray-700 mb-6">
+                            <div
+                              dangerouslySetInnerHTML={{ __html: item.body }}
+                            />
+                          </div>
+                          <div className="mb-6 border-t-2">
+                            {item.historyEmailTracking.length >= 1 && (
+                              <>
+                                <h4 className="font-semibold text-gray-400">
+                                  Email Interactions:
+                                </h4>
+                                <ul className="list-disc pl-5 text-sm text-gray-600">
+                                  {item.historyEmailTracking.map(
+                                    (item, index) => (
+                                      <li key={index}>
+                                        <strong>
+                                          {convertEmailActivity(item.event)}
+                                        </strong>{" "}
+                                        <small>
+                                          {convertTime(item.createdAt)}
+                                        </small>
+                                      </li>
+                                    )
+                                  )}
+                                </ul>
+                              </>
+                            )}
+                          </div>
                         </div>
                       </div>
-                    </div>
+                    ))}
                   </div>
                 )}
 

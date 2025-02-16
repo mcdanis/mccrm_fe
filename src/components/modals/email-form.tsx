@@ -85,9 +85,19 @@ const EmailForm = ({
   };
 
   const sendEmail = async () => {
+    const msg = await messageBox(
+      "",
+      "Sure to send an Email to " + name + " ?",
+      "question"
+    );
+    if (!msg) {
+      return;
+    }
+
     setIsSendEmailLoading(true);
     if (!body || !subject || !to || !name) {
       setError("There are field not valid");
+      setIsSendEmailLoading(false);
       return;
     }
 
