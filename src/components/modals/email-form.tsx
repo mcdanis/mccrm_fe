@@ -196,7 +196,7 @@ const EmailForm = ({
             </label>
             <EditorProvider>
               <Editor
-                className="text-black bg-white"
+                className="text-black bg-white max-h-48 overflow-y-auto"
                 containerProps={{ style: { resize: "vertical" } }}
                 name="note"
                 value={body}
