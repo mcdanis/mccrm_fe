@@ -325,7 +325,6 @@ export const Info: React.FC<InfoProps> = ({ subCampaign }) => {
   const handleSubmit = (event: React.ChangeEvent<HTMLFormElement>) => {
     event.preventDefault();
     // Handle form submission here
-    // console.log(formData);
   };
   return (
     <>

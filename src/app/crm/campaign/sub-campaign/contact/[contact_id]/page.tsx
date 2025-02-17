@@ -308,8 +308,8 @@ const Contact = () => {
   const handleChange = (
     event:
       | React.ChangeEvent<
-          HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-        >
+        HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+      >
       | ContentEditableEvent
   ) => {
     const { name, value } = event.target;
@@ -714,48 +714,32 @@ const Contact = () => {
           <div className="grid grid-cols-1 gap-4 mt-3">
             <div className="">
               <div className="flex-1">
-                {/* Tabs */}
-                {/* <button
-                  onClick={() => switchTab("notes")}
-                  className={`py-2 px-4 border border-gray-400 rounded bg-[#F3F4F6] text-gray-400`}
-                >
-                  Disable
-                </button>
-                <button
-                  onClick={() => switchTab("notes")}
-                  className={`hover:bg-[#3c5d8f] py-2 px-4 border border-[#3c5d8f] hover:text-white rounded bg-[#F3F4F6] text-black`}
-                >
-                  button aktif
-                </button> */}
                 <ErrorElement error={error} />
-                <div className="mt-3 flex space-x-1 mb-4">
+                <div className="mt-3 flex flex-wrap justify-center space-x-1 mb-4 space-y-1 md:justify-start">
                   <button
                     onClick={() => switchTab("email-response")}
-                    className={`hover:bg-[#1c3458]  text-xs  px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${
-                      activeTab == "email-response"
-                        ? "bg-[#5C708E] text-white"
-                        : "bg-[#F3F4F6] text-black"
-                    }`}
+                    className={`hover:bg-[#1c3458] text-xs mt-1  px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${activeTab == "email-response"
+                      ? "bg-[#5C708E] text-white"
+                      : "bg-[#F3F4F6] text-black"
+                      }`}
                   >
                     Email Response
                   </button>
                   <button
                     onClick={() => switchTab("notes")}
-                    className={`hover:bg-[#1c3458]  text-xs  px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${
-                      activeTab == "notes"
-                        ? "bg-[#5C708E] text-white"
-                        : "bg-[#F3F4F6] text-black"
-                    }`}
+                    className={`hover:bg-[#1c3458]  text-xs  px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${activeTab == "notes"
+                      ? "bg-[#5C708E] text-white"
+                      : "bg-[#F3F4F6] text-black"
+                      }`}
                   >
                     Notes
                   </button>
                   <button
                     onClick={() => switchTab("progress")}
-                    className={`hover:bg-[#1c3458] text-xs px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${
-                      activeTab == "progress"
-                        ? "bg-[#5C708E] text-white"
-                        : "bg-[#F3F4F6] text-black"
-                    }`}
+                    className={`hover:bg-[#1c3458] text-xs px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${activeTab == "progress"
+                      ? "bg-[#5C708E] text-white"
+                      : "bg-[#F3F4F6] text-black"
+                      }`}
                   >
                     Activity
                   </button>
@@ -763,11 +747,10 @@ const Contact = () => {
                     Number(formData.status) != 9 && (
                       <button
                         onClick={() => switchTab("status")}
-                        className={`hover:bg-[#1c3458] text-xs px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${
-                          activeTab == "status"
-                            ? "bg-[#5C708E] text-white"
-                            : "bg-[#F3F4F6] text-black"
-                        }`}
+                        className={`hover:bg-[#1c3458] text-xs px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${activeTab == "status"
+                          ? "bg-[#5C708E] text-white"
+                          : "bg-[#F3F4F6] text-black"
+                          }`}
                       >
                         Qualification
                       </button>
@@ -776,11 +759,10 @@ const Contact = () => {
                     Number(formData.status) != 9 && (
                       <button
                         onClick={() => switchTab("negotiation")}
-                        className={`hover:bg-[#1c3458] text-xs  px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${
-                          activeTab == "negotiation"
-                            ? "bg-[#5C708E] text-white"
-                            : "bg-[#F3F4F6] text-black"
-                        }`}
+                        className={`hover:bg-[#1c3458] text-xs  px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${activeTab == "negotiation"
+                          ? "bg-[#5C708E] text-white"
+                          : "bg-[#F3F4F6] text-black"
+                          }`}
                       >
                         Negotiation
                       </button>
@@ -789,11 +771,10 @@ const Contact = () => {
                     Number(formData.status) != 9 && (
                       <button
                         onClick={() => switchTab("done")}
-                        className={`hover:bg-[#1c3458] text-xs  px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${
-                          activeTab == "done"
-                            ? "bg-[#5C708E] text-white"
-                            : "bg-[#F3F4F6] text-black"
-                        }`}
+                        className={`hover:bg-[#1c3458] text-xs  px-2 text-sm py-2 border border-[#3c5d8f] hover:text-white rounded ${activeTab == "done"
+                          ? "bg-[#5C708E] text-white"
+                          : "bg-[#F3F4F6] text-black"
+                          }`}
                       >
                         Done
                       </button>
@@ -1374,11 +1355,10 @@ const Contact = () => {
                   {tabs.map((tab) => (
                     <button
                       key={tab.id}
-                      className={`flex-1 py-1 text-center ${
-                        activeTimelineTab === tab.id
-                          ? "bg-[#5C708E] text-white"
-                          : "bg-gray-200 text-gray-700"
-                      }`}
+                      className={`flex-1 py-1 text-center ${activeTimelineTab === tab.id
+                        ? "bg-[#5C708E] text-white"
+                        : "bg-gray-200 text-gray-700"
+                        }`}
                       onClick={() => handleTabClick(tab.id)}
                     >
                       {tab.label}

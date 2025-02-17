@@ -136,7 +136,7 @@ const EmailForm = ({
 
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
-      <div className="bg-white rounded-lg shadow-lg p-6 w-2/3">
+      <div className="bg-white rounded-lg shadow-lg p-6 w-3/3 md:w-2/3">
         <h2 className="text-lg font-bold mb-4 text-gray-700">Write an Email</h2>
         <ErrorElement error={error} />
         <div className="grid grid-cols-1">
